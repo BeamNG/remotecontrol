@@ -1,0 +1,156 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:udpsteering="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="#000000">
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main"
+    android:clipChildren="false"
+    android:layout_centerVertical="true"
+    >
+
+
+
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="360dp"
+        android:layout_height="600dp"
+        android:indeterminate="false"
+        android:progress="62"
+        android:max="100"
+        android:rotation="159"
+        android:progressDrawable="@drawable/circular_progress_bar_15"
+        android:padding="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="179dp"
+        />
+
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="520dp"
+            android:layout_height="600dp"
+            android:indeterminate="false"
+            android:progress="62"
+            android:max="100"
+            android:rotation="159"
+            android:progressDrawable="@drawable/circular_progress_bar_215"
+            android:layout_marginTop="179dp"
+            android:layout_centerHorizontal="true"
+            />
+
+    <ProgressBar
+        android:id="@+id/progressBar3"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="655dp"
+        android:layout_height="600dp"
+        android:indeterminate="false"
+        android:progress="10"
+        android:max="100"
+        android:rotation="159"
+        android:progressDrawable="@drawable/circular_progress_bar_315"
+        android:layout_marginTop="184dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <com.beamng.udpsteering.InverseProgressBar
+        android:id="@+id/progressBar4"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="660dp"
+        android:layout_height="600dp"
+        android:indeterminate="false"
+        android:progress="18"
+        android:max="100"
+        android:rotation="201"
+        android:progressDrawable="@drawable/circular_progress_bar_415"
+        android:layout_marginTop="185dp"
+        android:layout_centerHorizontal="true" />
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/hud_single_nocolor_15_large"
+        android:scaleType="centerInside"
+        android:id="@+id/speedometer"
+        android:layout_centerInParent="true"
+
+        />
+
+    <com.beamng.udpsteering.CustomTextView
+        android:id="@+id/Textspeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="72sp"
+        udpsteering:fontName="OpenSans-Bold.ttf"
+        android:text="046"
+        android:textColor="#FFFFFF"
+        android:layout_below="@+id/anchor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <com.beamng.udpsteering.CustomTextView
+        android:id="@+id/Textgear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="90sp"
+        udpsteering:fontName="OpenSans-Bold.ttf"
+        android:text="2"
+        android:textColor="#FFFFFF"
+        android:layout_below="@id/anchor"
+        android:layout_toLeftOf="@id/anchor"
+        android:layout_marginTop="81dp"
+        android:layout_marginRight="-8dp"/>
+
+    <com.beamng.udpsteering.CustomTextView
+        android:id="@+id/Textodo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        udpsteering:fontName="OpenSans-Bold.ttf"
+        android:text="000086"
+        android:textColor="#FFFFFF"
+        android:textScaleX="1.15"
+        android:layout_below="@id/anchor"
+        android:layout_toLeftOf="@id/anchor"
+        android:layout_marginTop="187dp"
+        android:layout_marginRight="-82dp"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@id/anchor"
+        android:layout_centerInParent="true"
+        android:background="#FFFFFF"
+        />
+
+</RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_servmess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Server-Nachricht:"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/button"
+        android:text="UDP TEST"
+        android:layout_marginTop="15dp"/>
+
+
+</RelativeLayout>
