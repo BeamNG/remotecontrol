@@ -1,0 +1,3 @@
+[submodule "Android/Udpsteering"]
+	path = Android/Udpsteering
+	url = /home/stefan/remotecontrol/Android/Udpsteering
