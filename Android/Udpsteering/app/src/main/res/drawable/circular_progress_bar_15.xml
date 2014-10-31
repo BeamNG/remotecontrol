@@ -5,12 +5,7 @@
             android:innerRadiusRatio="2.9"
             android:shape="ring"
             android:thicknessRatio="4.5">
-            <gradient
-                android:startColor="#149434"
-                android:endColor="#149434"
-                android:centerColor="#149434"
-                android:type="sweep" />
-
+            <solid android:color="@color/green"/>
         </shape>
     </item>
 

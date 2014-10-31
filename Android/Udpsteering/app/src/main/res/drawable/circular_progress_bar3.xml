@@ -2,17 +2,10 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@android:id/progress">
         <shape
-
             android:innerRadiusRatio="2.9"
             android:shape="ring"
             android:thicknessRatio="16.0">
-            <gradient
-                android:startColor="#31326E"
-                android:endColor="#31326E"
-                android:centerColor="#31326E"
-                android:type="sweep" />
-
+            <solid android:color="@color/darkblue"/>
         </shape>
     </item>
-
 </layer-list>

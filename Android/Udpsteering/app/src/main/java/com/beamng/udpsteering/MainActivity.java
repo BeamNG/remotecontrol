@@ -46,9 +46,6 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends Activity implements SensorEventListener, OnUdpConnected {
 
     private SensorManager mSensorManager;
-    private RelativeLayout mainLayout;
-    private TextView serverMessage;
-    private Button udptest;
     public Handler mHandler;
     private Context mContext;
     private InetAddress adress;
@@ -59,17 +56,28 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private float oldangle = 0.0f;
     private int sendingTimeout = 500;
     private ThreadPoolExecutor executor;
-    public ProgressBar pb;
     public ObjectAnimator animation;
+    private ObjectAnimator oban;
     int oldProgress = 0;
     int newProgress = 0;
-    private ObjectAnimator oban;
+
+    //Sensordata damping elements
     private List<Float>[] rollingAverage = new List[3];
     private static final int MAX_SAMPLE_SIZE = 5;
     private float gravity;
+    private int orientationhandler = 1;
+
+    //test
     private int x = 10;
 
+    //UI Elements
+    private TextView serverMessage;
+    private Button udptest;
+    private Button throttle;
+    private Button breaks;
+
     //Views depending on communication
+    private RelativeLayout mainLayout;
     private ProgressBar pbSpeed;
     private ProgressBar pbRspeed;
     private ProgressBar pbFuel;
@@ -135,6 +143,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         udptest = (Button) findViewById(R.id.button);
         serverMessage = (TextView) findViewById(R.id.tv_servmess);
+        throttle = (Button) findViewById(R.id.throttlecontrol);
+        breaks = (Button) findViewById(R.id.breakcontrol);
         mContext = getApplicationContext();
 
         aContext = this;
@@ -176,6 +186,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         Iadress = String.format("%d.%d.%d.%d",(ipAddress & 0xff), (ipAddress >> 8 & 0xff),
                 (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
 
+        //Buttons
+
         udptest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,6 +197,18 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 new UdpExploreSender(adress, aContext,udpInterf,Iadress).executeOnExecutor(executor,null);
             }
         });
+        throttle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Gas", "geklickt");
+            }
+        });
+        breaks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Bremse", "geklickt");
+            }
+        });
 
         // Check for WiFi connectivity
         ConnectivityManager connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -192,7 +216,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         if(mWifi == null || !mWifi.isConnected())
         {
-            Log.d("Network", "Sorry! You need to be in a WiFi network in order to send UDP broadcast packets. Aborting.");
+            Toast.makeText(this,"Sorry! You need to be connected to a WiFi network. Aborting.",Toast.LENGTH_LONG).show();
         }
 
         //faster handling of the rotating views
@@ -228,8 +252,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         }).start();
 
     }
-
-
 
 
     @Override
@@ -302,7 +324,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         angle = (float) (accMagOrientation[1] * 180 / Math.PI);
 
         //angle damped via the average of the last 5 sensordata entries
-        float uiAngle =(float) (gravity * -7.9);
+
+        if (accMagOrientation[2] > 1.0 && orientationhandler !=-1){
+            orientationhandler = -1;
+            Log.e("CHANGE","SENSORS to -1");
+        }else if(accMagOrientation[2] < -1.0 && orientationhandler !=1){
+            orientationhandler = 1;
+            Log.e("CHANGE","SENSORS to 1");
+        }
+
+        float uiAngle =(float) (gravity * -7.9 * orientationhandler);
 
         //animation of the whole mainLayout when UI is updated every 50ms
         oban = ObjectAnimator.ofFloat(mainLayout,"rotation",oldangle,uiAngle);
@@ -311,9 +342,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             oban.start();
 
         oldangle = uiAngle;
-
-
     }
+
 
     private Runnable updateOrientationDisplayTask = new Runnable() {
         public void run() {
@@ -393,7 +423,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             an4.setInterpolator(new LinearInterpolator());
             an4.start();
 
-            Log.i("X: ",x+"");
             x = x -1;
         }
 
@@ -540,12 +569,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     newProgress = Integer.valueOf(message.substring(1,message.length()));
                 Log.i("Speed","set to: " + message.substring(1,message.length()));
 
-                    animation = ObjectAnimator.ofInt(pb, "progress", oldProgress, newProgress);
+                    animation = ObjectAnimator.ofInt(pbSpeed, "progress", oldProgress, newProgress);
                     animation.setDuration(50);
                     animation.setInterpolator(new LinearInterpolator());
                     animation.start();
                     android.os.SystemClock.sleep(50);
-                    pb.setProgress(newProgress);
+                    pbSpeed.setProgress(newProgress);
                     oldProgress = newProgress;
                 }
 
