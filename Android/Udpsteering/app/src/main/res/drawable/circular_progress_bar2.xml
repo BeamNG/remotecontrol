@@ -4,8 +4,10 @@
         <shape
             android:innerRadiusRatio="2.9"
             android:shape="ring"
-            android:thicknessRatio="12.0">
+            android:thicknessRatio="11.9">
             <solid android:color="@color/lightblue"/>
+            <stroke android:width="2dp"
+                android:color="@color/white"></stroke>
         </shape>
     </item>
 

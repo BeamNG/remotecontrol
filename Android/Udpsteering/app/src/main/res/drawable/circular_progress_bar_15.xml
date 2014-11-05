@@ -6,6 +6,8 @@
             android:shape="ring"
             android:thicknessRatio="4.5">
             <solid android:color="@color/green"/>
+            <stroke android:width="5dp"
+                android:color="@color/white"></stroke>
         </shape>
     </item>
 

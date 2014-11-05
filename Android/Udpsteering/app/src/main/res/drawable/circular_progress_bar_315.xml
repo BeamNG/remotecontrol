@@ -2,10 +2,12 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@android:id/progress">
         <shape
-            android:innerRadiusRatio="2.5"
+            android:innerRadiusRatio="2.472"
             android:shape="ring"
-            android:thicknessRatio="13.0">
+            android:thicknessRatio="13.08">
             <solid android:color="@color/darkblue"/>
+            <stroke android:width="3dp"
+                android:color="@color/white"></stroke>
         </shape>
     </item>
 </layer-list>

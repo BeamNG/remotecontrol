@@ -25,6 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -84,7 +86,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private ProgressBar pbHeat;
     private TextView textSpeed;
     private TextView textGear;
-    private TextView testOdo;
+    private TextView textOdo;
 
     // magnetic field vector
     private float[] magnet = new float[3];
@@ -140,6 +142,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         pbRspeed = (ProgressBar) findViewById(R.id.progressBar2);
         pbFuel = (ProgressBar) findViewById(R.id.progressBar3);
         pbHeat = (ProgressBar) findViewById(R.id.progressBar4);
+        textSpeed = (TextView) findViewById(R.id.Textspeed);
+        textGear = (TextView) findViewById(R.id.Textgear);
+        textOdo = (TextView) findViewById(R.id.Textodo);
 
         udptest = (Button) findViewById(R.id.button);
         serverMessage = (TextView) findViewById(R.id.tv_servmess);
@@ -325,10 +330,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         //angle damped via the average of the last 5 sensordata entries
 
-        if (accMagOrientation[2] > 1.0 && orientationhandler !=-1){
+        if (accMagOrientation[2] > 1.3 && orientationhandler !=-1){
             orientationhandler = -1;
             Log.e("CHANGE","SENSORS to -1");
-        }else if(accMagOrientation[2] < -1.0 && orientationhandler !=1){
+        }else if(accMagOrientation[2] < -1.3 && orientationhandler !=1){
             orientationhandler = 1;
             Log.e("CHANGE","SENSORS to 1");
         }
@@ -394,10 +399,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     public void testmethod() {
 
         if (x>1) {
-        int from = 62 / x;
-        int to = 62 / (x-1);
-        int from1 = 21 / x;
-        int to1 = 21 / (x-1);
+        int from = 616 / x;
+        int to = 616 / (x-1);
+        int from1 = 209 / x;
+        int to1 = 209 / (x-1);
 
             ObjectAnimator an;
             an = ObjectAnimator.ofInt(pbSpeed, "progress",from,to);
@@ -422,6 +427,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             an4.setDuration(200);
             an4.setInterpolator(new LinearInterpolator());
             an4.start();
+
+            String speedvar = String.format("%03d", 220 /(x-1));
+            textSpeed.setText(speedvar);
+
+            String gearvar = (5 / (x-1))+1+"";
+            String odovar = String.format("%06d",10000/(x-1));
+            textGear.setText(gearvar);
+            textOdo.setText(odovar);
+
 
             x = x -1;
         }
