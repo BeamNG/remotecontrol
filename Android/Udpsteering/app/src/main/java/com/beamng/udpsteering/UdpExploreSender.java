@@ -63,7 +63,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         this.aContext = activityContext;
         this.listener = listener;
         this.Iadr = iadrr;
-        serverMessage =(TextView) aContext.findViewById(R.id.tv_servmess);
     }
 
     @Override
@@ -110,7 +109,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        serverMessage.setText("Server-Nachricht: "+ Arrays.toString(values));
         if (Arrays.toString(values).equals("[beamng]")){
             bKeepRunning = false;
             listener.onUdpConnected(hostadress);

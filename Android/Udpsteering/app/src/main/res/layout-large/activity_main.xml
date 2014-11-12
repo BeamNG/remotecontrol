@@ -17,9 +17,7 @@
             android:layout_weight="50"
             android:layout_centerHorizontal="true"
             android:id="@+id/breakcontrol"
-            android:text="Breaks"
             android:paddingTop="10dp"
-            android:textColor="@color/white"
             android:gravity="top|center_horizontal"
             android:background="@drawable/custombutton"
             android:layout_margin="5dp"/>
@@ -30,10 +28,8 @@
             android:layout_weight="50"
             android:layout_centerHorizontal="true"
             android:id="@+id/throttlecontrol"
-            android:text="Throttle"
             android:paddingTop="10dp"
             android:layout_alignParentRight="true"
-            android:textColor="#FFFFFF"
             android:gravity="top|center_horizontal"
             android:background="@drawable/custombutton"
             android:layout_margin="5dp"/>
@@ -58,8 +54,8 @@
         android:layout_width="360dp"
         android:layout_height="600dp"
         android:indeterminate="false"
-        android:progress="510"
-        android:max="1000"
+        android:progress="70"
+        android:max="200"
         android:rotation="159"
         android:progressDrawable="@drawable/circular_progress_bar_15"
         android:padding="20dp"
@@ -74,8 +70,8 @@
             android:layout_width="520dp"
             android:layout_height="600dp"
             android:indeterminate="false"
-            android:progress="600"
-            android:max="1000"
+            android:progress="80"
+            android:max="200"
             android:rotation="159"
             android:progressDrawable="@drawable/circular_progress_bar_215"
             android:layout_marginTop="179dp"
@@ -88,8 +84,8 @@
         android:layout_width="655dp"
         android:layout_height="600dp"
         android:indeterminate="false"
-        android:progress="209"
-        android:max="1000"
+        android:progress="30"
+        android:max="200"
         android:rotation="159"
         android:progressDrawable="@drawable/circular_progress_bar_315"
         android:layout_marginTop="184dp"
@@ -102,8 +98,8 @@
         android:layout_width="660dp"
         android:layout_height="600dp"
         android:indeterminate="false"
-        android:progress="209"
-        android:max="1000"
+        android:progress="20"
+        android:max="200"
         android:rotation="201"
         android:progressDrawable="@drawable/circular_progress_bar_415"
         android:layout_marginTop="185dp"
@@ -126,7 +122,7 @@
         android:layout_height="wrap_content"
         android:textSize="72sp"
         udpsteering:fontName="OpenSans-Bold.ttf"
-        android:text="046"
+        android:text="127"
         android:textColor="#FFFFFF"
         android:layout_below="@+id/anchor"
         android:layout_centerHorizontal="true"
@@ -138,7 +134,7 @@
         android:layout_height="wrap_content"
         android:textSize="90sp"
         udpsteering:fontName="OpenSans-Bold.ttf"
-        android:text="2"
+        android:text="4"
         android:textColor="#FFFFFF"
         android:layout_below="@id/anchor"
         android:layout_toLeftOf="@id/anchor"
@@ -169,20 +165,13 @@
 
 </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tv_servmess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:text="Server-Nachricht:"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:id="@+id/button"
-        android:text="UDP TEST"
+        android:text="CONNECT"
         android:layout_marginTop="15dp"/>
 
 
