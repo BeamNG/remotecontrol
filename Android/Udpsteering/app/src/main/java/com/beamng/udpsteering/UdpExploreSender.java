@@ -19,13 +19,12 @@ import java.util.Arrays;
 public class UdpExploreSender extends AsyncTask<String, String, String> {
     DatagramPacket packet;
     DatagramPacket packetr;
-    String sendString = "hallo";
+    String sendString;
     int PORT = 7000;
     InetAddress netadress;
     DatagramSocket socketS;
     DatagramSocket socketR;
     Activity aContext;
-    TextView serverMessage;
     Boolean bKeepRunning = true;
     private OnUdpConnected listener;
     String Iadr;
@@ -95,7 +94,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             socketR.bind(new InetSocketAddress(Iadr , PORT));
             }catch (Exception e) {e.printStackTrace();}}
 
-        byte[] buf = new byte[1024];
+        byte[] buf = new byte[128];
         packetr = new DatagramPacket(buf, buf.length);
         while (bKeepRunning){
         try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
@@ -109,7 +108,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        if (Arrays.toString(values).equals("[beamng]")){
+        if (values[0].equals("beamng")){
             bKeepRunning = false;
             listener.onUdpConnected(hostadress);
             cancel(true);

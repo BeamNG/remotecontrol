@@ -14,6 +14,7 @@ public class Recievepacket {
     private float rpm;
     private float engTemp;
     private float fuel;
+    private int odometer;
     private short dashLights;
     private boolean[] dasharray = new boolean[11];
     private short showLights;
@@ -24,18 +25,19 @@ public class Recievepacket {
 
         ByteBuffer bb = ByteBuffer.wrap(data);
 
-        flags = bb.getShort(5);
-        gear = bb.get(7);
-        speed = bb.getFloat(9);
-        rpm = bb.getFloat(13);
-        engTemp = bb.getFloat(21);
-        fuel = bb.getFloat(25);
-        dashLights = bb.getShort(33);
-        showLights = bb.getShort(35);
+        flags = bb.getShort(0);
+        gear = bb.get(1);
+        speed = bb.getFloat(2);
+        rpm = bb.getFloat(6);
+        engTemp = bb.getFloat(10);
+        fuel = bb.getFloat(14);
+        dashLights = bb.getShort(18);
+        showLights = bb.getShort(20);
+        odometer = bb.getInt(22);
 
         bb.clear();
 
-        Log.i("CONSTRUCTOR","flags= " + flags + " gear= "+ gear + " speed= "+speed+ " rpm= "+rpm+" engTemp= "+engTemp+" fuel= "+fuel+" dashLights= "+dashLights+" showLights= "+showLights);
+        Log.i("CONSTRUCTOR","flags= " + flags + " gear= "+ gear + " speed= "+speed+ " rpm= "+rpm+" engTemp= "+engTemp+" fuel= "+fuel+" odometer= "+odometer+" dashLights= "+dashLights+" showLights= "+showLights);
 
     }
 
@@ -98,4 +100,6 @@ public class Recievepacket {
     public float getFuel(){
         return 0.5f;
     }
+
+    public int getOdometer() { return 500; }
 }

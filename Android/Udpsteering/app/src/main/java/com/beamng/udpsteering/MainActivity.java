@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -18,6 +19,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
@@ -55,7 +59,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private String Iadress;
     private float angle;
     private float oldangle = 0.0f;
-    private int sendingTimeout = 500;
+    private int sendingTimeout = 50;
     private ThreadPoolExecutor executor;
     private ObjectAnimator oban;
     private ProgressDialog ringProgressDialog;
@@ -65,16 +69,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private List<Float>[] rollingAverage = new List[3];
     private static final int MAX_SAMPLE_SIZE = 5;
     private float gravity;
-    private int orientationhandler = 1;
 
     //test
-    private int x = 10;
+    //private int x = 10;
 
     //UI Elements
-    private TextView serverMessage;
     private Button udptest;
     private Button throttle;
     private Button breaks;
+    private boolean thrpushed;
+    private boolean brpushed;
 
     //Views depending on communication
     private RelativeLayout mainLayout;
@@ -85,6 +89,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private TextView textSpeed;
     private TextView textGear;
     private TextView textOdo;
+
+    //Orientationhandling
+    private Display display;
+    int orientation;
+    private int orientationhandler = 1;
 
     // magnetic field vector
     private float[] magnet = new float[3];
@@ -152,6 +161,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         aContext = this;
 
+        display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        orientation = display.getRotation();
 
         //Multi-Thread-executor:
         // A queue of Runnables
@@ -194,24 +205,41 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         udptest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {adress = getBroadcastAddress();
-                    Log.i("Broadcastadress", adress.getHostAddress());}catch (IOException e) {e.printStackTrace();}
-                    new UdpExploreSender(adress, aContext,udpInterf,Iadress).executeOnExecutor(executor,null);
-                ringProgressDialog = ProgressDialog.show(MainActivity.this, "Connecting ...","Please select this phone in your BeamNG.Drive Game", true);
+                try {
+                    adress = getBroadcastAddress();
+                    Log.i("Broadcastadress", adress.getHostAddress());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                new UdpExploreSender(adress, aContext, udpInterf, Iadress).executeOnExecutor(executor, null);
+                ringProgressDialog = ProgressDialog.show(MainActivity.this, "Connecting ...", "Please select this phone in your BeamNG.Drive Game", true);
             }
         });
 
 
-        throttle.setOnClickListener(new View.OnClickListener() {
+        throttle.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Log.i("Gas", "geklickt");
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    thrpushed = true;
+
+                }else if(event.getAction() == MotionEvent.ACTION_UP) {
+                    thrpushed = false;
+                }
+                return false;
             }
         });
-        breaks.setOnClickListener(new View.OnClickListener() {
+
+        breaks.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                Log.i("Bremse", "geklickt");
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    brpushed = true;
+
+                }else if(event.getAction() == MotionEvent.ACTION_UP) {
+                    brpushed = false;
+                }
+                return false;
             }
         });
 
@@ -281,6 +309,20 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 // copy new magnetometer data into magnet array
                 System.arraycopy(event.values, 0, magnet, 0, 3);
                 break;
+
+            // Check for orientation-change sensor event
+            case Sensor.TYPE_ROTATION_VECTOR:
+                orientation = display.getRotation();
+                switch (orientation) {
+                    case Surface.ROTATION_90:
+                        if(orientationhandler != 1){orientationhandler=1;}
+                        break;
+                    case Surface.ROTATION_270:
+                        if(orientationhandler != -1){orientationhandler=-1;}
+                        break;
+                }
+                 break;
+
         }
     }
 
@@ -327,6 +369,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         mSensorManager.registerListener(this,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
                 SensorManager.SENSOR_DELAY_GAME);
+
+        mSensorManager.registerListener(this,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
+                SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     public void updateOreintationDisplay() {
@@ -334,14 +380,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         angle = (float) (accMagOrientation[1] * 180 / Math.PI);
 
         //angle damped via the average of the last 5 sensordata entries
-
-        if (accMagOrientation[2] > 1.3 && orientationhandler !=-1){
-            orientationhandler = -1;
-            Log.e("CHANGE","SENSORS to -1");
-        }else if(accMagOrientation[2] < -1.3 && orientationhandler !=1){
-            orientationhandler = 1;
-            Log.e("CHANGE","SENSORS to 1");
-        }
 
         //with Boundaries -60 to +60°:
         //float uiAngle =Math.min(Math.max((float) (gravity * -7.9 * orientationhandler), -60f),60f);
@@ -388,7 +426,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         return total;
     }
 
-    //method to get Inetadress
+    //method to get Network Broadcastadress
     InetAddress getBroadcastAddress() throws IOException {
         WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         DhcpInfo dhcp = wifi.getDhcpInfo();
@@ -401,61 +439,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         return InetAddress.getByAddress(quads);
     }
 
-    //testing of the progressbars (maximum progress 1&2 = 62; 3&4 = 21)
-   /* public void testmethod() {
-
-        if (x>1) {
-        int from = 123 / x;
-        int to = 123 / (x-1);
-        int from1 = 42 / x;
-        int to1 = 42 / (x-1);
-
-
-            ObjectAnimator an;
-            an = ObjectAnimator.ofInt(pbSpeed, "progress",from,to);
-            an.setDuration(200);
-            an.setInterpolator(new LinearInterpolator());
-            an.start();
-
-            ObjectAnimator an2;
-            an2 = ObjectAnimator.ofInt(pbRspeed, "progress",from,to);
-            an2.setDuration(200);
-            an2.setInterpolator(new LinearInterpolator());
-            an2.start();
-
-            ObjectAnimator an3;
-            an3 = ObjectAnimator.ofInt(pbFuel, "progress",from1,to1);
-            an3.setDuration(200);
-            an3.setInterpolator(new LinearInterpolator());
-            an3.start();
-
-            ObjectAnimator an4;
-            an4 = ObjectAnimator.ofInt(pbHeat, "progress",from1,to1);
-            an4.setDuration(200);
-            an4.setInterpolator(new LinearInterpolator());
-            an4.start();
-
-            String speedvar = String.format("%03d", 220 /(x-1));
-            textSpeed.setText(speedvar);
-
-            String gearvar = (5 / (x-1))+1+"";
-            String odovar = String.format("%06d",10000/(x-1));
-            textGear.setText(gearvar);
-            textOdo.setText(odovar);
-
-
-            x = x -1;
-        }
-
-    }*/
-
     //Interface for starting threads for sending and recieving data
     @Override
     public void onUdpConnected(InetAddress hostadress) {
         Toast.makeText(getApplicationContext(),"Connected to BeamNG",Toast.LENGTH_LONG).show();
         initListeners();
         ringProgressDialog.dismiss();
-        udptest.setVisibility(View.INVISIBLE);
+        udptest.setVisibility(View.GONE);
         UdpSessionSender sessionsender = new UdpSessionSender(hostadress,aContext,Iadress);
         sessionsender.executeOnExecutor(executor,null);
         UdpSessionReceiver sessionreceiver = new UdpSessionReceiver(hostadress,aContext,Iadress);
@@ -466,16 +456,14 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     public class UdpSessionSender extends AsyncTask<String,String,String> {
 
         DatagramPacket packets;
-        DatagramPacket packetr;
         Float sendFloat;
         int PORT = 7001;
         InetAddress receiveradress;
         DatagramSocket socketS;
-        DatagramSocket socketR;
         Activity aContext;
         Boolean bKeepRunning = true;
         String myIadr;
-        InetAddress hostadress;
+        Sendpacket sendpacket;
 
 
         public UdpSessionSender (InetAddress iadrSend, Activity activityContext, String myiadrr) {
@@ -495,10 +483,17 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     e.printStackTrace();
                 }
 
-            sendFloat = angle;
-            Log.e("SendFloat: ", sendFloat+"");
-                String sendString = "Steering:"+sendFloat;
-            byte[] buffer = sendString.getBytes();
+            sendFloat = Math.min(Math.max((angle*orientationhandler)/75,-1f),1f);
+
+                if (sendpacket == null){
+                    sendpacket = new Sendpacket(sendFloat,thrpushed,brpushed);
+                }else{
+                    sendpacket.setSteeringAngle(sendFloat);
+                    sendpacket.setThrottle(thrpushed);
+                    sendpacket.setBreaks(brpushed);
+                }
+
+            byte[] buffer = sendpacket.getSendingByteArray();
             if(socketS == null) {
                 try {
                     socketS = new DatagramSocket();}catch (SocketException e) {e.printStackTrace();}}
@@ -511,25 +506,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             } catch (Exception e) {
                 e.printStackTrace();
             }}
-
-            Log.i("ExploreRecieveSocketBinder",Iadress + ":7001");
-            if(socketR == null) {
-                try {
-                    DatagramChannel channel = DatagramChannel.open();
-                    socketR = channel.socket();
-                    socketR.bind(new InetSocketAddress(Iadress , PORT));
-                }catch (Exception e) {e.printStackTrace();}}
-
-            byte[] buf = new byte[256];
-            packetr = new DatagramPacket(buf, buf.length);
-            while (bKeepRunning){
-                try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
-                String message = new String(buf, 0, packetr.getLength());
-                hostadress = packetr.getAddress();
-                Log.i("UDP SERVER","Recieved: " + message + " IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
-                publishProgress(message);
-            }
-
             return null;
         }
 
@@ -580,7 +556,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     socketR.bind(new InetSocketAddress(Iadress , PORT));
                 }catch (Exception e) {e.printStackTrace();}}
 
-            byte[] buf = new byte[1024];
+            byte[] buf = new byte[128];
             packetr = new DatagramPacket(buf, buf.length);
             while (bKeepRunning){
                 try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
@@ -599,29 +575,30 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             super.onProgressUpdate(values);
 
             //ByteArrayTest
-            byte[] testbytes = new byte[37];
-            testbytes[6] = 00000001;
-            testbytes[7] = 00000001;
-            testbytes[12] = 00000001;
-            testbytes[16] = 00000001;
+            byte[] testbytes = new byte[26];
+            testbytes[0] = 00000001;
+            testbytes[1] = 00000001;
+            testbytes[5] = 00000001;
+            testbytes[9] = 00000001;
+            testbytes[13] = 00000001;
+            testbytes[17] = 00000001;
+            testbytes[19] = 00000001;
+            testbytes[21] = 00000001;
             testbytes[24] = 00000001;
-            testbytes[28] = 00000001;
-            testbytes[34] = 00000001;
-            testbytes[36] = 00000001;
 
             packet = new Recievepacket(testbytes);
 
-                    //Speed
-                    newSpeed = Math.round(123 * packet.getSpeed());
-                    Log.i("Speed ", "set to: " + packet.getRPM());
-                    animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, newSpeed);
-                    oldSpeed = newSpeed;
+            //Speed
+            newSpeed = Math.round(123 * packet.getSpeed());
+            Log.i("Speed ", "set to: " + packet.getRPM());
+            animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, newSpeed);
+            oldSpeed = newSpeed;
 
-                    //RPM
-                    newRPM = Math.round(123 * packet.getRPM());
-                    Log.i("RPM ", "set to: " + packet.getSpeed());
-                    animation2 = ObjectAnimator.ofInt(pbRspeed, "progress", oldRPM, newRPM);
-                    oldRPM = newRPM;
+            //RPM
+            newRPM = Math.round(123 * packet.getRPM());
+            Log.i("RPM ", "set to: " + packet.getSpeed());
+            animation2 = ObjectAnimator.ofInt(pbRspeed, "progress", oldRPM, newRPM);
+            oldRPM = newRPM;
 
             //EngTemp
             newEngTemp = Math.round(42 * packet.getEngineTemp());
