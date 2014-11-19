@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -63,6 +62,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private ThreadPoolExecutor executor;
     private ObjectAnimator oban;
     private ProgressDialog ringProgressDialog;
+    private boolean connected;
 
 
     //Sensordata damping elements
@@ -77,8 +77,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private Button udptest;
     private Button throttle;
     private Button breaks;
-    private boolean thrpushed;
-    private boolean brpushed;
+    private float thrpushed;
+    private float brpushed;
 
     //Views depending on communication
     private RelativeLayout mainLayout;
@@ -211,7 +211,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                new UdpExploreSender(adress, aContext, udpInterf, Iadress).executeOnExecutor(executor, null);
+
+                if(!connected){
+                new UdpExploreSender(adress, aContext, udpInterf, Iadress).executeOnExecutor(executor);}
                 ringProgressDialog = ProgressDialog.show(MainActivity.this, "Connecting ...", "Please select this phone in your BeamNG.Drive Game", true);
             }
         });
@@ -221,10 +223,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    thrpushed = true;
+                    thrpushed = 1f;
 
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
-                    thrpushed = false;
+                    thrpushed = 0f;
                 }
                 return false;
             }
@@ -234,10 +236,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    brpushed = true;
+                    brpushed = 1f;
 
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
-                    brpushed = false;
+                    brpushed = 0f;
                 }
                 return false;
             }
@@ -447,9 +449,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         ringProgressDialog.dismiss();
         udptest.setVisibility(View.GONE);
         UdpSessionSender sessionsender = new UdpSessionSender(hostadress,aContext,Iadress);
-        sessionsender.executeOnExecutor(executor,null);
+        sessionsender.executeOnExecutor(executor);
         UdpSessionReceiver sessionreceiver = new UdpSessionReceiver(hostadress,aContext,Iadress);
-        sessionreceiver.executeOnExecutor(executor,null);
+        sessionreceiver.executeOnExecutor(executor);
+        connected = true;
     }
 
     //udp sender thread
@@ -457,7 +460,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         DatagramPacket packets;
         Float sendFloat;
-        int PORT = 7001;
+        int PORT = 4445;
         InetAddress receiveradress;
         DatagramSocket socketS;
         Activity aContext;
@@ -515,7 +518,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     public class UdpSessionReceiver extends AsyncTask<String,String,String> {
 
         DatagramPacket packetr;
-        int PORT = 7001;
+        int PORT = 4445;
         InetAddress receiveradress;
         DatagramSocket socketR;
         Activity aContext;
@@ -548,7 +551,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         @Override
         protected String doInBackground(String... arg0) {
             Log.i("UdpServer","started");
-            Log.i("RecieveSocketBinder",Iadress + ":7001");
+            Log.i("RecieveSocketBinder",Iadress + ":4445");
             if(socketR == null) {
                 try {
                     DatagramChannel channel = DatagramChannel.open();
@@ -556,16 +559,17 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     socketR.bind(new InetSocketAddress(Iadress , PORT));
                 }catch (Exception e) {e.printStackTrace();}}
 
-            byte[] buf = new byte[128];
+            byte[] buf = new byte[67];
             packetr = new DatagramPacket(buf, buf.length);
             while (bKeepRunning){
                 try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
-                message = new String(buf, 0, packetr.getLength());
-                int uint8first = buf[0] & 0xFF;
-                String maskMessage = Integer.toBinaryString(uint8first);
+                //message = new String(buf, 0, packetr.getLength());
+                //int uint8first = buf[0] & 0xFF;
+                //String maskMessage = Integer.toBinaryString(uint8first);
+                packet = new Recievepacket(buf);
                 hostadress = packetr.getAddress();
-                Log.i("UDP SERVER","Recieved: " + maskMessage + " IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
-                publishProgress(maskMessage);
+                Log.i("UDP SERVER","Recieved a packet: IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
+                publishProgress();
             }
 
             return null;
@@ -575,18 +579,18 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             super.onProgressUpdate(values);
 
             //ByteArrayTest
-            byte[] testbytes = new byte[26];
-            testbytes[0] = 00000001;
-            testbytes[1] = 00000001;
-            testbytes[5] = 00000001;
-            testbytes[9] = 00000001;
-            testbytes[13] = 00000001;
-            testbytes[17] = 00000001;
-            testbytes[19] = 00000001;
-            testbytes[21] = 00000001;
+            /*byte[] testbytes = new byte[67];
+            testbytes[6] = 00000001;
+            testbytes[7] = 00000001;
+            testbytes[12] = 00000001;
+            testbytes[16] = 00000001;
             testbytes[24] = 00000001;
+            testbytes[28] = 00000001;
+            testbytes[39] = 00000001;
+            testbytes[43] = 00000001;
+            testbytes[66] = 00000001;*/
 
-            packet = new Recievepacket(testbytes);
+            //packet = new Recievepacket(testbytes);
 
             //Speed
             newSpeed = Math.round(123 * packet.getSpeed());
@@ -622,6 +626,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             textSpeed.setText(speedvar);
 
             textGear.setText(packet.getGear());
+            textOdo.setText(String.format("%06d",packet.getOdometer()));
 
 
                 bKeepRunning = true;

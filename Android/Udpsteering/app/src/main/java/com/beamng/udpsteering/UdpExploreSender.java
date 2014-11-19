@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,13 +13,12 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.channels.DatagramChannel;
-import java.util.Arrays;
 
 public class UdpExploreSender extends AsyncTask<String, String, String> {
     DatagramPacket packet;
     DatagramPacket packetr;
     String sendString;
-    int PORT = 7000;
+    int PORT = 4444;
     InetAddress netadress;
     DatagramSocket socketS;
     DatagramSocket socketR;
@@ -86,7 +84,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
 
-        Log.i("RecieveSocketBinder",Iadr + ":7000");
+        Log.i("RecieveSocketBinder",Iadr + ":4444");
         if(socketR == null) {
             try {
                 DatagramChannel channel = DatagramChannel.open();
@@ -112,6 +110,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             bKeepRunning = false;
             listener.onUdpConnected(hostadress);
             cancel(true);
+            socketR.close();
         }else {
             bKeepRunning = true;
         }
