@@ -4,6 +4,7 @@
         <shape
             android:innerRadiusRatio="2.58"
             android:shape="ring"
+            android:useLevel="true"
             android:thicknessRatio="10.1">
             <solid android:color="@color/lightblue"/>
             <stroke android:width="3dp"

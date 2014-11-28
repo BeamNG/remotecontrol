@@ -2,6 +2,9 @@ package com.beamng.udpsteering;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -27,6 +30,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     private OnUdpConnected listener;
     String Iadr;
     InetAddress hostadress;
+    private final ProgressDialog progressDialog;
 
 
 
@@ -55,12 +59,24 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
 
 
 
-    public UdpExploreSender(InetAddress iadr, Activity activityContext, OnUdpConnected listener, String iadrr) {
+    public UdpExploreSender(InetAddress iadr, Activity activityContext, OnUdpConnected listener, String iadrr, Context ctx) {
         this.netadress = iadr;
         this.aContext = activityContext;
         this.listener = listener;
         this.Iadr = iadrr;
-    }
+
+            progressDialog = new ProgressDialog(ctx);
+            progressDialog.setMessage("Please select this device in your BeamNG.Drive Game");
+            progressDialog.setTitle("Connecting ...");
+            progressDialog.setCancelable(true);
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    cancel(true);
+                }
+            });
+
+        }
 
     @Override
     protected String doInBackground(String... arg0) {
@@ -89,18 +105,19 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             try {
                 DatagramChannel channel = DatagramChannel.open();
                 socketR = channel.socket();
+                socketR.setReuseAddress(true);
             socketR.bind(new InetSocketAddress(Iadr , PORT));
             }catch (Exception e) {e.printStackTrace();}}
 
         byte[] buf = new byte[128];
         packetr = new DatagramPacket(buf, buf.length);
         while (bKeepRunning){
-        try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
-        String message = new String(buf, 0, packetr.getLength());
-         hostadress = packetr.getAddress();
-        Log.i("UDP SERVER","Recieved: " + message + " IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
-        publishProgress(message);
-            }
+            try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
+            String message = new String(buf, 0, packetr.getLength());
+            hostadress = packetr.getAddress();
+            Log.i("UDP SERVER","Recieved: " + message + " IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
+            publishProgress(message);
+        }
         return null;
     }
     @Override
@@ -111,11 +128,25 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             listener.onUdpConnected(hostadress);
             cancel(true);
             socketR.close();
+            progressDialog.dismiss();
         }else {
             bKeepRunning = true;
         }
     }
 
+    @Override
+    protected void onPreExecute() {
+        progressDialog.show();
+    }
 
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
+        socketR.disconnect();
+        socketR.close();
+        socketS.close();
+        bKeepRunning=false;
+        progressDialog.dismiss();
+    }
 }
 

@@ -4,8 +4,14 @@
         <shape
             android:innerRadiusRatio="2.9"
             android:shape="ring"
+            android:useLevel="true"
             android:thicknessRatio="11.9">
-            <solid android:color="@color/lightblue"/>
+
+            <gradient
+                android:startColor="@color/lightblue"
+                android:centerColor="@color/lightblue"
+                android:endColor="#ff0606"
+                android:angle="135"/>
             <stroke android:width="2dp"
                 android:color="@color/white"></stroke>
         </shape>

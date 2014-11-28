@@ -63,10 +63,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private ObjectAnimator oban;
     private ProgressDialog ringProgressDialog;
     private boolean connected;
+    private UdpExploreSender exploreSender;
 
 
     //Sensordata damping elements
-    private List<Float>[] rollingAverage = new List[3];
+    private List<Float>[] rollingAverage = new List[4];
     private static final int MAX_SAMPLE_SIZE = 5;
     private float gravity;
 
@@ -167,7 +168,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         //Multi-Thread-executor:
         // A queue of Runnables
         BlockingQueue<Runnable> mDecodeWorkQueue;
-        // Instantiates the queue of Runnables as a LinkedBlockingQueue
+        // instantiate the queue of Runnables as a LinkedBlockingQueue
         mDecodeWorkQueue = new LinkedBlockingQueue<Runnable>();
         // Sets the amount of time an idle thread waits before terminating
         int KEEP_ALIVE_TIME = 1;
@@ -213,8 +214,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 }
 
                 if(!connected){
-                new UdpExploreSender(adress, aContext, udpInterf, Iadress).executeOnExecutor(executor);}
-                ringProgressDialog = ProgressDialog.show(MainActivity.this, "Connecting ...", "Please select this phone in your BeamNG.Drive Game", true);
+                new UdpExploreSender(adress, aContext, udpInterf, Iadress,MainActivity.this).executeOnExecutor(executor);}
+
+
             }
         });
 
@@ -262,29 +264,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         //initListeners();
 
         mHandler = new Handler();
-
-
-        //Testing of all progressbars
-        /*new Thread(new Runnable() {
-
-            public void run() {
-                while (x > 1) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    // Update the progress bars via testmethod
-                    mmHandler.post(new Runnable() {
-                        public void run() {
-                            //testmethod();
-
-                        }
-                    });
-                }
-            }
-
-        }).start();*/
 
 
 
@@ -563,9 +542,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             packetr = new DatagramPacket(buf, buf.length);
             while (bKeepRunning){
                 try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
-                //message = new String(buf, 0, packetr.getLength());
-                //int uint8first = buf[0] & 0xFF;
-                //String maskMessage = Integer.toBinaryString(uint8first);
+
                 packet = new Recievepacket(buf);
                 hostadress = packetr.getAddress();
                 Log.i("UDP SERVER","Recieved a packet: IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
@@ -577,20 +554,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-
-            //ByteArrayTest
-            /*byte[] testbytes = new byte[67];
-            testbytes[6] = 00000001;
-            testbytes[7] = 00000001;
-            testbytes[12] = 00000001;
-            testbytes[16] = 00000001;
-            testbytes[24] = 00000001;
-            testbytes[28] = 00000001;
-            testbytes[39] = 00000001;
-            testbytes[43] = 00000001;
-            testbytes[66] = 00000001;*/
-
-            //packet = new Recievepacket(testbytes);
 
             //Speed
             newSpeed = Math.round(123 * packet.getSpeed());
@@ -627,6 +590,20 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
             textGear.setText(packet.getGear());
             textOdo.setText(String.format("%06d",packet.getOdometer()));
+
+            boolean[] lightsarray = packet.getActiveLightsArr();
+
+            for (int i=0;i<11;i++) {
+                if(lightsarray[i]==true){
+                    //turn lights on
+                    Log.i("LIGHTSARRAY","Number "+i+" turned on.");
+                }
+            }
+
+            if(packet.getFlagsArray()[3]){
+                //KMH
+                Log.i("User wants ","KMH");
+            }
 
 
                 bKeepRunning = true;
