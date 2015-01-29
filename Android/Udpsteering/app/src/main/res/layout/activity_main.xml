@@ -119,6 +119,66 @@
 
         />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icons_abs_aktiv"
+        android:scaleType="centerInside"
+        android:id="@+id/light_abs"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icons_break_aktiv"
+        android:scaleType="centerInside"
+        android:id="@+id/light_break"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icons_headlight_aktiv"
+        android:scaleType="centerInside"
+        android:id="@+id/light_headlight"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icons_headlight_high_aktiv"
+        android:scaleType="centerInside"
+        android:id="@+id/light_fullbeam"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        />
+
+    <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/icons_left_indicator_aktiv"
+    android:scaleType="centerInside"
+    android:id="@+id/light_leftindicator"
+    android:layout_centerInParent="true"
+    android:visibility="invisible"
+    />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icons_right_indicator_aktiv"
+        android:scaleType="centerInside"
+        android:id="@+id/light_rightindicator"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        />
+
 
 
     <com.beamng.udpsteering.CustomTextView

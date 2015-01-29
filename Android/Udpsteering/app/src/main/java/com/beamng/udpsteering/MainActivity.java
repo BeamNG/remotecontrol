@@ -10,7 +10,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
-import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -25,6 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,10 +35,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -53,6 +56,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private SensorManager mSensorManager;
     public Handler mHandler;
     private Context mContext;
+    private NetworkInfo mWifi;
+    private ConnectivityManager connManager;
     private InetAddress adress;
     private Activity aContext;
     private OnUdpConnected udpInterf;
@@ -66,6 +71,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private UdpExploreSender exploreSender;
     private UdpSessionSender sessionsender;
     private UdpSessionReceiver sessionreceiver;
+    private WifiManager wifiManager;
 
 
     //Sensordata damping elements
@@ -90,6 +96,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private TextView textSpeed;
     private TextView textGear;
     private TextView textOdo;
+    private ImageView[] lightViews;
 
     //Orientationhandling
     private Display display;
@@ -145,6 +152,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         textGear = (TextView) findViewById(R.id.Textgear);
         textOdo = (TextView) findViewById(R.id.Textodo);
 
+        //HUD-Lights in the order of given Structure in Recievepacket.java
+        lightViews = new ImageView[11];
+        lightViews[10] = (ImageView) findViewById(R.id.light_abs);
+        lightViews[2] = (ImageView) findViewById(R.id.light_break);
+        lightViews[0] = (ImageView) findViewById(R.id.light_headlight);
+        lightViews[1] = (ImageView) findViewById(R.id.light_fullbeam);
+        lightViews[5] = (ImageView) findViewById(R.id.light_leftindicator);
+        lightViews[6] = (ImageView) findViewById(R.id.light_rightindicator);
+
         udptest = (Button) findViewById(R.id.button);
         throttle = (Button) findViewById(R.id.throttlecontrol);
         breaks = (Button) findViewById(R.id.breakcontrol);
@@ -183,28 +199,37 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
                 1000, TIME_CONSTANT);
 
-
-        //get broadcastadress and start initial message on buttonclick
         udpInterf = this;
 
-        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        Iadress = String.format("%d.%d.%d.%d",(ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+        // Check for WiFi connectivity
+        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        if(mWifi == null || !mWifi.isConnected())
+        {
+            Toast.makeText(this,"You need to be connected to a WiFi network.",Toast.LENGTH_LONG).show();
+        }
 
         //Buttons
         udptest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    adress = getBroadcastAddress();
-                    Log.i("Broadcastadress", adress.getHostAddress());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+                Iadress = String.format("%d.%d.%d.%d",(ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                        (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
 
-                if(!connected){
-                new UdpExploreSender(adress, aContext, udpInterf, Iadress,MainActivity.this).executeOnExecutor(executor);}
+                mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                if(mWifi.isConnected()) {
+                    adress = getBroadcastAddress(getIpAddress());
+                    Log.i("Broadcastadress", adress.getHostAddress());
+
+                    if (!connected) {
+                        new UdpExploreSender(adress, aContext, udpInterf, Iadress, MainActivity.this).executeOnExecutor(executor);
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(),"Not connected to a WIFI network",Toast.LENGTH_SHORT).show();
+                }
 
 
             }
@@ -237,14 +262,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             }
         });
 
-        // Check for WiFi connectivity
-        ConnectivityManager connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if(mWifi == null || !mWifi.isConnected())
-        {
-            Toast.makeText(this,"You need to be connected to a WiFi network.",Toast.LENGTH_LONG).show();
-        }
 
         //faster handling of the rotating views
         mainLayout.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -397,16 +415,52 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     }
 
     //method to get Network Broadcastadress
-    InetAddress getBroadcastAddress() throws IOException {
-        WifiManager wifi = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-        DhcpInfo dhcp = wifi.getDhcpInfo();
-        // handle null somehow
+    public InetAddress getBroadcastAddress(InetAddress inetAddr) {
+        NetworkInterface temp;
+        InetAddress iAddr = null;
+        try {
+            temp = NetworkInterface.getByInetAddress(inetAddr);
+            List <InterfaceAddress> addresses = temp.getInterfaceAddresses();
 
-        int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
-        byte[] quads = new byte[4];
-        for (int k = 0; k < 4; k++)
-            quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-        return InetAddress.getByAddress(quads);
+            for (InterfaceAddress inetAddress: addresses)
+
+                iAddr = inetAddress.getBroadcast();
+            return iAddr;
+
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //method to get IpAdress
+    public InetAddress getIpAddress() {
+        InetAddress inetAddress = null;
+        InetAddress myAddr = null;
+
+        try {
+            for (Enumeration < NetworkInterface > networkInterface = NetworkInterface
+                    .getNetworkInterfaces(); networkInterface.hasMoreElements();) {
+
+                NetworkInterface singleInterface = networkInterface.nextElement();
+
+                for (Enumeration< InetAddress > IpAddresses = singleInterface.getInetAddresses(); IpAddresses
+                        .hasMoreElements();) {
+                    inetAddress = IpAddresses.nextElement();
+
+                    if (!inetAddress.isLoopbackAddress() && (singleInterface.getDisplayName()
+                            .contains("wlan0") ||
+                            singleInterface.getDisplayName().contains("eth0") ||
+                            singleInterface.getDisplayName().contains("ap0"))) {
+
+                        myAddr = inetAddress;
+                    }
+                }
+            }
+
+        } catch (SocketException ex) {
+        }
+        return myAddr;
     }
 
     private void hideSystemUI(){
@@ -527,10 +581,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     socketS = new DatagramSocket();}catch (SocketException e) {e.printStackTrace();}}
             try {
                 packets = new DatagramPacket(buffer, buffer.length, receiveradress, PORT);
-                Log.i("Socket","created + sending");
-
                 socketS.send(packets);
-                Log.i("UDP","C: Sent.");
+                Log.i("UDP","Package Sent.");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -562,10 +614,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         int newFuel = 0;
         String speedvar ="";
         Recievepacket packet;
-        public ObjectAnimator animation1;
-        public ObjectAnimator animation2;
-        public ObjectAnimator animation3;
-        public ObjectAnimator animation4;
+        private ObjectAnimator animation1;
+        private ObjectAnimator animation2;
+        private ObjectAnimator animation3;
+        private ObjectAnimator animation4;
+        private AnimatorSet animSet;
 
 
         public UdpSessionReceiver (InetAddress iadrSend, Activity activityContext, String myiadrr) {
@@ -608,8 +661,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
                 packet = new Recievepacket(buf);
                 hostadress = packetr.getAddress();
-                //Log.i("UDP SERVER","Recieved a packet: IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
-                publishProgress();
+                Log.i("UDP SERVER","Recieved a packet");
+                publishProgress("");
 
             }
 
@@ -634,37 +687,37 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            if(values[0].equals("TIMEOUT")){
+            if(values!=null && values[0].equals("TIMEOUT")){
                 cancel(true);
                 connectionTimeout();
                 return;
             }
             //Speed
             newSpeed = Math.round(123 * packet.getSpeed());
-            Log.i("Speed ", "set to: " + packet.getRPM());
+            //Log.i("Speed ", "set to: " + packet.getRPM());
             animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, newSpeed);
             oldSpeed = newSpeed;
 
             //RPM
             newRPM = Math.round(123 * packet.getRPM());
-            Log.i("RPM ", "set to: " + packet.getSpeed());
+            //Log.i("RPM ", "set to: " + packet.getSpeed());
             animation2 = ObjectAnimator.ofInt(pbRspeed, "progress", oldRPM, newRPM);
             oldRPM = newRPM;
 
             //EngTemp
             newEngTemp = Math.round(42 * packet.getEngineTemp());
-            Log.i("Engtemp ", "set to: " + packet.getEngineTemp());
+            //Log.i("Engtemp ", "set to: " + packet.getEngineTemp());
             animation3 = ObjectAnimator.ofInt(pbHeat, "progress", oldEngTemp, newEngTemp);
             oldEngTemp = newEngTemp;
 
             //Fuel
             newFuel= Math.round(42 * packet.getFuel());
-            Log.i("Fuel", "set to: " + packet.getFuel());
+            //Log.i("Fuel", "set to: " + packet.getFuel());
             animation4 = ObjectAnimator.ofInt(pbFuel, "progress", oldFuel, newFuel);
             oldFuel = newFuel;
 
-            AnimatorSet animSet = new AnimatorSet();
-            animSet.play(animation1).with(animation2).with(animation3).with(animation4);
+            animSet = new AnimatorSet();
+            animSet.playTogether(animation1,animation2,animation3,animation4);
             animSet.setInterpolator(new LinearInterpolator());
             animSet.setDuration(500);
             animSet.start();
@@ -678,9 +731,18 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             boolean[] lightsarray = packet.getActiveLightsArr();
 
             for (int i=0;i<11;i++) {
-                if(lightsarray[i]==true){
-                    //turn lights on
-                    Log.i("LIGHTSARRAY","Number "+i+" turned on.");
+                //Check if we have a View for that Flag
+                if(lightViews[i]!= null) {
+                    if (lightsarray[i]) {
+                        if(lightViews[i].getVisibility() == View.INVISIBLE) {
+                            lightViews[i].setVisibility(View.VISIBLE);
+                        }
+
+                    } else {
+                        if(lightViews[i].getVisibility() == View.VISIBLE){
+                            lightViews[i].setVisibility(View.INVISIBLE);
+                        }
+                    }
                 }
             }
 
