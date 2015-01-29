@@ -36,6 +36,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,11 +60,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private float angle;
     private float oldangle = 0.0f;
     private int sendingTimeout = 50;
-    private ThreadPoolExecutor executor;
     private ObjectAnimator oban;
     private ProgressDialog ringProgressDialog;
     private boolean connected;
     private UdpExploreSender exploreSender;
+    private UdpSessionSender sessionsender;
+    private UdpSessionReceiver sessionreceiver;
 
 
     //Sensordata damping elements
@@ -71,8 +73,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private static final int MAX_SAMPLE_SIZE = 5;
     private float gravity;
 
-    //test
-    //private int x = 10;
 
     //UI Elements
     private Button udptest;
@@ -113,36 +113,27 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
     private Timer fuseTimer = new Timer();
 
-    // Need handler for callbacks of the Testrunnable to the UI thread
-    final Handler mmHandler = new Handler();
+    //Multithreading
+    private ThreadPoolExecutor executor;
+    private BlockingQueue<Runnable> mDecodeWorkQueue;
+    private int KEEP_ALIVE_TIME = 1;
+    private TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
+    private int NUMBER_OF_CORES;
 
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (hasFocus){
+            hideSystemUI();
+        }
+        super.onWindowFocusChanged(hasFocus);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // If the Android version is lower than Jellybean, use this call to hide
-        // the status bar.
-        if (Build.VERSION.SDK_INT < 16) {
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else{
-            View decorView = getWindow().getDecorView();
-        // Hide both the navigation bar and the status bar.
-        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher
-            int uiOptions;
-            if (Build.VERSION.SDK_INT >= 19){
-                uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-                decorView.setSystemUiVisibility(uiOptions);
-            }else{
-            uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-            decorView.setSystemUiVisibility(uiOptions);}
-        }
-
-
-
+        hideSystemUI();
         setContentView(R.layout.activity_main);
 
         mainLayout = (RelativeLayout) findViewById(R.id.main);
@@ -158,6 +149,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         throttle = (Button) findViewById(R.id.throttlecontrol);
         breaks = (Button) findViewById(R.id.breakcontrol);
         ringProgressDialog = new ProgressDialog(this);
+
+
         mContext = getApplicationContext();
 
         aContext = this;
@@ -167,16 +160,14 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         //Multi-Thread-executor:
         // A queue of Runnables
-        BlockingQueue<Runnable> mDecodeWorkQueue;
         // instantiate the queue of Runnables as a LinkedBlockingQueue
         mDecodeWorkQueue = new LinkedBlockingQueue<Runnable>();
         // Sets the amount of time an idle thread waits before terminating
-        int KEEP_ALIVE_TIME = 1;
+        KEEP_ALIVE_TIME = 1;
         // Sets the Time Unit to seconds
-        TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
+        KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
 
-        int NUMBER_OF_CORES =
-                Runtime.getRuntime().availableProcessors();
+        NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
 
         // Creates a thread pool manager
         executor = new ThreadPoolExecutor(
@@ -202,7 +193,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
 
         //Buttons
-
         udptest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -253,7 +243,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         if(mWifi == null || !mWifi.isConnected())
         {
-            Toast.makeText(this,"Sorry! You need to be connected to a WiFi network. Aborting.",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"You need to be connected to a WiFi network.",Toast.LENGTH_LONG).show();
         }
 
         //faster handling of the rotating views
@@ -361,7 +351,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         angle = (float) (accMagOrientation[1] * 180 / Math.PI);
 
         //angle damped via the average of the last 5 sensordata entries
-
         //with Boundaries -60 to +60°:
         //float uiAngle =Math.min(Math.max((float) (gravity * -7.9 * orientationhandler), -60f),60f);
         float uiAngle =(float) (gravity * -7.9 * orientationhandler);
@@ -420,6 +409,45 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         return InetAddress.getByAddress(quads);
     }
 
+    private void hideSystemUI(){
+        // If the Android version is lower than Jellybean, use this call to hide
+        // the status bar.
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }else{
+            View decorView = getWindow().getDecorView();
+            // Hide both the navigation bar and the status bar.
+            // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher
+            int uiOptions;
+            if (Build.VERSION.SDK_INT >= 19){
+                uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+                decorView.setSystemUiVisibility(uiOptions);
+            }else{
+                uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+                decorView.setSystemUiVisibility(uiOptions);}
+        }
+    }
+
+    public void connectionTimeout(){
+        udptest.setVisibility(View.VISIBLE);
+        sessionsender.cancel(true);
+        sessionreceiver.cancel(true);
+        connected=false;
+        Toast.makeText(aContext,"Your connection timed out",Toast.LENGTH_LONG).show();
+        executor.shutdownNow();
+        mDecodeWorkQueue = new LinkedBlockingQueue<>();
+        // Creates a thread pool manager
+        executor = new ThreadPoolExecutor(
+                NUMBER_OF_CORES,       // Initial pool size
+                NUMBER_OF_CORES,       // Max pool size
+                KEEP_ALIVE_TIME,
+                KEEP_ALIVE_TIME_UNIT,
+                mDecodeWorkQueue);
+    }
+
     //Interface for starting threads for sending and recieving data
     @Override
     public void onUdpConnected(InetAddress hostadress) {
@@ -427,9 +455,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         initListeners();
         ringProgressDialog.dismiss();
         udptest.setVisibility(View.GONE);
-        UdpSessionSender sessionsender = new UdpSessionSender(hostadress,aContext,Iadress);
+        sessionsender = new UdpSessionSender(hostadress,aContext,Iadress);
         sessionsender.executeOnExecutor(executor);
-        UdpSessionReceiver sessionreceiver = new UdpSessionReceiver(hostadress,aContext,Iadress);
+        sessionreceiver = new UdpSessionReceiver(hostadress,aContext,Iadress);
         sessionreceiver.executeOnExecutor(executor);
         connected = true;
     }
@@ -455,6 +483,20 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         }
 
         @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            bKeepRunning=false;
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    socketS.disconnect();
+                    socketS.close();
+                }
+            }, 200);
+        }
+
+        @Override
         protected String doInBackground(String... arg0) {
 
             Log.i("UdpClient","started");
@@ -474,6 +516,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     sendpacket.setThrottle(thrpushed);
                     sendpacket.setBreaks(brpushed);
                 }
+                if(isCancelled()){
+                    bKeepRunning = false;
+                    continue;
+                }
 
             byte[] buffer = sendpacket.getSendingByteArray();
             if(socketS == null) {
@@ -487,7 +533,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 Log.i("UDP","C: Sent.");
             } catch (Exception e) {
                 e.printStackTrace();
-            }}
+            }
+                }
             return null;
         }
 
@@ -538,23 +585,60 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     socketR.bind(new InetSocketAddress(Iadress , PORT));
                 }catch (Exception e) {e.printStackTrace();}}
 
+            try {
+                //Timeout after 10 seconds of not recieving a packet
+                socketR.setSoTimeout(10000);
+            }catch (SocketException e){}
+
+
             byte[] buf = new byte[67];
             packetr = new DatagramPacket(buf, buf.length);
             while (bKeepRunning){
-                try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
+                try {
+                    socketR.receive(packetr);
+                }catch(SocketTimeoutException e){
+                    publishProgress("TIMEOUT");
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(isCancelled()){
+                    bKeepRunning = false;
+                    continue;
+                }
 
                 packet = new Recievepacket(buf);
                 hostadress = packetr.getAddress();
-                Log.i("UDP SERVER","Recieved a packet: IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
+                //Log.i("UDP SERVER","Recieved a packet: IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
                 publishProgress();
+
             }
 
             return null;
         }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            bKeepRunning=false;
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    socketR.disconnect();
+                    socketR.close();
+                }
+            }, 200);
+        }
+
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
+            if(values[0].equals("TIMEOUT")){
+                cancel(true);
+                connectionTimeout();
+                return;
+            }
             //Speed
             newSpeed = Math.round(123 * packet.getSpeed());
             Log.i("Speed ", "set to: " + packet.getRPM());
@@ -575,7 +659,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
             //Fuel
             newFuel= Math.round(42 * packet.getFuel());
-            Log.i("Speed", "set to: " + packet.getEngineTemp());
+            Log.i("Fuel", "set to: " + packet.getFuel());
             animation4 = ObjectAnimator.ofInt(pbFuel, "progress", oldFuel, newFuel);
             oldFuel = newFuel;
 

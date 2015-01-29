@@ -75,14 +75,13 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
                     cancel(true);
                 }
             });
-
         }
 
     @Override
     protected String doInBackground(String... arg0) {
 
 
-        sendString = getDeviceName();
+        sendString = "beamng" + getDeviceName();
         Log.e("SendString: ", sendString);
         byte[] buffer = (sendString).getBytes();
 
