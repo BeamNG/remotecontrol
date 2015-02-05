@@ -196,6 +196,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
 
 
+        mainLayout.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+
         fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
                 1000, TIME_CONSTANT);
 

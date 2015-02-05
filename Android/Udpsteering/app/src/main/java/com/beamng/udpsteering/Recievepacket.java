@@ -69,7 +69,7 @@ public class Recievepacket {
     #define OG_SHIFT      1        // key
     #define OG_CTRL       2        // key
     #define OG_TURBO      8192     // show turbo gauge
-    #define OG_KM         16384    // if not set - user prefers MILES
+    #define OG_KM         16384    // if not set - user prefers MILES //only value used
     #define OG_BAR        32768    // if not set - user prefers PSI
 
     // DL_x - bits for OutGaugePack DashLights and ShowLights
@@ -132,31 +132,40 @@ public class Recievepacket {
     public boolean[] getActiveLightsArr(){
 
         if((showLights & FLAG_SHIFTLIGHT) == FLAG_SHIFTLIGHT)
-        {lightsArray[0]= true;}
+        {lightsArray[0]= true;
+        Log.i("ACTIVELIGHTS","Shiftlight ON");}
 
         if((showLights & FLAG_FULLBEAM) == FLAG_FULLBEAM)
-        {lightsArray[1]= true;}
+        {lightsArray[1]= true;
+        Log.i("ACTIVELIGHTS","Fullbeam ON");}
 
         if((showLights & FLAG_HANDBREAK) == FLAG_HANDBREAK)
-        {lightsArray[2]= true;}
+        {lightsArray[2]= true;
+            Log.i("ACTIVELIGHTS","Handbreak ON");}
 
         if((showLights & FLAG_SIGNAL_L) == FLAG_SIGNAL_L)
-        {lightsArray[5]= true;}
+        {lightsArray[5]= true;
+            Log.i("ACTIVELIGHTS","Left Signal ON");}
 
         if((showLights & FLAG_SIGNAL_R) == FLAG_SIGNAL_R)
-        {lightsArray[6]= true;}
+        {lightsArray[6]= true;
+            Log.i("ACTIVELIGHTS","Right Signal ON");}
 
         if((showLights & FLAG_SIGNAL_ANY) == FLAG_SIGNAL_ANY)
-        {lightsArray[7]= true;}
+        {lightsArray[7]= true;
+            Log.i("ACTIVELIGHTS","Any Signal ON");}
 
         if((showLights & FLAG_OILWARN) == FLAG_OILWARN)
-        {lightsArray[8]= true;}
+        {lightsArray[8]= true;
+            Log.i("ACTIVELIGHTS","Oilwarn ON");}
 
         if((showLights & FLAG_BATTERY) == FLAG_BATTERY)
-        {lightsArray[9]= true;}
+        {lightsArray[9]= true;
+            Log.i("ACTIVELIGHTS","Battery ON");}
 
         if((showLights & FLAG_ABS) == FLAG_ABS)
-        {lightsArray[10]= true;}
+        {lightsArray[10]= true;
+            Log.i("ACTIVELIGHTS","ABS ON");}
 
         return lightsArray;
     }
