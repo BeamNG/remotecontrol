@@ -1,0 +1,553 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E5B2C7A119E7D80D0001561E /* PTUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B2C7A019E7D80D0001561E /* PTUtil.swift */; };
+		E5B2C7A519E7F4250001561E /* PSSearching.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B2C7A419E7F4250001561E /* PSSearching.swift */; };
+		E5B2C7A719E7F7C30001561E /* PSSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B2C7A619E7F7C30001561E /* PSSession.swift */; };
+		E5B2C7A919E7FCB80001561E /* PSSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B2C7A819E7FCB80001561E /* PSSessionViewController.swift */; };
+		E5B2C7AB19E811490001561E /* PSProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B2C7AA19E811490001561E /* PSProgressBar.swift */; };
+		E5B766191AA89540001D37FA /* PSQuat.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B766181AA89540001D37FA /* PSQuat.m */; };
+		E5EF037319FE4D1200A84565 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036819FE4D1200A84565 /* LICENSE.txt */; };
+		E5EF037419FE4D1200A84565 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036919FE4D1200A84565 /* OpenSans-Bold.ttf */; };
+		E5EF037519FE4D1200A84565 /* OpenSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036A19FE4D1200A84565 /* OpenSans-BoldItalic.ttf */; };
+		E5EF037619FE4D1200A84565 /* OpenSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036B19FE4D1200A84565 /* OpenSans-ExtraBold.ttf */; };
+		E5EF037719FE4D1200A84565 /* OpenSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036C19FE4D1200A84565 /* OpenSans-ExtraBoldItalic.ttf */; };
+		E5EF037819FE4D1200A84565 /* OpenSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036D19FE4D1200A84565 /* OpenSans-Italic.ttf */; };
+		E5EF037919FE4D1200A84565 /* OpenSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036E19FE4D1200A84565 /* OpenSans-Light.ttf */; };
+		E5EF037A19FE4D1200A84565 /* OpenSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF036F19FE4D1200A84565 /* OpenSans-LightItalic.ttf */; };
+		E5EF037B19FE4D1200A84565 /* OpenSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF037019FE4D1200A84565 /* OpenSans-Regular.ttf */; };
+		E5EF037C19FE4D1200A84565 /* OpenSans-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF037119FE4D1200A84565 /* OpenSans-Semibold.ttf */; };
+		E5EF037D19FE4D1200A84565 /* OpenSans-SemiboldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5EF037219FE4D1200A84565 /* OpenSans-SemiboldItalic.ttf */; };
+		E5EF146D19E688B90080988C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EF146C19E688B90080988C /* AppDelegate.swift */; };
+		E5EF147219E688B90080988C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5EF147019E688B90080988C /* Main.storyboard */; };
+		E5EF147419E688B90080988C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5EF147319E688B90080988C /* Images.xcassets */; };
+		E5EF148019E688B90080988C /* BeamNG_SteeringDeviceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5EF147F19E688B90080988C /* BeamNG_SteeringDeviceTests.swift */; };
+		E5EF149219E68F0D0080988C /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E5EF149119E68F0D0080988C /* AsyncUdpSocket.m */; };
+		E5EF149519E694610080988C /* PSNetUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E5EF149419E694610080988C /* PSNetUtil.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E5EF147A19E688B90080988C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E5EF145F19E688B90080988C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E5EF146619E688B90080988C;
+			remoteInfo = BeamNG.SteeringDevice;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		E5B2C7A019E7D80D0001561E /* PTUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PTUtil.swift; sourceTree = "<group>"; };
+		E5B2C7A419E7F4250001561E /* PSSearching.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSSearching.swift; sourceTree = "<group>"; };
+		E5B2C7A619E7F7C30001561E /* PSSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSSession.swift; sourceTree = "<group>"; };
+		E5B2C7A819E7FCB80001561E /* PSSessionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSSessionViewController.swift; sourceTree = "<group>"; };
+		E5B2C7AA19E811490001561E /* PSProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PSProgressBar.swift; sourceTree = "<group>"; };
+		E5B766171AA89540001D37FA /* PSQuat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PSQuat.h; sourceTree = "<group>"; };
+		E5B766181AA89540001D37FA /* PSQuat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSQuat.m; sourceTree = "<group>"; };
+		E5EF036819FE4D1200A84565 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		E5EF036919FE4D1200A84565 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
+		E5EF036A19FE4D1200A84565 /* OpenSans-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-BoldItalic.ttf"; sourceTree = "<group>"; };
+		E5EF036B19FE4D1200A84565 /* OpenSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-ExtraBold.ttf"; sourceTree = "<group>"; };
+		E5EF036C19FE4D1200A84565 /* OpenSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		E5EF036D19FE4D1200A84565 /* OpenSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Italic.ttf"; sourceTree = "<group>"; };
+		E5EF036E19FE4D1200A84565 /* OpenSans-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Light.ttf"; sourceTree = "<group>"; };
+		E5EF036F19FE4D1200A84565 /* OpenSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-LightItalic.ttf"; sourceTree = "<group>"; };
+		E5EF037019FE4D1200A84565 /* OpenSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Regular.ttf"; sourceTree = "<group>"; };
+		E5EF037119FE4D1200A84565 /* OpenSans-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Semibold.ttf"; sourceTree = "<group>"; };
+		E5EF037219FE4D1200A84565 /* OpenSans-SemiboldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiboldItalic.ttf"; sourceTree = "<group>"; };
+		E5EF146719E688B90080988C /* BeamNG.SteeringDevice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeamNG.SteeringDevice.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5EF146B19E688B90080988C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E5EF146C19E688B90080988C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E5EF147119E688B90080988C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		E5EF147319E688B90080988C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		E5EF147919E688B90080988C /* BeamNG.SteeringDeviceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BeamNG.SteeringDeviceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5EF147E19E688B90080988C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E5EF147F19E688B90080988C /* BeamNG_SteeringDeviceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeamNG_SteeringDeviceTests.swift; sourceTree = "<group>"; };
+		E5EF149019E68F0D0080988C /* AsyncUdpSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncUdpSocket.h; sourceTree = "<group>"; };
+		E5EF149119E68F0D0080988C /* AsyncUdpSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncUdpSocket.m; sourceTree = "<group>"; };
+		E5EF149319E68F3B0080988C /* BeamNG.SteeringDevice-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BeamNG.SteeringDevice-Bridging-Header.h"; sourceTree = "<group>"; };
+		E5EF149419E694610080988C /* PSNetUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PSNetUtil.m; sourceTree = "<group>"; };
+		E5EF149619E6947A0080988C /* PSNetUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PSNetUtil.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E5EF146419E688B90080988C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5EF147619E688B90080988C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E5EF036619FE4D0000A84565 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF036719FE4D1200A84565 /* Open_Sans */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		E5EF036719FE4D1200A84565 /* Open_Sans */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF036819FE4D1200A84565 /* LICENSE.txt */,
+				E5EF036919FE4D1200A84565 /* OpenSans-Bold.ttf */,
+				E5EF036A19FE4D1200A84565 /* OpenSans-BoldItalic.ttf */,
+				E5EF036B19FE4D1200A84565 /* OpenSans-ExtraBold.ttf */,
+				E5EF036C19FE4D1200A84565 /* OpenSans-ExtraBoldItalic.ttf */,
+				E5EF036D19FE4D1200A84565 /* OpenSans-Italic.ttf */,
+				E5EF036E19FE4D1200A84565 /* OpenSans-Light.ttf */,
+				E5EF036F19FE4D1200A84565 /* OpenSans-LightItalic.ttf */,
+				E5EF037019FE4D1200A84565 /* OpenSans-Regular.ttf */,
+				E5EF037119FE4D1200A84565 /* OpenSans-Semibold.ttf */,
+				E5EF037219FE4D1200A84565 /* OpenSans-SemiboldItalic.ttf */,
+			);
+			path = Open_Sans;
+			sourceTree = "<group>";
+		};
+		E5EF145E19E688B90080988C = {
+			isa = PBXGroup;
+			children = (
+				E5EF146919E688B90080988C /* BeamNG.SteeringDevice */,
+				E5EF147C19E688B90080988C /* BeamNG.SteeringDeviceTests */,
+				E5EF146819E688B90080988C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E5EF146819E688B90080988C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF146719E688B90080988C /* BeamNG.SteeringDevice.app */,
+				E5EF147919E688B90080988C /* BeamNG.SteeringDeviceTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E5EF146919E688B90080988C /* BeamNG.SteeringDevice */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF036619FE4D0000A84565 /* Resources */,
+				E5EF149919E6CE960080988C /* Utils */,
+				E5EF148F19E68EEF0080988C /* UDPSocket */,
+				E5EF148A19E68B1A0080988C /* Model */,
+				E5EF148919E689050080988C /* View */,
+				E5EF146C19E688B90080988C /* AppDelegate.swift */,
+				E5EF147019E688B90080988C /* Main.storyboard */,
+				E5EF147319E688B90080988C /* Images.xcassets */,
+				E5EF146A19E688B90080988C /* Supporting Files */,
+				E5EF149319E68F3B0080988C /* BeamNG.SteeringDevice-Bridging-Header.h */,
+			);
+			path = BeamNG.SteeringDevice;
+			sourceTree = "<group>";
+		};
+		E5EF146A19E688B90080988C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF146B19E688B90080988C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E5EF147C19E688B90080988C /* BeamNG.SteeringDeviceTests */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF147F19E688B90080988C /* BeamNG_SteeringDeviceTests.swift */,
+				E5EF147D19E688B90080988C /* Supporting Files */,
+			);
+			path = BeamNG.SteeringDeviceTests;
+			sourceTree = "<group>";
+		};
+		E5EF147D19E688B90080988C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF147E19E688B90080988C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E5EF148919E689050080988C /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E5B2C7A819E7FCB80001561E /* PSSessionViewController.swift */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		E5EF148A19E68B1A0080988C /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E5B2C7A419E7F4250001561E /* PSSearching.swift */,
+				E5B2C7A619E7F7C30001561E /* PSSession.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		E5EF148F19E68EEF0080988C /* UDPSocket */ = {
+			isa = PBXGroup;
+			children = (
+				E5EF149019E68F0D0080988C /* AsyncUdpSocket.h */,
+				E5EF149119E68F0D0080988C /* AsyncUdpSocket.m */,
+			);
+			name = UDPSocket;
+			sourceTree = "<group>";
+		};
+		E5EF149919E6CE960080988C /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E5B2C7A019E7D80D0001561E /* PTUtil.swift */,
+				E5B766171AA89540001D37FA /* PSQuat.h */,
+				E5B766181AA89540001D37FA /* PSQuat.m */,
+				E5EF149419E694610080988C /* PSNetUtil.m */,
+				E5EF149619E6947A0080988C /* PSNetUtil.h */,
+				E5B2C7AA19E811490001561E /* PSProgressBar.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E5EF146619E688B90080988C /* BeamNG.SteeringDevice */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5EF148319E688B90080988C /* Build configuration list for PBXNativeTarget "BeamNG.SteeringDevice" */;
+			buildPhases = (
+				E5EF146319E688B90080988C /* Sources */,
+				E5EF146419E688B90080988C /* Frameworks */,
+				E5EF146519E688B90080988C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BeamNG.SteeringDevice;
+			productName = BeamNG.SteeringDevice;
+			productReference = E5EF146719E688B90080988C /* BeamNG.SteeringDevice.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E5EF147819E688B90080988C /* BeamNG.SteeringDeviceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E5EF148619E688B90080988C /* Build configuration list for PBXNativeTarget "BeamNG.SteeringDeviceTests" */;
+			buildPhases = (
+				E5EF147519E688B90080988C /* Sources */,
+				E5EF147619E688B90080988C /* Frameworks */,
+				E5EF147719E688B90080988C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E5EF147B19E688B90080988C /* PBXTargetDependency */,
+			);
+			name = BeamNG.SteeringDeviceTests;
+			productName = BeamNG.SteeringDeviceTests;
+			productReference = E5EF147919E688B90080988C /* BeamNG.SteeringDeviceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E5EF145F19E688B90080988C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = 28Apps;
+				TargetAttributes = {
+					E5EF146619E688B90080988C = {
+						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = 939ENH6MSN;
+					};
+					E5EF147819E688B90080988C = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = E5EF146619E688B90080988C;
+					};
+				};
+			};
+			buildConfigurationList = E5EF146219E688B90080988C /* Build configuration list for PBXProject "BeamNG.SteeringDevice" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E5EF145E19E688B90080988C;
+			productRefGroup = E5EF146819E688B90080988C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E5EF146619E688B90080988C /* BeamNG.SteeringDevice */,
+				E5EF147819E688B90080988C /* BeamNG.SteeringDeviceTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E5EF146519E688B90080988C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5EF037C19FE4D1200A84565 /* OpenSans-Semibold.ttf in Resources */,
+				E5EF037D19FE4D1200A84565 /* OpenSans-SemiboldItalic.ttf in Resources */,
+				E5EF037319FE4D1200A84565 /* LICENSE.txt in Resources */,
+				E5EF037B19FE4D1200A84565 /* OpenSans-Regular.ttf in Resources */,
+				E5EF037819FE4D1200A84565 /* OpenSans-Italic.ttf in Resources */,
+				E5EF037719FE4D1200A84565 /* OpenSans-ExtraBoldItalic.ttf in Resources */,
+				E5EF147219E688B90080988C /* Main.storyboard in Resources */,
+				E5EF037A19FE4D1200A84565 /* OpenSans-LightItalic.ttf in Resources */,
+				E5EF037419FE4D1200A84565 /* OpenSans-Bold.ttf in Resources */,
+				E5EF147419E688B90080988C /* Images.xcassets in Resources */,
+				E5EF037919FE4D1200A84565 /* OpenSans-Light.ttf in Resources */,
+				E5EF037519FE4D1200A84565 /* OpenSans-BoldItalic.ttf in Resources */,
+				E5EF037619FE4D1200A84565 /* OpenSans-ExtraBold.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5EF147719E688B90080988C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E5EF146319E688B90080988C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5B2C7A119E7D80D0001561E /* PTUtil.swift in Sources */,
+				E5B2C7A719E7F7C30001561E /* PSSession.swift in Sources */,
+				E5B2C7A919E7FCB80001561E /* PSSessionViewController.swift in Sources */,
+				E5B2C7AB19E811490001561E /* PSProgressBar.swift in Sources */,
+				E5EF149219E68F0D0080988C /* AsyncUdpSocket.m in Sources */,
+				E5B2C7A519E7F4250001561E /* PSSearching.swift in Sources */,
+				E5EF149519E694610080988C /* PSNetUtil.m in Sources */,
+				E5B766191AA89540001D37FA /* PSQuat.m in Sources */,
+				E5EF146D19E688B90080988C /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E5EF147519E688B90080988C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5EF148019E688B90080988C /* BeamNG_SteeringDeviceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E5EF147B19E688B90080988C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E5EF146619E688B90080988C /* BeamNG.SteeringDevice */;
+			targetProxy = E5EF147A19E688B90080988C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		E5EF147019E688B90080988C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E5EF147119E688B90080988C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E5EF148119E688B90080988C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		E5EF148219E688B90080988C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E5EF148419E688B90080988C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = BeamNG.SteeringDevice/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "BeamNG.SteeringDevice/BeamNG.SteeringDevice-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E5EF148519E688B90080988C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = BeamNG.SteeringDevice/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "BeamNG.SteeringDevice/BeamNG.SteeringDevice-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E5EF148719E688B90080988C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BeamNG.SteeringDeviceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BeamNG.SteeringDevice.app/BeamNG.SteeringDevice";
+			};
+			name = Debug;
+		};
+		E5EF148819E688B90080988C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BeamNG.SteeringDeviceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BeamNG.SteeringDevice.app/BeamNG.SteeringDevice";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E5EF146219E688B90080988C /* Build configuration list for PBXProject "BeamNG.SteeringDevice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5EF148119E688B90080988C /* Debug */,
+				E5EF148219E688B90080988C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5EF148319E688B90080988C /* Build configuration list for PBXNativeTarget "BeamNG.SteeringDevice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5EF148419E688B90080988C /* Debug */,
+				E5EF148519E688B90080988C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E5EF148619E688B90080988C /* Build configuration list for PBXNativeTarget "BeamNG.SteeringDeviceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5EF148719E688B90080988C /* Debug */,
+				E5EF148819E688B90080988C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E5EF145F19E688B90080988C /* Project object */;
+}
