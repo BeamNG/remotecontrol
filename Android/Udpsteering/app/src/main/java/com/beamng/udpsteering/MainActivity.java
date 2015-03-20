@@ -152,7 +152,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         textGear = (TextView) findViewById(R.id.Textgear);
         textOdo = (TextView) findViewById(R.id.Textodo);
 
-        //HUD-Lights in the order of given Structure in Recievepacket.java
+        //HUD-Lights in the order of given Structure in Receivepacket.java
         lightViews = new ImageView[11];
         lightViews[10] = (ImageView) findViewById(R.id.light_abs);
         lightViews[2] = (ImageView) findViewById(R.id.light_break);
@@ -523,7 +523,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         DatagramPacket packets;
         Float sendFloat;
-        int PORT = 4445;
+        int PORT = 4444;
         InetAddress receiveradress;
         DatagramSocket socketS;
         Activity aContext;
@@ -584,7 +584,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             try {
                 packets = new DatagramPacket(buffer, buffer.length, receiveradress, PORT);
                 socketS.send(packets);
-                Log.i("UDP","Package Sent.");
+                //Log.i("UDP","Package Sent to " + receiveradress + ":" + PORT);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -615,7 +615,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         int newEngTemp = 0;
         int newFuel = 0;
         String speedvar ="";
-        Recievepacket packet;
+        Receivepacket packet;
         private ObjectAnimator animation1;
         private ObjectAnimator animation2;
         private ObjectAnimator animation3;
@@ -632,7 +632,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         @Override
         protected String doInBackground(String... arg0) {
             Log.i("UdpServer","started");
-            Log.i("RecieveSocketBinder",Iadress + ":4445");
+            Log.i("ReceiveSocketBinder",Iadress + ":" + PORT);
             if(socketR == null) {
                 try {
                     DatagramChannel channel = DatagramChannel.open();
@@ -661,9 +661,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     continue;
                 }
 
-                packet = new Recievepacket(buf);
+                packet = new Receivepacket(buf);
                 hostadress = packetr.getAddress();
-                Log.i("UDP SERVER","Recieved a packet");
+                //Log.i("UDP SERVER","Received a packet");
                 publishProgress("");
 
             }
@@ -695,13 +695,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 return;
             }
             //Speed
-            newSpeed = Math.round(123 * packet.getSpeed());
+            newSpeed = Math.round(3.6f * packet.getSpeed());
             //Log.i("Speed ", "set to: " + packet.getRPM());
             animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, newSpeed);
             oldSpeed = newSpeed;
 
             //RPM
-            newRPM = Math.round(123 * packet.getRPM());
+            newRPM = Math.round(0.01f * packet.getRPM());
             //Log.i("RPM ", "set to: " + packet.getSpeed());
             animation2 = ObjectAnimator.ofInt(pbRspeed, "progress", oldRPM, newRPM);
             oldRPM = newRPM;
@@ -724,7 +724,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             animSet.setDuration(500);
             animSet.start();
 
-            speedvar = String.format("%03d", Math.round(220 * packet.getSpeed()));
+            speedvar = String.format("%03d", Math.round(3.6f * packet.getSpeed()));
             textSpeed.setText(speedvar);
 
             textGear.setText(packet.getGear());
@@ -750,7 +750,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
             if(packet.getFlagsArray()[3]){
                 //KMH
-                Log.i("User wants ","KMH");
+                //Log.i("User wants ","KMH");
             }
 
 

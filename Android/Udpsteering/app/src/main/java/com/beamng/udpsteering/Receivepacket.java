@@ -7,7 +7,7 @@ import org.apache.commons.io.EndianUtils;
 
 import java.nio.ByteBuffer;
 
-public class Recievepacket {
+public class Receivepacket {
     private int time;
     private int flags;
     private final short FLAG_KMH = 16384;
@@ -35,7 +35,7 @@ public class Recievepacket {
 
 
     //Constructor
-    public Recievepacket(byte[] data){
+    public Receivepacket(byte[] data) {
 
     /*ffi.cdef[[
     typedef struct outgauge_t  {
@@ -114,7 +114,7 @@ public class Recievepacket {
 
         bb.clear();
 
-        Log.i("CONSTRUCTOR","flags= " + flags + " gear= "+ gear + " speed= "+speed+ " rpm= "+rpm+" engTemp= "+engTemp+" fuel= "+fuel+" odometer= "+odometer+" dashLights= "+dashLights+" showLights= "+showLights);
+        //Log.i("CONSTRUCTOR","flags= " + flags + " gear= "+ gear + " speed= "+speed+ " rpm= "+rpm+" engTemp= "+engTemp+" fuel= "+fuel+" odometer= "+odometer+" dashLights= "+dashLights+" showLights= "+showLights);
 
     }
 
@@ -131,41 +131,50 @@ public class Recievepacket {
 
     public boolean[] getActiveLightsArr(){
 
-        if((showLights & FLAG_SHIFTLIGHT) == FLAG_SHIFTLIGHT)
-        {lightsArray[0]= true;
-        Log.i("ACTIVELIGHTS","Shiftlight ON");}
+        if((showLights & FLAG_SHIFTLIGHT) == FLAG_SHIFTLIGHT) {
+            lightsArray[0]= true;
+            //Log.i("ACTIVELIGHTS","Shiftlight ON");
+        }
 
-        if((showLights & FLAG_FULLBEAM) == FLAG_FULLBEAM)
-        {lightsArray[1]= true;
-        Log.i("ACTIVELIGHTS","Fullbeam ON");}
+        if((showLights & FLAG_FULLBEAM) == FLAG_FULLBEAM) {
+            lightsArray[1]= true;
+            //Log.i("ACTIVELIGHTS","Fullbeam ON");
+        }
 
-        if((showLights & FLAG_HANDBREAK) == FLAG_HANDBREAK)
-        {lightsArray[2]= true;
-            Log.i("ACTIVELIGHTS","Handbreak ON");}
+        if((showLights & FLAG_HANDBREAK) == FLAG_HANDBREAK){
+            lightsArray[2]= true;
+            //Log.i("ACTIVELIGHTS","Handbreak ON");
+        }
 
-        if((showLights & FLAG_SIGNAL_L) == FLAG_SIGNAL_L)
-        {lightsArray[5]= true;
-            Log.i("ACTIVELIGHTS","Left Signal ON");}
+        if((showLights & FLAG_SIGNAL_L) == FLAG_SIGNAL_L) {
+            lightsArray[5]= true;
+            //Log.i("ACTIVELIGHTS","Left Signal ON");
+        }
 
-        if((showLights & FLAG_SIGNAL_R) == FLAG_SIGNAL_R)
-        {lightsArray[6]= true;
-            Log.i("ACTIVELIGHTS","Right Signal ON");}
+        if((showLights & FLAG_SIGNAL_R) == FLAG_SIGNAL_R) {
+            lightsArray[6]= true;
+            //Log.i("ACTIVELIGHTS","Right Signal ON");
+        }
 
-        if((showLights & FLAG_SIGNAL_ANY) == FLAG_SIGNAL_ANY)
-        {lightsArray[7]= true;
-            Log.i("ACTIVELIGHTS","Any Signal ON");}
+        if((showLights & FLAG_SIGNAL_ANY) == FLAG_SIGNAL_ANY) {
+            lightsArray[7]= true;
+            //Log.i("ACTIVELIGHTS","Any Signal ON");
+        }
 
-        if((showLights & FLAG_OILWARN) == FLAG_OILWARN)
-        {lightsArray[8]= true;
-            Log.i("ACTIVELIGHTS","Oilwarn ON");}
+        if((showLights & FLAG_OILWARN) == FLAG_OILWARN) {
+            lightsArray[8]= true;
+            //Log.i("ACTIVELIGHTS","Oilwarn ON");
+        }
 
-        if((showLights & FLAG_BATTERY) == FLAG_BATTERY)
-        {lightsArray[9]= true;
-            Log.i("ACTIVELIGHTS","Battery ON");}
+        if((showLights & FLAG_BATTERY) == FLAG_BATTERY) {
+            lightsArray[9]= true;
+            //Log.i("ACTIVELIGHTS","Battery ON");
+        }
 
-        if((showLights & FLAG_ABS) == FLAG_ABS)
-        {lightsArray[10]= true;
-            Log.i("ACTIVELIGHTS","ABS ON");}
+        if((showLights & FLAG_ABS) == FLAG_ABS) {
+            lightsArray[10]= true;
+            //Log.i("ACTIVELIGHTS","ABS ON");
+        }
 
         return lightsArray;
     }

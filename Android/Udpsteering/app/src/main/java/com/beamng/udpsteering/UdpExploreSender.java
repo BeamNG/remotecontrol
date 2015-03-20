@@ -21,7 +21,8 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     DatagramPacket packet;
     DatagramPacket packetr;
     String sendString;
-    int PORT = 4444;
+    int hostPORT = 4444;
+    int localPORT = hostPORT + 1;
     InetAddress netadress;
     DatagramSocket socketS;
     DatagramSocket socketR;
@@ -89,32 +90,36 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         try {
             socketS = new DatagramSocket();}catch (SocketException e) {e.printStackTrace();}}
         try {
-            packet = new DatagramPacket(buffer, buffer.length, netadress, PORT);
+            packet = new DatagramPacket(buffer, buffer.length, netadress, hostPORT);
             Log.i("UDP","Sending String: "+ new String(buffer));
             Log.i("Socket","created + sending");
 
             socketS.send(packet);
-            Log.i("UDP","C: Sent.");
+            //Log.i("UDP","C: Sent.");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Log.i("RecieveSocketBinder",Iadr + ":4444");
+        Log.i("RecieveSocketBinder",Iadr + ":" + localPORT);
         if(socketR == null) {
             try {
                 DatagramChannel channel = DatagramChannel.open();
                 socketR = channel.socket();
                 socketR.setReuseAddress(true);
-            socketR.bind(new InetSocketAddress(Iadr , PORT));
+            socketR.bind(new InetSocketAddress(Iadr , localPORT));
             }catch (Exception e) {e.printStackTrace();}}
 
         byte[] buf = new byte[128];
         packetr = new DatagramPacket(buf, buf.length);
         while (bKeepRunning){
-            try {socketR.receive(packetr);}catch (IOException e) {e.printStackTrace();}
+            try {
+                socketR.receive(packetr);
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
             String message = new String(buf, 0, packetr.getLength());
             hostadress = packetr.getAddress();
-            Log.i("UDP SERVER","Recieved: " + message + " IP " + packetr.getAddress().toString() + ":" + packetr.getPort());
+            //Log.i("UDP SERVER","Received: " + message + " IP " + packetr.getAddress().getHostAddress() + ":" + packetr.getPort());
             publishProgress(message);
         }
         return null;
