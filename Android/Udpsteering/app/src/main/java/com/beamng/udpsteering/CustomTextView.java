@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import android.util.Log;
 
 public class CustomTextView extends TextView {
 
@@ -25,14 +26,19 @@ public class CustomTextView extends TextView {
     }
 
     private void init(AttributeSet attrs) {
-        if (attrs!=null) {
-            TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomTextView);
-            String fontName = a.getString(R.styleable.CustomTextView_fontName);
-            if (fontName!=null) {
-                Typeface myTypeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/"+fontName);
-                setTypeface(myTypeface);
+        try {
+            if (attrs!=null) {
+                TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CustomTextView);
+                String fontName = a.getString(R.styleable.CustomTextView_fontName);
+                if (fontName!=null) {
+                        Typeface myTypeface = Typeface.createFromAsset(getContext().getAssets(), fontName);
+                        setTypeface(myTypeface);
+
+                }
+                a.recycle();
             }
-            a.recycle();
+        } catch(RuntimeException e) {
+            Log.e( "CustomTextView", "Unable to create font", e );
         }
     }
 
