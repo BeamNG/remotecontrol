@@ -594,7 +594,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
     }
 
-    //udp reciever thread
+    //udp receiver thread
     public class UdpSessionReceiver extends AsyncTask<String,String,String> {
 
         DatagramPacket packetr;
