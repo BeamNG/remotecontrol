@@ -43,6 +43,7 @@ import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -136,6 +137,36 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         super.onWindowFocusChanged(hasFocus);
     }
 
+
+    static final String AB = "0123456789ABCDEF";
+    static Random rnd = new Random();
+    String randomString( int len )
+    {
+        StringBuilder sb = new StringBuilder( len );
+        for( int i = 0; i < len; i++ )
+            sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
+        return sb.toString();
+    }
+
+    protected void startBroadcasting() {
+        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+        Iadress = String.format("%d.%d.%d.%d",(ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if(mWifi.isConnected()) {
+            adress = getBroadcastAddress(getIpAddress());
+            Log.i("Broadcastadress", adress.getHostAddress());
+
+            if (!connected) {
+                new UdpExploreSender(adress, aContext, udpInterf, Iadress, MainActivity.this).executeOnExecutor(executor, randomString(4));
+            }
+        }else{
+            Toast.makeText(getApplicationContext(),"Not connected to a WIFI network",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,27 +244,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             Toast.makeText(this,"You need to be connected to a WiFi network.",Toast.LENGTH_LONG).show();
         }
 
+        startBroadcasting();
         //Buttons
         udptest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-                Iadress = String.format("%d.%d.%d.%d",(ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-                        (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-
-                mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-                if(mWifi.isConnected()) {
-                    adress = getBroadcastAddress(getIpAddress());
-                    Log.i("Broadcastadress", adress.getHostAddress());
-
-                    if (!connected) {
-                        new UdpExploreSender(adress, aContext, udpInterf, Iadress, MainActivity.this).executeOnExecutor(executor);
-                    }
-                }else{
-                    Toast.makeText(getApplicationContext(),"Not connected to a WIFI network",Toast.LENGTH_SHORT).show();
-                }
-
-
+                startBroadcasting();
             }
         });
 
@@ -488,7 +504,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     }
 
     public void connectionTimeout(){
-        udptest.setVisibility(View.VISIBLE);
+        //udptest.setVisibility(View.VISIBLE);
         sessionsender.cancel(true);
         sessionreceiver.cancel(true);
         connected=false;
@@ -510,7 +526,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         Toast.makeText(getApplicationContext(),"Connected to BeamNG",Toast.LENGTH_LONG).show();
         initListeners();
         ringProgressDialog.dismiss();
-        udptest.setVisibility(View.GONE);
+        //udptest.setVisibility(View.GONE);
         sessionsender = new UdpSessionSender(hostadress,aContext,Iadress);
         sessionsender.executeOnExecutor(executor);
         sessionreceiver = new UdpSessionReceiver(hostadress,aContext,Iadress);
@@ -642,7 +658,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
             try {
                 //Timeout after 10 seconds of not recieving a packet
-                socketR.setSoTimeout(10000);
+                socketR.setSoTimeout(0);
             }catch (SocketException e){}
 
 

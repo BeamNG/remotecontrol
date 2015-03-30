@@ -237,7 +237,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:id="@+id/button"
-        android:text="CONNECT"
+        android:text="RECONNECT"
         android:layout_marginTop="15dp"
         />
 

@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.text.Html;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -15,11 +16,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.util.Random;
 import java.nio.channels.DatagramChannel;
 
 public class UdpExploreSender extends AsyncTask<String, String, String> {
-    DatagramPacket packet;
-    DatagramPacket packetr;
+    DatagramPacket packetS;
+    DatagramPacket packetR;
     String sendString;
     int hostPORT = 4444;
     int localPORT = hostPORT + 1;
@@ -66,76 +68,90 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         this.listener = listener;
         this.Iadr = iadrr;
 
-            progressDialog = new ProgressDialog(ctx);
-            progressDialog.setMessage("Please select this device in your BeamNG.Drive Game");
-            progressDialog.setTitle("Connecting ...");
-            progressDialog.setCancelable(true);
-            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    cancel(true);
-                }
+        progressDialog = new ProgressDialog(ctx);
+        progressDialog.setMessage("...");
+        progressDialog.setTitle("Enter this code in BeamNG.drive when asked");
+        progressDialog.setCancelable(true);
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                cancel(true);
+            }
             });
-        }
+    }
 
     @Override
-    protected String doInBackground(String... arg0) {
+    protected String doInBackground(String... args) {
+        String securityCode = args[0];
 
+        progressDialog.setMessage(Html.fromHtml("<b><big>" + securityCode + "</big></b>"));
 
-        sendString = "beamng" + getDeviceName();
-        Log.e("SendString: ", sendString);
+        sendString = "beamng|" + getDeviceName() + "|" + securityCode;
+        Log.i("SendString: ", sendString);
         byte[] buffer = (sendString).getBytes();
 
         if(socketS == null) {
-        try {
-            socketS = new DatagramSocket();}catch (SocketException e) {e.printStackTrace();}}
-        try {
-            packet = new DatagramPacket(buffer, buffer.length, netadress, hostPORT);
-            Log.i("UDP","Sending String: "+ new String(buffer));
-            Log.i("Socket","created + sending");
-
-            socketS.send(packet);
-            //Log.i("UDP","C: Sent.");
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                socketS = new DatagramSocket();
+            }catch (SocketException e) {
+                e.printStackTrace();
+            }
         }
 
-        Log.i("RecieveSocketBinder",Iadr + ":" + localPORT);
+        //Log.i("ReceiveSocketBinder",Iadr + ":" + localPORT);
         if(socketR == null) {
             try {
                 DatagramChannel channel = DatagramChannel.open();
                 socketR = channel.socket();
                 socketR.setReuseAddress(true);
-            socketR.bind(new InetSocketAddress(Iadr , localPORT));
-            }catch (Exception e) {e.printStackTrace();}}
-
-        byte[] buf = new byte[128];
-        packetr = new DatagramPacket(buf, buf.length);
-        while (bKeepRunning){
-            try {
-                socketR.receive(packetr);
-            }catch (IOException e) {
+                socketR.bind(new InetSocketAddress(Iadr , localPORT));
+                socketR.setSoTimeout(250);
+            }catch (Exception e) {
                 e.printStackTrace();
             }
-            String message = new String(buf, 0, packetr.getLength());
-            hostadress = packetr.getAddress();
-            //Log.i("UDP SERVER","Received: " + message + " IP " + packetr.getAddress().getHostAddress() + ":" + packetr.getPort());
-            publishProgress(message);
+        }
+
+        //Log.i("UDP","Sending String: "+ new String(buffer));
+        String waitingFor = "beamng|" + securityCode;
+        byte[] receive_buf = new byte[32];
+        try {
+            packetR = new DatagramPacket(receive_buf, receive_buf.length);
+            packetS = new DatagramPacket(buffer, buffer.length, netadress, hostPORT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        while (bKeepRunning){
+            try {
+                socketS.send(packetS);
+                socketR.receive(packetR);
+            }catch (IOException e) {
+                //e.printStackTrace();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+                continue;
+            }
+            String message = new String(receive_buf, 0, packetR.getLength());
+            hostadress = packetR.getAddress();
+
+            Log.i("UDP SERVER","Received: " + message + " IP " + packetR.getAddress().getHostAddress() + ":" + packetR.getPort() + " / waiting for: " + waitingFor);
+            if(message.equals(waitingFor)) {
+                publishProgress(message);
+            }
         }
         return null;
     }
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        if (values[0].equals("beamng")){
-            bKeepRunning = false;
-            listener.onUdpConnected(hostadress);
-            cancel(true);
-            socketR.close();
-            progressDialog.dismiss();
-        }else {
-            bKeepRunning = true;
-        }
+        bKeepRunning = false;
+        listener.onUdpConnected(hostadress);
+        cancel(true);
+        socketR.close();
+        progressDialog.dismiss();
     }
 
     @Override
