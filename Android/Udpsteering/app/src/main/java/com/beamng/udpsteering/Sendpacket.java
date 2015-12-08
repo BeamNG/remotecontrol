@@ -7,23 +7,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.nio.ByteBuffer;
 
 public class Sendpacket {
-    private float steeringAngle;
-    private float throttle;
-    private float brakes;
-
-    public Sendpacket(float steeringAngle, float throttle, float brakes){
-        this.steeringAngle = steeringAngle;
-        this.throttle = throttle;
-        this.brakes = brakes;
-
-        /*
-        float 		steeringangle      //-1 to +1   //0-3
-
-        float		throttle	   // -1 to +1      //4-7
-
-        float		breaks		   // -1 to +1      // 8-11
-        */
-    }
+    private float steeringAngle; // 0 to 1, bytes 0-3
+    private float throttle;      // 0 or 1, bytes 4-7
+    private float brakes;        // 0 or 1, bytes 8-11
 
     public void setBreaks(float brakes) {
         this.brakes = brakes;

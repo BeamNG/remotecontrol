@@ -11,6 +11,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -29,6 +30,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -121,48 +126,44 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
     private Timer fuseTimer = new Timer();
 
+    public static String id = "";
+
     //Multithreading
     private ThreadPoolExecutor executor;
     private BlockingQueue<Runnable> mDecodeWorkQueue;
     private int KEEP_ALIVE_TIME = 1;
     private TimeUnit KEEP_ALIVE_TIME_UNIT = TimeUnit.SECONDS;
     private int NUMBER_OF_CORES;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if (hasFocus){
+        if (hasFocus) {
             hideSystemUI();
         }
         super.onWindowFocusChanged(hasFocus);
     }
 
-
-    static final String AB = "0123456789ABCDEF";
-    static Random rnd = new Random();
-    String randomString( int len )
-    {
-        StringBuilder sb = new StringBuilder( len );
-        for( int i = 0; i < len; i++ )
-            sb.append( AB.charAt( rnd.nextInt(AB.length()) ) );
-        return sb.toString();
-    }
-
     protected void startBroadcasting() {
         int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        Iadress = String.format("%d.%d.%d.%d",(ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+        Iadress = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
                 (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
 
         mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if(mWifi.isConnected()) {
+        if (mWifi.isConnected()) {
             adress = getBroadcastAddress(getIpAddress());
             Log.i("Broadcastadress", adress.getHostAddress());
 
             if (!connected) {
-                new UdpExploreSender(adress, aContext, udpInterf, Iadress, MainActivity.this).executeOnExecutor(executor, randomString(4));
+                new UdpExploreSender(adress, aContext, udpInterf, Iadress, MainActivity.this).executeOnExecutor(executor, id);
             }
-        }else{
-            Toast.makeText(getApplicationContext(),"Not connected to a WIFI network",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Not connected to a WIFI network", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -170,6 +171,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.v("BeamNG", id); // Prints the scan format (qrcode, pdf417 etc.)
 
         hideSystemUI();
         setContentView(R.layout.activity_main);
@@ -225,8 +228,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 mDecodeWorkQueue);
 
 
-
-
         mainLayout.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
@@ -239,9 +240,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if(mWifi == null || !mWifi.isConnected())
-        {
-            Toast.makeText(this,"You need to be connected to a WiFi network.",Toast.LENGTH_LONG).show();
+        if (mWifi == null || !mWifi.isConnected()) {
+            Toast.makeText(this, "You need to be connected to a WiFi network.", Toast.LENGTH_LONG).show();
         }
 
         startBroadcasting();
@@ -260,7 +260,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     thrpushed = 1f;
 
-                }else if(event.getAction() == MotionEvent.ACTION_UP) {
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     thrpushed = 0f;
                 }
                 return false;
@@ -273,13 +273,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     brpushed = 1f;
 
-                }else if(event.getAction() == MotionEvent.ACTION_UP) {
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     brpushed = 0f;
                 }
                 return false;
             }
         });
-
 
 
         //faster handling of the rotating views
@@ -292,15 +291,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         mHandler = new Handler();
 
 
-
-
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-
 
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        switch(event.sensor.getType()) {
+        switch (event.sensor.getType()) {
             case Sensor.TYPE_ACCELEROMETER:
                 // copy new accelerometer data into accel array and calculate orientation
                 System.arraycopy(event.values, 0, accel, 0, 3);
@@ -322,20 +321,24 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 orientation = display.getRotation();
                 switch (orientation) {
                     case Surface.ROTATION_90:
-                        if(orientationhandler != 1){orientationhandler=1;}
+                        if (orientationhandler != 1) {
+                            orientationhandler = 1;
+                        }
                         break;
                     case Surface.ROTATION_270:
-                        if(orientationhandler != -1){orientationhandler=-1;}
+                        if (orientationhandler != -1) {
+                            orientationhandler = -1;
+                        }
                         break;
                 }
-                 break;
+                break;
 
         }
     }
 
     // calculates orientation angles from accelerometer and magnetometer output
     public void calculateAccMagOrientation() {
-        if(SensorManager.getRotationMatrix(rotationMatrix, null, accel, magnet)) {
+        if (SensorManager.getRotationMatrix(rotationMatrix, null, accel, magnet)) {
             SensorManager.getOrientation(rotationMatrix, accMagOrientation);
         }
     }
@@ -343,8 +346,24 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     @Override
     public void onStop() {
         super.onStop();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.beamng.udpsteering/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
         // unregister sensor listeners to prevent the activity from draining the device's battery.
         mSensorManager.unregisterListener(this);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
     @Override
@@ -361,11 +380,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         // should be altered, when "Connecting..."-screen is implemented
         initListeners();
     }
+
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+
     // This function registers sensor listeners for the accelerometer, magnetometer
-    public void initListeners(){
+    public void initListeners() {
 
         rollingAverage[1] = new ArrayList<Float>();
 
@@ -389,12 +410,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         //angle damped via the average of the last 5 sensordata entries
         //with Boundaries -60 to +60°:
         //float uiAngle =Math.min(Math.max((float) (gravity * -7.9 * orientationhandler), -60f),60f);
-        float uiAngle =(float) (gravity * -7.9 * orientationhandler);
+        float uiAngle = (float) (gravity * -7.9 * orientationhandler);
         //animation of the whole mainLayout when UI is updated every 50ms
-        oban = ObjectAnimator.ofFloat(mainLayout,"rotation",oldangle,uiAngle);
-            oban.setDuration(50);
-            oban.setInterpolator(new LinearInterpolator());
-            oban.start();
+        oban = ObjectAnimator.ofFloat(mainLayout, "rotation", oldangle, uiAngle);
+        oban.setDuration(50);
+        oban.setInterpolator(new LinearInterpolator());
+        oban.start();
 
         oldangle = uiAngle;
     }
@@ -405,6 +426,27 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             updateOreintationDisplay();
         }
     };
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.beamng.udpsteering/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
     class calculateFusedOrientationTask extends TimerTask {
         public void run() {
             // update sensor output in GUI
@@ -413,21 +455,22 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     }
 
     //rolling list of the last 5 Sensorevents
-    public List<Float> roll(List<Float> list, float newMember){
-        if(list.size() == MAX_SAMPLE_SIZE){
+    public List<Float> roll(List<Float> list, float newMember) {
+        if (list.size() == MAX_SAMPLE_SIZE) {
             list.remove(0);
         }
         list.add(newMember);
         return list;
     }
-    //average of the rolling list
-    public float averageList(List<Float> tallyUp){
 
-        float total=0;
-        for(float item : tallyUp ){
-            total+=item;
+    //average of the rolling list
+    public float averageList(List<Float> tallyUp) {
+
+        float total = 0;
+        for (float item : tallyUp) {
+            total += item;
         }
-        total = total/tallyUp.size();
+        total = total / tallyUp.size();
 
         return total;
     }
@@ -438,9 +481,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         InetAddress iAddr = null;
         try {
             temp = NetworkInterface.getByInetAddress(inetAddr);
-            List <InterfaceAddress> addresses = temp.getInterfaceAddresses();
+            List<InterfaceAddress> addresses = temp.getInterfaceAddresses();
 
-            for (InterfaceAddress inetAddress: addresses)
+            for (InterfaceAddress inetAddress : addresses)
 
                 iAddr = inetAddress.getBroadcast();
             return iAddr;
@@ -457,13 +500,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         InetAddress myAddr = null;
 
         try {
-            for (Enumeration < NetworkInterface > networkInterface = NetworkInterface
-                    .getNetworkInterfaces(); networkInterface.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> networkInterface = NetworkInterface
+                    .getNetworkInterfaces(); networkInterface.hasMoreElements(); ) {
 
                 NetworkInterface singleInterface = networkInterface.nextElement();
 
-                for (Enumeration< InetAddress > IpAddresses = singleInterface.getInetAddresses(); IpAddresses
-                        .hasMoreElements();) {
+                for (Enumeration<InetAddress> IpAddresses = singleInterface.getInetAddresses(); IpAddresses
+                        .hasMoreElements(); ) {
                     inetAddress = IpAddresses.nextElement();
 
                     if (!inetAddress.isLoopbackAddress() && (singleInterface.getDisplayName()
@@ -481,34 +524,35 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         return myAddr;
     }
 
-    private void hideSystemUI(){
+    private void hideSystemUI() {
         // If the Android version is lower than Jellybean, use this call to hide
         // the status bar.
         if (Build.VERSION.SDK_INT < 16) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }else{
+        } else {
             View decorView = getWindow().getDecorView();
             // Hide both the navigation bar and the status bar.
             // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher
             int uiOptions;
-            if (Build.VERSION.SDK_INT >= 19){
+            if (Build.VERSION.SDK_INT >= 19) {
                 uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
                 decorView.setSystemUiVisibility(uiOptions);
-            }else{
+            } else {
                 uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
-                decorView.setSystemUiVisibility(uiOptions);}
+                decorView.setSystemUiVisibility(uiOptions);
+            }
         }
     }
 
-    public void connectionTimeout(){
+    public void connectionTimeout() {
         //udptest.setVisibility(View.VISIBLE);
         sessionsender.cancel(true);
         sessionreceiver.cancel(true);
-        connected=false;
-        Toast.makeText(aContext,"Your connection timed out",Toast.LENGTH_LONG).show();
+        connected = false;
+        Toast.makeText(aContext, "Your connection timed out", Toast.LENGTH_LONG).show();
         executor.shutdownNow();
         mDecodeWorkQueue = new LinkedBlockingQueue<>();
         // Creates a thread pool manager
@@ -520,36 +564,35 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 mDecodeWorkQueue);
     }
 
-    //Interface for starting threads for sending and recieving data
+    //Interface for starting threads for sending and receiving data
     @Override
-    public void onUdpConnected(InetAddress hostadress) {
-        Toast.makeText(getApplicationContext(),"Connected to BeamNG",Toast.LENGTH_LONG).show();
+    public void onUdpConnected(InetAddress hostAddress) {
+        Toast.makeText(getApplicationContext(), "Connected to BeamNG", Toast.LENGTH_LONG).show();
         initListeners();
         ringProgressDialog.dismiss();
         //udptest.setVisibility(View.GONE);
-        sessionsender = new UdpSessionSender(hostadress,aContext,Iadress);
+        sessionsender = new UdpSessionSender(hostAddress, aContext, Iadress);
         sessionsender.executeOnExecutor(executor);
-        sessionreceiver = new UdpSessionReceiver(hostadress,aContext,Iadress);
+        sessionreceiver = new UdpSessionReceiver(hostAddress, aContext, Iadress);
         sessionreceiver.executeOnExecutor(executor);
         connected = true;
     }
 
     //udp sender thread
-    public class UdpSessionSender extends AsyncTask<String,String,String> {
+    public class UdpSessionSender extends AsyncTask<String, String, String> {
 
         DatagramPacket packets;
-        Float sendFloat;
-        int PORT = 4444;
-        InetAddress receiveradress;
+        final int PORT = 4444;
+        InetAddress receiverAddress;
         DatagramSocket socketS;
         Activity aContext;
         Boolean bKeepRunning = true;
         String myIadr;
-        Sendpacket sendpacket;
+        Sendpacket sendpacket = new Sendpacket();
 
 
-        public UdpSessionSender (InetAddress iadrSend, Activity activityContext, String myiadrr) {
-            this.receiveradress = iadrSend;
+        public UdpSessionSender(InetAddress iadrSend, Activity activityContext, String myiadrr) {
+            this.receiverAddress = iadrSend;
             this.aContext = activityContext;
             this.myIadr = myiadrr;
         }
@@ -557,7 +600,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            bKeepRunning=false;
+            bKeepRunning = false;
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -571,47 +614,47 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         @Override
         protected String doInBackground(String... arg0) {
 
-            Log.i("UdpClient","started");
-            while (bKeepRunning){
+            Log.i("UdpClient", "started");
+            while (bKeepRunning) {
                 try {
                     Thread.sleep(sendingTimeout);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-            sendFloat = Math.min(Math.max((angle*orientationhandler)/75,-1f),1f);
-
-                if (sendpacket == null){
-                    sendpacket = new Sendpacket(sendFloat,thrpushed,brpushed);
-                }else{
-                    sendpacket.setSteeringAngle(sendFloat);
-                    sendpacket.setThrottle(thrpushed);
-                    sendpacket.setBreaks(brpushed);
-                }
-                if(isCancelled()){
+                sendpacket.setSteeringAngle(
+                    Math.min(Math.max((angle / 1.5f * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f
+                );
+                sendpacket.setThrottle(thrpushed);
+                sendpacket.setBreaks(brpushed);
+                if (isCancelled()) {
                     bKeepRunning = false;
                     continue;
                 }
 
-            byte[] buffer = sendpacket.getSendingByteArray();
-            if(socketS == null) {
-                try {
-                    socketS = new DatagramSocket();}catch (SocketException e) {e.printStackTrace();}}
-            try {
-                packets = new DatagramPacket(buffer, buffer.length, receiveradress, PORT);
-                socketS.send(packets);
-                //Log.i("UDP","Package Sent to " + receiveradress + ":" + PORT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                byte[] buffer = sendpacket.getSendingByteArray();
+                if (socketS == null) {
+                    try {
+                        socketS = new DatagramSocket();
+                    } catch (SocketException e) {
+                        e.printStackTrace();
+                    }
                 }
+                try {
+                    packets = new DatagramPacket(buffer, buffer.length, receiverAddress, PORT);
+                    socketS.send(packets);
+                    //Log.i("UDP","Package Sent to " + receiverAddress + ":" + PORT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             return null;
         }
 
     }
 
     //udp receiver thread
-    public class UdpSessionReceiver extends AsyncTask<String,String,String> {
+    public class UdpSessionReceiver extends AsyncTask<String, String, String> {
 
         DatagramPacket packetr;
         int PORT = 4445;
@@ -630,7 +673,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         int newRPM = 0;
         int newEngTemp = 0;
         int newFuel = 0;
-        String speedvar ="";
+        String speedvar = "";
         Receivepacket packet;
         private ObjectAnimator animation1;
         private ObjectAnimator animation2;
@@ -639,7 +682,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         private AnimatorSet animSet;
 
 
-        public UdpSessionReceiver (InetAddress iadrSend, Activity activityContext, String myiadrr) {
+        public UdpSessionReceiver(InetAddress iadrSend, Activity activityContext, String myiadrr) {
             this.receiveradress = iadrSend;
             this.aContext = activityContext;
             this.myIadr = myiadrr;
@@ -647,32 +690,36 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         @Override
         protected String doInBackground(String... arg0) {
-            Log.i("UdpServer","started");
-            Log.i("ReceiveSocketBinder",Iadress + ":" + PORT);
-            if(socketR == null) {
+            Log.i("UdpServer", "started");
+            Log.i("ReceiveSocketBinder", Iadress + ":" + PORT);
+            if (socketR == null) {
                 try {
                     DatagramChannel channel = DatagramChannel.open();
                     socketR = channel.socket();
-                    socketR.bind(new InetSocketAddress(Iadress , PORT));
-                }catch (Exception e) {e.printStackTrace();}}
+                    socketR.bind(new InetSocketAddress(Iadress, PORT));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
             try {
                 //Timeout after 10 seconds of not recieving a packet
                 socketR.setSoTimeout(0);
-            }catch (SocketException e){}
+            } catch (SocketException e) {
+            }
 
 
             byte[] buf = new byte[67];
             packetr = new DatagramPacket(buf, buf.length);
-            while (bKeepRunning){
+            while (bKeepRunning) {
                 try {
                     socketR.receive(packetr);
-                }catch(SocketTimeoutException e){
+                } catch (SocketTimeoutException e) {
                     publishProgress("TIMEOUT");
-                }catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if(isCancelled()){
+                if (isCancelled()) {
                     bKeepRunning = false;
                     continue;
                 }
@@ -690,7 +737,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            bKeepRunning=false;
+            bKeepRunning = false;
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -705,7 +752,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
 
-            if(values!=null && values[0].equals("TIMEOUT")){
+            if (values != null && values[0].equals("TIMEOUT")) {
                 cancel(true);
                 connectionTimeout();
                 return;
@@ -729,13 +776,13 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             oldEngTemp = newEngTemp;
 
             //Fuel
-            newFuel= Math.round(42 * packet.getFuel());
+            newFuel = Math.round(42 * packet.getFuel());
             //Log.i("Fuel", "set to: " + packet.getFuel());
             animation4 = ObjectAnimator.ofInt(pbFuel, "progress", oldFuel, newFuel);
             oldFuel = newFuel;
 
             animSet = new AnimatorSet();
-            animSet.playTogether(animation1,animation2,animation3,animation4);
+            animSet.playTogether(animation1, animation2, animation3, animation4);
             animSet.setInterpolator(new LinearInterpolator());
             animSet.setDuration(500);
             animSet.start();
@@ -744,33 +791,33 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             textSpeed.setText(speedvar);
 
             textGear.setText(packet.getGear());
-            textOdo.setText(String.format("%06d",packet.getOdometer()));
+            textOdo.setText(String.format("%06d", packet.getOdometer()));
 
             boolean[] lightsarray = packet.getActiveLightsArr();
 
-            for (int i=0;i<11;i++) {
+            for (int i = 0; i < 11; i++) {
                 //Check if we have a View for that Flag
-                if(lightViews[i]!= null) {
+                if (lightViews[i] != null) {
                     if (lightsarray[i]) {
-                        if(lightViews[i].getVisibility() == View.INVISIBLE) {
+                        if (lightViews[i].getVisibility() == View.INVISIBLE) {
                             lightViews[i].setVisibility(View.VISIBLE);
                         }
 
                     } else {
-                        if(lightViews[i].getVisibility() == View.VISIBLE){
+                        if (lightViews[i].getVisibility() == View.VISIBLE) {
                             lightViews[i].setVisibility(View.INVISIBLE);
                         }
                     }
                 }
             }
 
-            if(packet.getFlagsArray()[3]){
+            if (packet.getFlagsArray()[3]) {
                 //KMH
                 //Log.i("User wants ","KMH");
             }
 
 
-                bKeepRunning = true;
+            bKeepRunning = true;
 
         }
 

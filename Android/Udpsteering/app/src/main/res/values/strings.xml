@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Udpsteering</string>
+    <string name="app_name">BeamNG.drive Remote Control</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
 
 </resources>

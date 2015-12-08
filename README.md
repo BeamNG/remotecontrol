@@ -7,13 +7,13 @@ Remote Control App for BeamNG.drive
 
 *   App sends out a broadcast in its local wifi on port 4444. It sends the string "beamng" + device-name.
 *   It then listens on the same Port for the string "beamng" as an answer to start the communication.
-*   Main communication takes place on port 4445 
+*   Main communication takes place on port 4445
 *   App sends the floats:
-    * Steering-angle between -1 (right) and 1 (left)
+    * Steering-angle between 0 (right) and 1 (left)
     * Throttle 1 for pushed otherwise 0
     * Breaks 1 for pushed otherwise 0
 *   App needs following structure for incoming packages:  
-    
+
 type              | name          | description                                      | bytes  
 ----------------- | ------------- | ------------------------------------------------ | -------------
 unsigned          | time          | time in milliseconds (to check order)            | 0-3  
@@ -37,11 +37,11 @@ char              | display1[16]  | Usually Fuel                                
 char              | display2[16]  | Usually Settings                                 | 76-80  
 int               | id            | optional - only if OutGauge ID is specified      | 81-84  
 unsigned          | odometer	  | distance driven in meters or miles (0-999999)    | 85-88  
-  
-      
+
+
     // OG _x - bits for Flags  
     OG_KM         16384    // if not set - user prefers MILES  
-  
+
     // DL _x - bits for ShowLights  
     DLSHIFT,           // bit 0    - shift light  
     DLFULLBEAM,        // bit 1    - full beam  
