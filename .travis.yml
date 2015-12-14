@@ -1,0 +1,7 @@
+language: android
+android:
+  components:
+    - build-tools-21.1.1
+script:
+  - cd Android/Udpsteering/
+  - gradle build connectedCheck
