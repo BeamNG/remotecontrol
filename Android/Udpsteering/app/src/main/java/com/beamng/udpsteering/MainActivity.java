@@ -48,7 +48,6 @@ import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
@@ -56,9 +55,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-
 public class MainActivity extends Activity implements SensorEventListener, OnUdpConnected {
-
     private SensorManager mSensorManager;
     public Handler mHandler;
     private Context mContext;
@@ -79,12 +76,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private UdpSessionReceiver sessionreceiver;
     private WifiManager wifiManager;
 
-
     //Sensordata damping elements
     private List<Float>[] rollingAverage = new List[4];
     private static final int MAX_SAMPLE_SIZE = 5;
     private float gravity;
-
 
     //UI Elements
     private Button udptest;
@@ -140,7 +135,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
      */
     private GoogleApiClient client;
 
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
@@ -163,16 +157,15 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 new UdpExploreSender(adress, aContext, udpInterf, Iadress, MainActivity.this).executeOnExecutor(executor, id);
             }
         } else {
-            Toast.makeText(getApplicationContext(), "Not connected to a WIFI network", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Not connected to a WiFi network", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.v("BeamNG", id); // Prints the scan format (qrcode, pdf417 etc.)
+        Log.v("BeamNG", id);
 
         hideSystemUI();
         setContentView(R.layout.activity_main);
@@ -186,7 +179,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         textGear = (TextView) findViewById(R.id.Textgear);
         textOdo = (TextView) findViewById(R.id.Textodo);
 
-        //HUD-Lights in the order of given Structure in Receivepacket.java
+        //HUD-Lights in the order of given structure in Receivepacket.java
         lightViews = new ImageView[11];
         lightViews[10] = (ImageView) findViewById(R.id.light_abs);
         lightViews[2] = (ImageView) findViewById(R.id.light_break);
@@ -199,7 +192,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         throttle = (Button) findViewById(R.id.throttlecontrol);
         breaks = (Button) findViewById(R.id.breakcontrol);
         ringProgressDialog = new ProgressDialog(this);
-
 
         mContext = getApplicationContext();
 
@@ -253,7 +245,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             }
         });
 
-
         throttle.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -279,7 +270,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 return false;
             }
         });
-
 
         //faster handling of the rotating views
         mainLayout.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -308,7 +298,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 rollingAverage[1] = roll(rollingAverage[1], event.values[1]);
                 gravity = averageList(rollingAverage[1]);
 
-
                 break;
 
             case Sensor.TYPE_MAGNETIC_FIELD:
@@ -332,7 +321,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                         break;
                 }
                 break;
-
         }
     }
 
@@ -403,7 +391,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 SensorManager.SENSOR_DELAY_NORMAL);
     }
 
-    public void updateOreintationDisplay() {
+    public void updateOrientationDisplay() {
         //most accurate angle to be send via UDP
         angle = (float) (accMagOrientation[1] * 180 / Math.PI);
 
@@ -420,10 +408,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         oldangle = uiAngle;
     }
 
-
     private Runnable updateOrientationDisplayTask = new Runnable() {
         public void run() {
-            updateOreintationDisplay();
+            updateOrientationDisplay();
         }
     };
 
@@ -475,7 +462,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         return total;
     }
 
-    //method to get Network Broadcastadress
     public InetAddress getBroadcastAddress(InetAddress inetAddr) {
         NetworkInterface temp;
         InetAddress iAddr = null;
@@ -494,7 +480,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         return null;
     }
 
-    //method to get IpAdress
     public InetAddress getIpAddress() {
         InetAddress inetAddress = null;
         InetAddress myAddr = null;
@@ -564,10 +549,10 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 mDecodeWorkQueue);
     }
 
-    //Interface for starting threads for sending and receiving data
+    // Interface for starting threads for sending and receiving data
     @Override
     public void onUdpConnected(InetAddress hostAddress) {
-        Toast.makeText(getApplicationContext(), "Connected to BeamNG", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Connected to BeamNG.drive", Toast.LENGTH_LONG).show();
         initListeners();
         ringProgressDialog.dismiss();
         //udptest.setVisibility(View.GONE);
@@ -580,7 +565,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
     //udp sender thread
     public class UdpSessionSender extends AsyncTask<String, String, String> {
-
         DatagramPacket packets;
         final int PORT = 4444;
         InetAddress receiverAddress;
@@ -589,7 +573,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         Boolean bKeepRunning = true;
         String myIadr;
         Sendpacket sendpacket = new Sendpacket();
-
 
         public UdpSessionSender(InetAddress iadrSend, Activity activityContext, String myiadrr) {
             this.receiverAddress = iadrSend;
@@ -613,7 +596,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         @Override
         protected String doInBackground(String... arg0) {
-
             Log.i("UdpClient", "started");
             while (bKeepRunning) {
                 try {
@@ -622,8 +604,9 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     e.printStackTrace();
                 }
 
+                float steeringAngle = Math.min(Math.max((angle / 1.5f * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f;
                 sendpacket.setSteeringAngle(
-                    Math.min(Math.max((angle / 1.5f * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f
+                    steeringAngle
                 );
                 sendpacket.setThrottle(thrpushed);
                 sendpacket.setBreaks(brpushed);
@@ -650,37 +633,29 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             }
             return null;
         }
-
     }
 
     //udp receiver thread
     public class UdpSessionReceiver extends AsyncTask<String, String, String> {
-
         DatagramPacket packetr;
-        int PORT = 4445;
+        final int PORT = 4445;
         InetAddress receiveradress;
         DatagramSocket socketR;
         Activity aContext;
-        Boolean bKeepRunning = true;
+        boolean keepRunning = true;
         String myIadr;
-        InetAddress hostadress;
+        InetAddress hostAddress;
         String message;
         int oldSpeed = 0;
         int oldRPM = 0;
         int oldEngTemp = 0;
         int oldFuel = 0;
-        int newSpeed = 0;
-        int newRPM = 0;
-        int newEngTemp = 0;
-        int newFuel = 0;
-        String speedvar = "";
         Receivepacket packet;
         private ObjectAnimator animation1;
         private ObjectAnimator animation2;
         private ObjectAnimator animation3;
         private ObjectAnimator animation4;
         private AnimatorSet animSet;
-
 
         public UdpSessionReceiver(InetAddress iadrSend, Activity activityContext, String myiadrr) {
             this.receiveradress = iadrSend;
@@ -703,15 +678,14 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             }
 
             try {
-                //Timeout after 10 seconds of not recieving a packet
+                // infinite timeout
                 socketR.setSoTimeout(0);
             } catch (SocketException e) {
             }
 
-
             byte[] buf = new byte[67];
             packetr = new DatagramPacket(buf, buf.length);
-            while (bKeepRunning) {
+            while (keepRunning) {
                 try {
                     socketR.receive(packetr);
                 } catch (SocketTimeoutException e) {
@@ -720,24 +694,21 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                     e.printStackTrace();
                 }
                 if (isCancelled()) {
-                    bKeepRunning = false;
+                    keepRunning = false;
                     continue;
                 }
 
                 packet = new Receivepacket(buf);
-                hostadress = packetr.getAddress();
                 //Log.i("UDP SERVER","Received a packet");
                 publishProgress("");
-
             }
-
             return null;
         }
 
         @Override
         protected void onCancelled() {
             super.onCancelled();
-            bKeepRunning = false;
+            keepRunning = false;
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -757,26 +728,23 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 connectionTimeout();
                 return;
             }
-            //Speed
-            newSpeed = Math.round(3.6f * packet.getSpeed());
-            //Log.i("Speed ", "set to: " + packet.getRPM());
+
+            int newSpeed = Math.round(3.6f * packet.getSpeed());
+            //Log.i("Speed ", "set to: " + packet.getSpeed());
             animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, newSpeed);
             oldSpeed = newSpeed;
 
-            //RPM
-            newRPM = Math.round(0.01f * packet.getRPM());
-            //Log.i("RPM ", "set to: " + packet.getSpeed());
+            int newRPM = Math.round(0.01f * packet.getRPM());
+            //Log.i("RPM ", "set to: " + packet.getRPM());
             animation2 = ObjectAnimator.ofInt(pbRspeed, "progress", oldRPM, newRPM);
             oldRPM = newRPM;
 
-            //EngTemp
-            newEngTemp = Math.round(42 * packet.getEngineTemp());
+            int newEngTemp = Math.round(42 * packet.getEngineTemp());
             //Log.i("Engtemp ", "set to: " + packet.getEngineTemp());
             animation3 = ObjectAnimator.ofInt(pbHeat, "progress", oldEngTemp, newEngTemp);
             oldEngTemp = newEngTemp;
 
-            //Fuel
-            newFuel = Math.round(42 * packet.getFuel());
+            int newFuel = Math.round(42 * packet.getFuel());
             //Log.i("Fuel", "set to: " + packet.getFuel());
             animation4 = ObjectAnimator.ofInt(pbFuel, "progress", oldFuel, newFuel);
             oldFuel = newFuel;
@@ -787,8 +755,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
             animSet.setDuration(500);
             animSet.start();
 
-            speedvar = String.format("%03d", Math.round(3.6f * packet.getSpeed()));
-            textSpeed.setText(speedvar);
+            textSpeed.setText(String.format("%03d", Math.round(3.6f * packet.getSpeed())));
 
             textGear.setText(packet.getGear());
             textOdo.setText(String.format("%06d", packet.getOdometer()));
@@ -816,11 +783,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 //Log.i("User wants ","KMH");
             }
 
-
-            bKeepRunning = true;
+            keepRunning = true;
 
         }
-
     }
-
 }
