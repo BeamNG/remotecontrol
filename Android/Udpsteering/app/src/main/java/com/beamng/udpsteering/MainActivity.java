@@ -77,7 +77,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private WifiManager wifiManager;
 
     //Sensordata damping elements
-    private List<Float>[] rollingAverage = new List[4];
+    private List<Float> rollingAverage = new ArrayList<Float>();
     private static final int MAX_SAMPLE_SIZE = 5;
     private float gravity;
 
@@ -295,8 +295,8 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 System.arraycopy(event.values, 0, accel, 0, 3);
                 calculateAccMagOrientation();
 
-                rollingAverage[1] = roll(rollingAverage[1], event.values[1]);
-                gravity = averageList(rollingAverage[1]);
+                rollingAverage = roll(rollingAverage, event.values[1]);
+                gravity = averageList(rollingAverage);
 
                 break;
 
@@ -375,9 +375,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
     // This function registers sensor listeners for the accelerometer, magnetometer
     public void initListeners() {
-
-        rollingAverage[1] = new ArrayList<Float>();
-
         mSensorManager.registerListener(this,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_GAME);
