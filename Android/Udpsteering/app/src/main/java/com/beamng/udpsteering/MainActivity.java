@@ -3,16 +3,12 @@ package com.beamng.udpsteering;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,26 +51,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends Activity implements SensorEventListener, OnUdpConnected {
+public class MainActivity extends Activity implements SensorEventListener {
     private SensorManager mSensorManager;
     public Handler mHandler;
-    private Context mContext;
-    private NetworkInfo mWifi;
-    private ConnectivityManager connManager;
-    private InetAddress adress;
     private Activity aContext;
-    private OnUdpConnected udpInterf;
     private String Iadress;
     private float angle;
     private float oldangle = 0.0f;
     private int sendingTimeout = 50;
     private ObjectAnimator oban;
-    private ProgressDialog ringProgressDialog;
-    private boolean connected;
-    private UdpExploreSender exploreSender;
     private UdpSessionSender sessionsender;
     private UdpSessionReceiver sessionreceiver;
-    private WifiManager wifiManager;
 
     //Sensordata damping elements
     private List<Float> rollingAverage = new ArrayList<Float>();
@@ -82,7 +69,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     private float gravity;
 
     //UI Elements
-    private Button udptest;
     private Button throttle;
     private Button breaks;
     private float thrpushed;
@@ -144,24 +130,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         super.onWindowFocusChanged(hasFocus);
     }
 
-    protected void startBroadcasting() {
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        Iadress = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-
-        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (mWifi.isConnected()) {
-            adress = getBroadcastAddress(getIpAddress());
-            Log.i("Broadcastadress", adress.getHostAddress());
-
-            if (!connected) {
-                new UdpExploreSender(adress, aContext, udpInterf, Iadress, MainActivity.this).executeOnExecutor(executor, id);
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Not connected to a WiFi network", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,14 +157,12 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         lightViews[5] = (ImageView) findViewById(R.id.light_leftindicator);
         lightViews[6] = (ImageView) findViewById(R.id.light_rightindicator);
 
-        udptest = (Button) findViewById(R.id.button);
         throttle = (Button) findViewById(R.id.throttlecontrol);
         breaks = (Button) findViewById(R.id.breakcontrol);
-        ringProgressDialog = new ProgressDialog(this);
-
-        mContext = getApplicationContext();
 
         aContext = this;
+        hostAddress = ((RemoteControlApplication)getApplication()).getHostAddress();
+        Iadress = ((RemoteControlApplication)getApplication()).getIp();
 
         display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         orientation = display.getRotation();
@@ -225,26 +191,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
         fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
                 1000, TIME_CONSTANT);
-
-        udpInterf = this;
-
-        // Check for WiFi connectivity
-        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if (mWifi == null || !mWifi.isConnected()) {
-            Toast.makeText(this, "You need to be connected to a WiFi network.", Toast.LENGTH_LONG).show();
-        }
-
-        startBroadcasting();
-        //Buttons
-        udptest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startBroadcasting();
-            }
-        });
 
         throttle.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -367,9 +313,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     public void onResume() {
         super.onResume();
         initListeners();
-        if (connected) {
-            startUdpTasks();
-        }
+        startUdpTasks();
     }
 
     @Override
@@ -462,53 +406,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         return total;
     }
 
-    public InetAddress getBroadcastAddress(InetAddress inetAddr) {
-        NetworkInterface temp;
-        InetAddress iAddr = null;
-        try {
-            temp = NetworkInterface.getByInetAddress(inetAddr);
-            List<InterfaceAddress> addresses = temp.getInterfaceAddresses();
-
-            for (InterfaceAddress inetAddress : addresses)
-
-                iAddr = inetAddress.getBroadcast();
-            return iAddr;
-
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public InetAddress getIpAddress() {
-        InetAddress inetAddress = null;
-        InetAddress myAddr = null;
-
-        try {
-            for (Enumeration<NetworkInterface> networkInterface = NetworkInterface
-                    .getNetworkInterfaces(); networkInterface.hasMoreElements(); ) {
-
-                NetworkInterface singleInterface = networkInterface.nextElement();
-
-                for (Enumeration<InetAddress> IpAddresses = singleInterface.getInetAddresses(); IpAddresses
-                        .hasMoreElements(); ) {
-                    inetAddress = IpAddresses.nextElement();
-
-                    if (!inetAddress.isLoopbackAddress() && (singleInterface.getDisplayName()
-                            .contains("wlan0") ||
-                            singleInterface.getDisplayName().contains("eth0") ||
-                            singleInterface.getDisplayName().contains("ap0"))) {
-
-                        myAddr = inetAddress;
-                    }
-                }
-            }
-
-        } catch (SocketException ex) {
-        }
-        return myAddr;
-    }
-
     private void hideSystemUI() {
         // If the Android version is lower than Jellybean, use this call to hide
         // the status bar.
@@ -536,7 +433,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         //udptest.setVisibility(View.VISIBLE);
         sessionsender.cancel(true);
         sessionreceiver.cancel(true);
-        connected = false;
         Toast.makeText(aContext, "Your connection timed out", Toast.LENGTH_LONG).show();
         executor.shutdownNow();
         mDecodeWorkQueue = new LinkedBlockingQueue<>();
@@ -550,6 +446,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
     }
 
     private void startUdpTasks() {
+        stopUdpTasks();
         sessionsender = new UdpSessionSender(hostAddress, aContext, Iadress);
         sessionsender.executeOnExecutor(executor);
         sessionreceiver = new UdpSessionReceiver(hostAddress, aContext, Iadress);
@@ -558,22 +455,11 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
 
     private void stopUdpTasks() {
         if (sessionsender != null) {
-            sessionsender.cancel(true);
+            sessionsender.cancel(false);
         }
         if (sessionreceiver != null) {
-            sessionreceiver.cancel(true);
+            sessionreceiver.cancel(false);
         }
-    }
-
-    // Interface for starting threads for sending and receiving data
-    @Override
-    public void onUdpConnected(InetAddress hostAddress) {
-        Toast.makeText(getApplicationContext(), "Connected to BeamNG.drive", Toast.LENGTH_SHORT).show();
-        initListeners();
-        ringProgressDialog.dismiss();
-        this.hostAddress = hostAddress;
-        connected = true;
-        startUdpTasks();
     }
 
     public class UdpSessionSender extends AsyncTask<String, String, String> {
