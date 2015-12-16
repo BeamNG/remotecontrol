@@ -134,6 +134,7 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    private InetAddress hostAddress;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -359,14 +360,16 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         super.onPause();
         // unregister sensor listeners to prevent the activity from draining the device's battery.
         mSensorManager.unregisterListener(this);
+        stopUdpTasks();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // restore the sensor listeners when user resumes the application.
-        // should be altered, when "Connecting..."-screen is implemented
         initListeners();
+        if (connected) {
+            startUdpTasks();
+        }
     }
 
     @Override
@@ -546,30 +549,38 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 mDecodeWorkQueue);
     }
 
-    // Interface for starting threads for sending and receiving data
-    @Override
-    public void onUdpConnected(InetAddress hostAddress) {
-        Toast.makeText(getApplicationContext(), "Connected to BeamNG.drive", Toast.LENGTH_LONG).show();
-        initListeners();
-        ringProgressDialog.dismiss();
-        //udptest.setVisibility(View.GONE);
+    private void startUdpTasks() {
         sessionsender = new UdpSessionSender(hostAddress, aContext, Iadress);
         sessionsender.executeOnExecutor(executor);
         sessionreceiver = new UdpSessionReceiver(hostAddress, aContext, Iadress);
         sessionreceiver.executeOnExecutor(executor);
-        connected = true;
     }
 
-    //udp sender thread
+    private void stopUdpTasks() {
+        if (sessionsender != null) {
+            sessionsender.cancel(true);
+        }
+        if (sessionreceiver != null) {
+            sessionreceiver.cancel(true);
+        }
+    }
+
+    // Interface for starting threads for sending and receiving data
+    @Override
+    public void onUdpConnected(InetAddress hostAddress) {
+        Toast.makeText(getApplicationContext(), "Connected to BeamNG.drive", Toast.LENGTH_SHORT).show();
+        initListeners();
+        ringProgressDialog.dismiss();
+        this.hostAddress = hostAddress;
+        connected = true;
+        startUdpTasks();
+    }
+
     public class UdpSessionSender extends AsyncTask<String, String, String> {
-        DatagramPacket packets;
         final int PORT = 4444;
         InetAddress receiverAddress;
-        DatagramSocket socketS;
         Activity aContext;
-        Boolean bKeepRunning = true;
         String myIadr;
-        Sendpacket sendpacket = new Sendpacket();
 
         public UdpSessionSender(InetAddress iadrSend, Activity activityContext, String myiadrr) {
             this.receiverAddress = iadrSend;
@@ -578,68 +589,49 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         }
 
         @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            bKeepRunning = false;
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    socketS.disconnect();
-                    socketS.close();
-                }
-            }, 200);
-        }
-
-        @Override
         protected String doInBackground(String... arg0) {
             Log.i("UdpClient", "started");
-            while (bKeepRunning) {
+            try {
+                DatagramSocket socket = new DatagramSocket();
                 try {
-                    Thread.sleep(sendingTimeout);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                    Sendpacket sendpacket = new Sendpacket();
+                    while (!isCancelled()) {
+                        try {
+                            Thread.sleep(sendingTimeout);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
 
-                float steeringAngle = Math.min(Math.max((angle / 1.5f * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f;
-                sendpacket.setSteeringAngle(
-                    steeringAngle
-                );
-                sendpacket.setThrottle(thrpushed);
-                sendpacket.setBreaks(brpushed);
-                if (isCancelled()) {
-                    bKeepRunning = false;
-                    continue;
-                }
+                        sendpacket.setSteeringAngle(Math.min(Math.max(
+                                (angle / 1.5f * orientationhandler) / 75, -0.5f
+                        ), 0.5f) + 0.5f);
+                        sendpacket.setThrottle(thrpushed);
+                        sendpacket.setBreaks(brpushed);
 
-                byte[] buffer = sendpacket.getSendingByteArray();
-                if (socketS == null) {
-                    try {
-                        socketS = new DatagramSocket();
-                    } catch (SocketException e) {
-                        e.printStackTrace();
+                        byte[] buffer = sendpacket.getSendingByteArray();
+                        socket.send(
+                                new DatagramPacket(buffer, buffer.length, receiverAddress, PORT)
+                        );
+                        // Log.i("UDP", "Package sent to " + receiverAddress + ":" + PORT);
                     }
-                }
-                try {
-                    packets = new DatagramPacket(buffer, buffer.length, receiverAddress, PORT);
-                    socketS.send(packets);
-                    //Log.i("UDP","Package Sent to " + receiverAddress + ":" + PORT);
-                } catch (Exception e) {
+                } catch (IOException e) {
                     e.printStackTrace();
+                } finally {
+                    socket.disconnect();
+                    socket.close();
                 }
+            } catch (SocketException e) {
+                e.printStackTrace();
             }
             return null;
         }
     }
 
-    //udp receiver thread
     public class UdpSessionReceiver extends AsyncTask<String, String, String> {
         DatagramPacket packetr;
         final int PORT = 4445;
         InetAddress receiveradress;
-        DatagramSocket socketR;
         Activity aContext;
-        boolean keepRunning = true;
         String myIadr;
         InetAddress hostAddress;
         String message;
@@ -664,56 +656,35 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
         protected String doInBackground(String... arg0) {
             Log.i("UdpServer", "started");
             Log.i("ReceiveSocketBinder", Iadress + ":" + PORT);
-            if (socketR == null) {
-                try {
-                    DatagramChannel channel = DatagramChannel.open();
-                    socketR = channel.socket();
-                    socketR.bind(new InetSocketAddress(Iadress, PORT));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
             try {
-                // infinite timeout
-                socketR.setSoTimeout(0);
-            } catch (SocketException e) {
-            }
-
-            byte[] buf = new byte[67];
-            packetr = new DatagramPacket(buf, buf.length);
-            while (keepRunning) {
+                DatagramChannel channel = DatagramChannel.open();
+                DatagramSocket socket = channel.socket();
+                socket.bind(new InetSocketAddress(Iadress, PORT));
+                socket.setSoTimeout(0); // infinite timeout
                 try {
-                    socketR.receive(packetr);
-                } catch (SocketTimeoutException e) {
-                    publishProgress("TIMEOUT");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (isCancelled()) {
-                    keepRunning = false;
-                    continue;
-                }
+                    byte[] buf = new byte[67];
+                    packetr = new DatagramPacket(buf, buf.length);
+                    while (!isCancelled()) {
+                        try {
+                            socket.receive(packetr);
+                        } catch (SocketTimeoutException e) {
+                            publishProgress("TIMEOUT");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-                packet = new Receivepacket(buf);
-                //Log.i("UDP SERVER","Received a packet");
-                publishProgress("");
+                        packet = new Receivepacket(buf);
+                        //Log.i("UDP SERVER","Received a packet");
+                        publishProgress("");
+                    }
+                } finally {
+                    socket.disconnect();
+                    socket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             return null;
-        }
-
-        @Override
-        protected void onCancelled() {
-            super.onCancelled();
-            keepRunning = false;
-            final Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    socketR.disconnect();
-                    socketR.close();
-                }
-            }, 200);
         }
 
         @Override
@@ -779,9 +750,6 @@ public class MainActivity extends Activity implements SensorEventListener, OnUdp
                 //KMH
                 //Log.i("User wants ","KMH");
             }
-
-            keepRunning = true;
-
         }
     }
 }
