@@ -69,8 +69,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         this.Iadr = iadrr;
 
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("...");
-        progressDialog.setTitle("Enter this code in BeamNG.drive when asked");
+        progressDialog.setMessage("Connecting to BeamNG.drive");
         progressDialog.setCancelable(true);
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -83,8 +82,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... args) {
         String securityCode = args[0];
-
-        progressDialog.setMessage(Html.fromHtml("<b><big>" + securityCode + "</big></b>"));
 
         sendString = "beamng|" + getDeviceName() + "|" + securityCode;
         Log.i("SendString: ", sendString);
