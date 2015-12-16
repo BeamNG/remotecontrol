@@ -35,8 +35,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     InetAddress hostadress;
     private final ProgressDialog progressDialog;
 
-
-
     public String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
@@ -46,7 +44,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             return capitalize(manufacturer) + " " + model;
         }
     }
-
 
     private String capitalize(String s) {
         if (s == null || s.length() == 0) {
@@ -59,8 +56,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             return Character.toUpperCase(first) + s.substring(1);
         }
     }
-
-
 
     public UdpExploreSender(InetAddress iadr, Activity activityContext, OnUdpConnected listener, String iadrr, Context ctx) {
         this.netadress = iadr;
@@ -87,23 +82,23 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         Log.i("SendString: ", sendString);
         byte[] buffer = (sendString).getBytes();
 
-        if(socketS == null) {
+        if (socketS == null) {
             try {
                 socketS = new DatagramSocket();
-            }catch (SocketException e) {
+            } catch (SocketException e) {
                 e.printStackTrace();
             }
         }
 
         //Log.i("ReceiveSocketBinder",Iadr + ":" + localPORT);
-        if(socketR == null) {
+        if (socketR == null) {
             try {
                 DatagramChannel channel = DatagramChannel.open();
                 socketR = channel.socket();
                 socketR.setReuseAddress(true);
                 socketR.bind(new InetSocketAddress(Iadr , localPORT));
                 socketR.setSoTimeout(250);
-            }catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
