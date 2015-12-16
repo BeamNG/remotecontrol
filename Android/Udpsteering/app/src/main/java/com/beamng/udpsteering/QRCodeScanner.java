@@ -32,14 +32,12 @@ public class QRCodeScanner extends Activity
     private ConnectivityManager connManager;
     private Context mContext;
     private UdpExploreSender exploreSender;
-    private ProgressDialog ringProgressDialog;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         mContext = getApplicationContext();
-        ringProgressDialog = new ProgressDialog(this);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
     }
@@ -67,6 +65,10 @@ public class QRCodeScanner extends Activity
     public void onPause() {
         super.onPause();
         mScannerView.stopCamera();           // Stop camera on pause
+        if (exploreSender != null) {
+            exploreSender.cancel(true);
+            exploreSender = null;
+        }
     }
 
     @Override
@@ -99,6 +101,7 @@ public class QRCodeScanner extends Activity
         InetAddress broadcastAddress = getBroadcastAddress(getIpAddress());
         Log.i("Broadcastaddress", broadcastAddress.getHostAddress());
 
+        assert(exploreSender == null);
         exploreSender = new UdpExploreSender(broadcastAddress, this, this, ip, this);
         exploreSender.execute(securityCode);
     }
@@ -152,9 +155,16 @@ public class QRCodeScanner extends Activity
 
     @Override
     public void onUdpConnected(InetAddress hostAddress) {
-        ringProgressDialog.dismiss();
         Intent intent = new Intent(this, MainActivity.class);
         ((RemoteControlApplication)getApplication()).setHostAddress(hostAddress);
         startActivity(intent);
+    }
+
+    @Override
+    public void onError(String message) {
+        if (message != null) {
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+        mScannerView.startCamera();
     }
 }
