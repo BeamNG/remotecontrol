@@ -186,7 +186,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 KEEP_ALIVE_TIME_UNIT,
                 mDecodeWorkQueue);
 
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mainLayout.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
         fuseTimer.scheduleAtFixedRate(new calculateFusedOrientationTask(),
