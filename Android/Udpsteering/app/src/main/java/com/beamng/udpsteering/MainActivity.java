@@ -458,7 +458,8 @@ public class MainActivity extends Activity implements SensorEventListener {
             sessionsender.cancel(false);
         }
         if (sessionreceiver != null) {
-            sessionreceiver.cancel(false);
+            // Notice that we are calling our own cancel method for the receiver:
+            sessionreceiver.cancel();
         }
     }
 
@@ -514,7 +515,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public class UdpSessionReceiver extends AsyncTask<String, String, String> {
-        DatagramPacket packetr;
         final int PORT = 4445;
         InetAddress receiveradress;
         Activity aContext;
@@ -531,11 +531,19 @@ public class MainActivity extends Activity implements SensorEventListener {
         private ObjectAnimator animation3;
         private ObjectAnimator animation4;
         private AnimatorSet animSet;
+        DatagramSocket socket;
 
         public UdpSessionReceiver(InetAddress iadrSend, Activity activityContext, String myiadrr) {
             this.receiveradress = iadrSend;
             this.aContext = activityContext;
             this.myIadr = myiadrr;
+        }
+
+        // We need or own cancel method because socket.receive is blocking and we therefore need
+        // to close the socket to quit doInBackground
+        public void cancel() {
+            super.cancel(false);
+            socket.close();
         }
 
         @Override
@@ -544,15 +552,14 @@ public class MainActivity extends Activity implements SensorEventListener {
             Log.i("ReceiveSocketBinder", Iadress + ":" + PORT);
             try {
                 DatagramChannel channel = DatagramChannel.open();
-                DatagramSocket socket = channel.socket();
+                socket = channel.socket();
                 socket.bind(new InetSocketAddress(Iadress, PORT));
                 socket.setSoTimeout(0); // infinite timeout
                 try {
                     byte[] buf = new byte[67];
-                    packetr = new DatagramPacket(buf, buf.length);
                     while (!isCancelled()) {
                         try {
-                            socket.receive(packetr);
+                            socket.receive(new DatagramPacket(buf, buf.length));
                         } catch (SocketTimeoutException e) {
                             publishProgress("TIMEOUT");
                         } catch (IOException e) {
@@ -570,6 +577,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             return null;
         }
 
