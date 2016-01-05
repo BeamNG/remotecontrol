@@ -1,8 +1,5 @@
 package com.beamng.udpsteering;
 
-
-import android.util.Log;
-
 import org.apache.commons.io.EndianUtils;
 
 import java.nio.ByteBuffer;

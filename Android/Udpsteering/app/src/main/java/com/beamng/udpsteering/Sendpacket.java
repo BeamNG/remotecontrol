@@ -2,8 +2,6 @@ package com.beamng.udpsteering;
 
 import android.util.Log;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.nio.ByteBuffer;
 
 public class Sendpacket {

@@ -15,7 +15,7 @@
         android:required="true" />
     <uses-feature
         android:name="android.hardware.sensor.magnetometer"
-        android:required="true" />
+        android:required="false" />
 
     <application
         android:name="com.beamng.udpsteering.RemoteControlApplication"
