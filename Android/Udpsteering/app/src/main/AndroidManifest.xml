@@ -13,9 +13,6 @@
     <uses-feature
         android:name="android.hardware.sensor.accelerometer"
         android:required="true" />
-    <uses-feature
-        android:name="android.hardware.sensor.magnetometer"
-        android:required="false" />
 
     <application
         android:name="com.beamng.udpsteering.RemoteControlApplication"

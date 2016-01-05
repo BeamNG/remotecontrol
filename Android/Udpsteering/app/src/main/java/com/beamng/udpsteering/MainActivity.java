@@ -36,13 +36,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.channels.DatagramChannel;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -89,18 +86,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Display display;
     int orientation;
     private int orientationhandler = 1;
-
-    // magnetic field vector
-    private float[] magnet = new float[3];
-
-    // accelerometer vector
-    private float[] accel = new float[3];
-
-    // orientation angles from accel and magnet
-    private float[] accMagOrientation = new float[3];
-
-    // accelerometer and magnetometer based rotation matrix
-    private float[] rotationMatrix = new float[9];
 
     //UI update interval
     public static final int TIME_CONSTANT = 50;
@@ -238,18 +223,18 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         switch (event.sensor.getType()) {
             case Sensor.TYPE_ACCELEROMETER:
-                // copy new accelerometer data into accel array and calculate orientation
-                System.arraycopy(event.values, 0, accel, 0, 3);
-                calculateAccMagOrientation();
+
+                angle = (float) (Math.asin(
+                    -event.values[1] / Math.sqrt(
+                        event.values[0] * event.values[0] +
+                        event.values[1] * event.values[1] +
+                        event.values[2] * event.values[2]
+                    )
+                ) * 180 / Math.PI);
 
                 rollingAverage = roll(rollingAverage, event.values[1]);
                 gravity = averageList(rollingAverage);
 
-                break;
-
-            case Sensor.TYPE_MAGNETIC_FIELD:
-                // copy new magnetometer data into magnet array
-                System.arraycopy(event.values, 0, magnet, 0, 3);
                 break;
 
             // Check for orientation-change sensor event
@@ -268,13 +253,6 @@ public class MainActivity extends Activity implements SensorEventListener {
                         break;
                 }
                 break;
-        }
-    }
-
-    // calculates orientation angles from accelerometer and magnetometer output
-    public void calculateAccMagOrientation() {
-        if (SensorManager.getRotationMatrix(rotationMatrix, null, accel, magnet)) {
-            SensorManager.getOrientation(rotationMatrix, accMagOrientation);
         }
     }
 
@@ -320,14 +298,10 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
-    // This function registers sensor listeners for the accelerometer, magnetometer
+    // This function registers sensor listeners for the accelerometer
     public void initListeners() {
         mSensorManager.registerListener(this,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_GAME);
-
-        mSensorManager.registerListener(this,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
                 SensorManager.SENSOR_DELAY_GAME);
 
         mSensorManager.registerListener(this,
@@ -336,9 +310,6 @@ public class MainActivity extends Activity implements SensorEventListener {
     }
 
     public void updateOrientationDisplay() {
-        //most accurate angle to be send via UDP
-        angle = (float) (accMagOrientation[1] * 180 / Math.PI);
-
         //angle damped via the average of the last 5 sensordata entries
         //with Boundaries -60 to +60°:
         //float uiAngle =Math.min(Math.max((float) (gravity * -7.9 * orientationhandler), -60f),60f);
