@@ -73,10 +73,10 @@ class PSReceivedData
         data.getBytes(&display2, range: NSMakeRange(76, 16));
     }
     var timer : UInt32 = 0;
-    var carName = [Byte](count: 4, repeatedValue: 0);
+    var carName = [UInt8](count: 4, repeatedValue: 0);
     var flags : UInt16 = 0;
-    var gear : Byte = 0;
-    var playerId : Byte = 0;
+    var gear : UInt8 = 0;
+    var playerId : UInt8 = 0;
     var speed : Float = 0.0;
     var rpm : Float = 0.0;
     var turbo : Float = 0.0;
@@ -89,8 +89,8 @@ class PSReceivedData
     var throttle : Float = 0.0;
     var brake : Float = 0.0;
     var clutch : Float = 0.0;
-    var display1 = [Byte](count: 16, repeatedValue: 0);
-    var display2 = [Byte](count: 16, repeatedValue: 0);
+    var display1 = [UInt8](count: 16, repeatedValue: 0);
+    var display2 = [UInt8](count: 16, repeatedValue: 0);
     //var id : Int = 0;
 }
 
@@ -114,31 +114,38 @@ class PSSession : AsyncUdpSocketDelegate
         self.onSessionBroken = sessionBrokenHandler;
         
         sendSocket = AsyncUdpSocket(delegate: self);
-        sendSocket.connectToHost(host, onPort: port, error: nil);
+        do {
+            try sendSocket.connectToHost(host, onPort: port)
+        } catch _ {
+        };
         
         var error : NSError? = nil;
         
         listenSocket = AsyncUdpSocket(delegate: self);
-        listenSocket.bindToPort(4445, error: &error);
+        do {
+            try listenSocket.bindToPort(4445)
+        } catch let error1 as NSError {
+            error = error1
+        };
         
         if(error != nil)
         {
-            println(error);
+            print(error);
         }
         
         listenSocket.receiveWithTimeout(-1, tag: 0);
     }
     deinit
     {
-        println("close!!!!");
+        print("close!!!!");
         listenSocket.close();
         sendSocket.close();
     }
     
     func sendCurrentData()
     {
-        var msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f", currentData.steer, currentData.acceleration, currentData.brake);
-        var data = msg.dataUsingEncoding(NSUTF8StringEncoding);
+        let msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f", currentData.steer, currentData.acceleration, currentData.brake);
+        let data = msg.dataUsingEncoding(NSUTF8StringEncoding);
         var mutData = NSMutableData();
         var nr = Int32(127);
         mutData.setData(data!);
@@ -152,8 +159,8 @@ class PSSession : AsyncUdpSocketDelegate
     
     func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)
     {
-        println("Did not receive!");
-        println(error);
+        print("Did not receive!");
+        print(error);
         //If receive timeout has been reached OR the connection has been actually broken, send a notification to given callback
         if(self.onSessionBroken != nil)
         {
@@ -165,7 +172,7 @@ class PSSession : AsyncUdpSocketDelegate
     
     func onUdpSocket(sock: AsyncUdpSocket!, didNotSendDataWithTag tag: Int, dueToError error: NSError!)
     {
-        println("Data not sent!\n\(error)");
+        print("Data not sent!\n\(error)");
         //Something went wrong! It is better to raise an error than trying to send again!
         if(self.onSessionBroken != nil)
         {
@@ -177,7 +184,7 @@ class PSSession : AsyncUdpSocketDelegate
     
     func onUdpSocket(sock: AsyncUdpSocket!, didReceiveData data: NSData!, withTag tag: Int, fromHost host: String!, port: UInt16) -> Bool
     {
-        println("PSSession: Received data!\n\t\(data)\nfrom: \(host):\(port)");
+        print("PSSession: Received data!\n\t\(data)\nfrom: \(host):\(port)");
         var paramID : Int8 = 0;
         var timer : UInt32 = 0;
         var recData : PSReceivedData = PSReceivedData();

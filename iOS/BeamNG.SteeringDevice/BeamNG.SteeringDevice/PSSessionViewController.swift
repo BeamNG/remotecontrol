@@ -147,7 +147,7 @@ class PSSessionViewController : UIViewController
         labelDist.textAlignment = NSTextAlignment.Center;
         hudView.addSubview(labelDist);
         
-        buttonAccelerate = UIButton.buttonWithType(UIButtonType.System) as UIButton;
+        buttonAccelerate = UIButton(type: UIButtonType.System) as UIButton;
         buttonAccelerate.frame = CGRectMake(0, 0, self.view.frame.height * 0.5, self.view.frame.width);
         buttonAccelerate.setTitle("", forState: UIControlState.Normal);
         buttonAccelerate.addTarget(self, action: "onButtonAccelerate0", forControlEvents: UIControlEvents.TouchDown);
@@ -155,7 +155,7 @@ class PSSessionViewController : UIViewController
         buttonAccelerate.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.0);
         self.view.addSubview(buttonAccelerate);
         
-        buttonBrake = UIButton.buttonWithType(UIButtonType.System) as UIButton;
+        buttonBrake = UIButton(type: UIButtonType.System) as UIButton;
         buttonBrake.frame = CGRectMake(self.view.frame.height * 0.5, 0, self.view.frame.height * 0.5, self.view.frame.width);
         buttonBrake.setTitle("", forState: UIControlState.Normal);
         buttonBrake.addTarget(self, action: "onButtonBrake0", forControlEvents: UIControlEvents.TouchDown);
@@ -163,9 +163,9 @@ class PSSessionViewController : UIViewController
         buttonBrake.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.0);
         self.view.addSubview(buttonBrake);
         
-        self.searching = PSSearching(self.onConnected);
+        self.searching = PSSearching(connectionHandler: self.onConnected);
         
-        self.connectionButton = UIButton.buttonWithType(UIButtonType.System) as UIButton;
+        self.connectionButton = UIButton(type: UIButtonType.System) as UIButton;
         self.connectionButton.setTitle("Connect", forState: UIControlState.Normal);
         self.connectionButton.addTarget(self, action: Selector("onButtonConnect"), forControlEvents: UIControlEvents.TouchUpInside);
         self.connectionButton.frame = CGRectMake(10.0, 10.0, 100, 100);
@@ -174,61 +174,62 @@ class PSSessionViewController : UIViewController
         cm = CMMotionManager();
         
         cm.deviceMotionUpdateInterval = 0.05;
-        cm.startDeviceMotionUpdatesUsingReferenceFrame(CMAttitudeReferenceFrameXArbitraryZVertical, toQueue: NSOperationQueue.mainQueue(), withHandler:
+        cm.startDeviceMotionUpdatesUsingReferenceFrame(CMAttitudeReferenceFrame.XArbitraryZVertical, toQueue: NSOperationQueue.mainQueue(), withHandler:
         
         {
-        (deviceMotion: CMDeviceMotion!, error: NSError!) in
+        (deviceMotion: CMDeviceMotion?, error: NSError?) in
         
-        
-            var gravity : PSVector = PSVector();
-            gravity.x = deviceMotion.gravity.x;
-            gravity.y = deviceMotion.gravity.y;
-            gravity.z = deviceMotion.gravity.z;
+            if var deviceMotion = deviceMotion {
+                var gravity : PSVector = PSVector();
+                gravity.x = deviceMotion.gravity.x;
+                gravity.y = deviceMotion.gravity.y;
+                gravity.z = deviceMotion.gravity.z;
+                
+                var upVec : PSVector = PSVector(x: 0, y: 1, z: 0);
             
-            var upVec : PSVector = PSVector(x: 0, y: 1, z: 0);
-        
-            var angle : Double = acos(gravity.dot(upVec));
-            if(self.interfaceOrientation == UIInterfaceOrientation.LandscapeLeft)
-            {
-                angle -= M_PI_2;
-                angle *= -1;
-                angle += M_PI_2;
-            }
-            var angleDeg : Double = angle * 180.0 / 3.145;
-            var translatedAngle : Double = angleDeg - 90.0;
-        
-            if(self.session != nil)
-            {
-                self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0;
-                self.session.sendCurrentData();
-            }
+                var angle : Double = acos(gravity.dot(upVec));
+                if(self.interfaceOrientation == UIInterfaceOrientation.LandscapeLeft)
+                {
+                    angle -= M_PI_2;
+                    angle *= -1;
+                    angle += M_PI_2;
+                }
+                var angleDeg : Double = angle * 180.0 / 3.145;
+                var translatedAngle : Double = angleDeg - 90.0;
             
-            var animDuration : Double = 0.07;
+                if(self.session != nil)
+                {
+                    self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0;
+                    self.session.sendCurrentData();
+                }
+                
+                var animDuration : Double = 0.07;
                 UIView.animateWithDuration(animDuration, animations: { () -> Void in
                     self.hudView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(CGFloat(-(angle - (90.0 / (180.0 / 3.145))))), CGAffineTransformMakeScale(1.0, 1.0));
                     
                     if(self.session != nil)
                     {
-                        self.speed.setProgress(CGFloat(self.session.carData.speed));
-                        self.rpm.setProgress(CGFloat(self.session.carData.rpm));
-                        self.labelSpeed.text = NSString(format: "%03d", Int(220.0 * self.session.carData.speed));
+                        self.speed.progress = CGFloat(self.session.carData.speed);
+                        self.rpm.progress = CGFloat(self.session.carData.rpm);
+                        self.labelSpeed.text = String(format: "%03d", Int(220.0 * self.session.carData.speed));
                         if(self.session.carData.gear == 0)
                         {
-                            self.labelGear.text = NSString(format: "N");
+                            self.labelGear.text = String(format: "N");
                         }
                         else if(self.session.carData.gear == 7)
                         {
-                            self.labelGear.text = NSString(format: "R");
+                            self.labelGear.text = String(format: "R");
                         }
                         else
                         {
-                            self.labelGear.text = NSString(format: "%01d", Int(self.session.carData.gear));
+                            self.labelGear.text = String(format: "%01d", Int(self.session.carData.gear));
                         }
-                        self.labelDist.text = NSString(format: "%06d", Int(self.session.carData.distance));
-                        self.fuel.setProgress(CGFloat(self.session.carData.fuel));
-                        self.temperature.setProgress(CGFloat(self.session.carData.temperature));
+                        self.labelDist.text = String(format: "%06d", Int(self.session.carData.distance));
+                        self.fuel.progress = CGFloat(self.session.carData.fuel);
+                        self.temperature.progress = CGFloat(self.session.carData.temperature);
                     }
                 });
+            }
         });
     }
     func onConnected(toHost: String, onPort: UInt16)
@@ -236,11 +237,11 @@ class PSSessionViewController : UIViewController
         if(self.session == nil)
         {
             self.connectionButton.hidden = true;
-            self.session = PSSession(host: toHost, port: onPort, self.onDisconnected);
+            self.session = PSSession(host: toHost, port: onPort, sessionBrokenHandler: self.onDisconnected);
         }
         else
         {
-            println("Tried to connect once more!");
+            print("Tried to connect once more!");
         }
     }
     func onDisconnected(error: NSError)
@@ -289,8 +290,8 @@ class PSSessionViewController : UIViewController
     override func shouldAutorotate() -> Bool {
         return true;
     }
-    override func supportedInterfaceOrientations() -> Int
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask
     {
-        return Int(UIInterfaceOrientationMask.Landscape.rawValue);
+        return UIInterfaceOrientationMask.Landscape;
     }
 }

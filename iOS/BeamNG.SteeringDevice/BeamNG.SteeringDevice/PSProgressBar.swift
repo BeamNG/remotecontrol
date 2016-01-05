@@ -15,11 +15,29 @@ class PSProgressBar : UIView
     var progressLayer : CAShapeLayer!;
     var progressLayer2 : CAShapeLayer!;
     
-    var progress : CGFloat = 0.0;
+    var _progress : CGFloat = 0.0;
+    var progress : CGFloat {
+        set(pr) {
+            self._progress = pr;
+            if(self._progress < 0.0)
+            {
+                self._progress = 0.0;
+            }
+            if(self._progress > 1.0)
+            {
+                self._progress = 1.0;
+            }
+            progressLayer.strokeEnd = self._progress;
+            progressLayer2.strokeEnd = self._progress + 0.01;
+        }
+        get {
+            return self._progress
+        }
+    }
     var angleBegin : CGFloat = 1.0;
     var angleEnd : CGFloat = 0.0;
     
-    required init(coder aDecoder: NSCoder)
+    required init?(coder aDecoder: NSCoder)
     {
         super.init(coder: aDecoder);
     }
@@ -31,7 +49,9 @@ class PSProgressBar : UIView
     {
         if let testVar = self.layer.sublayers
         {
-            self.layer.sublayers.removeAll(keepCapacity: true);
+            if var unwrapped = self.layer.sublayers {
+                unwrapped.removeAll(keepCapacity: true);
+            }
         }
         
         
@@ -64,20 +84,6 @@ class PSProgressBar : UIView
         
         self.layer.addSublayer(progressLayer);
         
-        setProgress(self.progress);
-    }
-    func setProgress(pr: CGFloat)
-    {
-        progress = pr;
-        if(progress < 0.0)
-        {
-            progress = 0.0;
-        }
-        if(progress > 1.0)
-        {
-            progress = 1.0;
-        }
-        progressLayer.strokeEnd = progress;
-        progressLayer2.strokeEnd = progress + 0.01;
+        self.progress = 0.0;
     }
 }

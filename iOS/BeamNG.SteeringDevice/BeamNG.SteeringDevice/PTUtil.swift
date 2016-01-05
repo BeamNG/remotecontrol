@@ -78,11 +78,14 @@ class PTUtil
         {
             let directories:[String] = dirs!;
             let dir = directories[0]; //documents directory
-            let path = dir.stringByAppendingPathComponent(filename);
-            //let text = "some text";
+            let path = (dir as NSString).stringByAppendingPathComponent(filename);
+            do {
+                //let text = "some text";
             
-            //writing
-            content.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding, error: nil);
+                //writing
+                try content.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
+            } catch _ {
+            };
             
             //reading
             //let text2 = String.stringWithContentsOfFile(path, encoding: NSUTF8StringEncoding, error: nil)
@@ -104,7 +107,7 @@ class PTUtil
         {
             let directories:[String] = dirs!;
             let dir = directories[0]; //documents directory
-            let path = dir.stringByAppendingPathComponent(filename);
+            let path = (dir as NSString).stringByAppendingPathComponent(filename);
             //let text = "some text";
             
             //writing
@@ -112,9 +115,9 @@ class PTUtil
             
             //reading
             //let text2 = String.stringWithContentsOfFile(path, encoding: NSUTF8StringEncoding, error: nil)
-            let text2 = NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding, error: nil);
+            let text2 = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding);
             //let text2 = String.stringWithContentsOfFile(path, encoding: NSUTF8StringEncoding, error: nil)
-            return text2;
+            return text2 as? String;
             //println(text2);
         }
         return nil;
