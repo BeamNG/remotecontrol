@@ -46,7 +46,7 @@ class PSSessionViewController : UIViewController
         
         hudImage = UIImage(named: "hud_single_nocolor")!;
         //hudImage = UIImage(named: "text_tester")!;
-        var sizeRatio : CGFloat = hudImage.size.height / hudImage.size.width;
+        let sizeRatio : CGFloat = hudImage.size.height / hudImage.size.width;
         var imgWidth : CGFloat = 500.0;
         var imgHeight : CGFloat = imgWidth * sizeRatio;
         imgWidth = hudImage.size.width;
@@ -58,7 +58,7 @@ class PSSessionViewController : UIViewController
         hudImageView.image = hudImage;
         hudView.addSubview(hudImageView);
 
-        var wheelRadius : CGFloat = 100;
+        let wheelRadius : CGFloat = 100;
         steeringWheelLayer = CAShapeLayer();
         steeringWheelLayer.path = UIBezierPath(arcCenter: CGPointMake(0, 0), radius: wheelRadius, startAngle: 0, endAngle: 3.15 * 2.0, clockwise: true).CGPath;
         steeringWheelLayer.strokeColor = UIColor(red: 0, green: 0, blue: 0, alpha: 1).CGColor;
@@ -74,26 +74,26 @@ class PSSessionViewController : UIViewController
         steeringWheelView.layer.addSublayer(steeringWheelLayer);
         
         
-        var beginAngle : CGFloat = CGFloat(-M_PI - M_PI_4 * 0.5);
-        var endAngle : CGFloat = CGFloat(M_PI_4 * 0.5);
+        let beginAngle : CGFloat = CGFloat(-M_PI - M_PI_4 * 0.5);
+        let endAngle : CGFloat = CGFloat(M_PI_4 * 0.5);
         //beginAngle = 0.0;
         
         //width and height = radius * 2
         
         //Those percent values are relative to the size of the HUDImage
-        var percentSpeedRadius : CGFloat = 0.4520;
-        var percentSpeedWidth : CGFloat = 0.117;
+        let percentSpeedRadius : CGFloat = 0.4520;
+        let percentSpeedWidth : CGFloat = 0.117;
         
-        var percentRPMRadius : CGFloat = 0.7083;
-        var percentRPMWidth : CGFloat = 0.0777;
+        let percentRPMRadius : CGFloat = 0.7083;
+        let percentRPMWidth : CGFloat = 0.0777;
         
-        var percentFuelRadius : CGFloat = 0.904355;
-        var percentFuelWidth : CGFloat = 0.0796872;
+        let percentFuelRadius : CGFloat = 0.904355;
+        let percentFuelWidth : CGFloat = 0.0796872;
         
-        var percentTemperatureRadius : CGFloat = 0.901355;
-        var percentTemperatureWidth : CGFloat = 0.0786872;
+        let percentTemperatureRadius : CGFloat = 0.901355;
+        let percentTemperatureWidth : CGFloat = 0.0786872;
         
-        var percentMiddle : CGPoint = CGPointMake(0.5, 0.693);
+        let percentMiddle : CGPoint = CGPointMake(0.5, 0.693);
         
         speed = PSProgressBar(frame: CGRectMake(0, 0, percentSpeedRadius * imgWidth, percentSpeedRadius * imgWidth));
         speed.center = CGPointMake(hudView.frame.width * percentMiddle.x, hudView.frame.height * percentMiddle.y);
@@ -117,8 +117,8 @@ class PSSessionViewController : UIViewController
         
         hudView.bringSubviewToFront(hudImageView);
         
-        var percentageLabelWidth : CGFloat = 0.3;
-        var labelWidth : CGFloat = percentageLabelWidth * imgWidth;
+        let percentageLabelWidth : CGFloat = 0.3;
+        let labelWidth : CGFloat = percentageLabelWidth * imgWidth;
         
         labelSpeed = UILabel(frame: CGRectMake(0.5029 * imgWidth - labelWidth * 0.5, 0.641 * imgHeight - labelWidth * 0.5, labelWidth, labelWidth));
         //labelSpeed.backgroundColor = UIColor.redColor();
@@ -179,13 +179,13 @@ class PSSessionViewController : UIViewController
         {
         (deviceMotion: CMDeviceMotion?, error: NSError?) in
         
-            if var deviceMotion = deviceMotion {
-                var gravity : PSVector = PSVector();
+            if let deviceMotion = deviceMotion {
+                let gravity : PSVector = PSVector();
                 gravity.x = deviceMotion.gravity.x;
                 gravity.y = deviceMotion.gravity.y;
                 gravity.z = deviceMotion.gravity.z;
                 
-                var upVec : PSVector = PSVector(x: 0, y: 1, z: 0);
+                let upVec : PSVector = PSVector(x: 0, y: 1, z: 0);
             
                 var angle : Double = acos(gravity.dot(upVec));
                 if(self.interfaceOrientation == UIInterfaceOrientation.LandscapeLeft)
@@ -194,8 +194,8 @@ class PSSessionViewController : UIViewController
                     angle *= -1;
                     angle += M_PI_2;
                 }
-                var angleDeg : Double = angle * 180.0 / 3.145;
-                var translatedAngle : Double = angleDeg - 90.0;
+                let angleDeg : Double = angle * 180.0 / 3.145;
+                let translatedAngle : Double = angleDeg - 90.0;
             
                 if(self.session != nil)
                 {
@@ -203,7 +203,7 @@ class PSSessionViewController : UIViewController
                     self.session.sendCurrentData();
                 }
                 
-                var animDuration : Double = 0.07;
+                let animDuration : Double = 0.07;
                 UIView.animateWithDuration(animDuration, animations: { () -> Void in
                     self.hudView.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(CGFloat(-(angle - (90.0 / (180.0 / 3.145))))), CGAffineTransformMakeScale(1.0, 1.0));
                     
