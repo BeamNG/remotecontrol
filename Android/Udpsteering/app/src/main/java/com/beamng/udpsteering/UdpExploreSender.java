@@ -11,6 +11,7 @@ import android.util.Log;
 import android.text.Html;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -20,22 +21,15 @@ import java.util.Random;
 import java.nio.channels.DatagramChannel;
 
 public class UdpExploreSender extends AsyncTask<String, String, String> {
-    DatagramPacket packetS;
-    DatagramPacket packetR;
     String sendString;
     int hostPORT = 4444;
     int localPORT = hostPORT + 1;
     InetAddress netadress;
-    DatagramSocket socketS;
-    DatagramSocket socketR;
     Activity aContext;
-    Boolean bKeepRunning = true;
     private OnUdpConnected listener;
     String Iadr;
     InetAddress hostadress;
     private final ProgressDialog progressDialog;
-
-
 
     public String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
@@ -46,7 +40,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             return capitalize(manufacturer) + " " + model;
         }
     }
-
 
     private String capitalize(String s) {
         if (s == null || s.length() == 0) {
@@ -60,8 +53,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         }
     }
 
-
-
     public UdpExploreSender(InetAddress iadr, Activity activityContext, OnUdpConnected listener, String iadrr, Context ctx) {
         this.netadress = iadr;
         this.aContext = activityContext;
@@ -69,8 +60,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         this.Iadr = iadrr;
 
         progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("...");
-        progressDialog.setTitle("Enter this code in BeamNG.drive when asked");
+        progressDialog.setMessage("Connecting to BeamNG.drive");
         progressDialog.setCancelable(true);
         progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
@@ -84,74 +74,74 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     protected String doInBackground(String... args) {
         String securityCode = args[0];
 
-        progressDialog.setMessage(Html.fromHtml("<b><big>" + securityCode + "</big></b>"));
-
         sendString = "beamng|" + getDeviceName() + "|" + securityCode;
         Log.i("SendString: ", sendString);
         byte[] buffer = (sendString).getBytes();
 
-        if(socketS == null) {
-            try {
-                socketS = new DatagramSocket();
-            }catch (SocketException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Log.i("ReceiveSocketBinder",Iadr + ":" + localPORT);
-        if(socketR == null) {
-            try {
-                DatagramChannel channel = DatagramChannel.open();
-                socketR = channel.socket();
-                socketR.setReuseAddress(true);
-                socketR.bind(new InetSocketAddress(Iadr , localPORT));
-                socketR.setSoTimeout(250);
-            }catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        //Log.i("UDP","Sending String: "+ new String(buffer));
-        String waitingFor = "beamng|" + securityCode;
-        byte[] receive_buf = new byte[32];
+        DatagramSocket socketS = null;
+        DatagramChannel channel = null;
         try {
-            packetR = new DatagramPacket(receive_buf, receive_buf.length);
-            packetS = new DatagramPacket(buffer, buffer.length, netadress, hostPORT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            socketS = new DatagramSocket();
+            channel = DatagramChannel.open();
+            DatagramSocket socketR = channel.socket();
+            socketR.setReuseAddress(true);
+            socketR.bind(new InetSocketAddress(Iadr, localPORT));
+            socketR.setSoTimeout(250);
+            final String waitingFor = "beamng|" + securityCode;
+            byte[] receive_buf = new byte[32];
+            DatagramPacket packetR = new DatagramPacket(receive_buf, receive_buf.length);
+            DatagramPacket packetS = new DatagramPacket(buffer, buffer.length, netadress, hostPORT);
 
-        while (bKeepRunning){
-            try {
-                socketS.send(packetS);
-                socketR.receive(packetR);
-            }catch (IOException e) {
-                //e.printStackTrace();
+            int tries = 0;
+            while (!isCancelled()) {
                 try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    socketS.send(packetS);
+                    socketR.receive(packetR);
+                } catch (IOException e) {
+                    if (++tries > 10) {
+                        return "Connection timeout.";
+                    }
+                    //e.printStackTrace();
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e1) {
+                        break;
+                    }
+                    continue;
                 }
-                continue;
-            }
-            String message = new String(receive_buf, 0, packetR.getLength());
-            hostadress = packetR.getAddress();
+                String message = new String(receive_buf, 0, packetR.getLength());
+                hostadress = packetR.getAddress();
 
-            Log.i("UDP SERVER","Received: " + message + " IP " + packetR.getAddress().getHostAddress() + ":" + packetR.getPort() + " / waiting for: " + waitingFor);
-            if(message.equals(waitingFor)) {
-                publishProgress(message);
+                Log.i("UDP SERVER", "Received: " + message + " IP " +
+                      packetR.getAddress().getHostAddress() + ":" + packetR.getPort() +
+                      " / waiting for: " + waitingFor);
+                if (message.equals(waitingFor)) {
+                    publishProgress(message);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            return e.getLocalizedMessage();
+        } finally {
+            if (channel != null) {
+                try {
+                    channel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (socketS != null) {
+                socketS.close();
             }
         }
         return null;
     }
+
     @Override
     protected void onProgressUpdate(String... values) {
         super.onProgressUpdate(values);
-        bKeepRunning = false;
         listener.onUdpConnected(hostadress);
         cancel(true);
-        socketR.close();
-        progressDialog.dismiss();
     }
 
     @Override
@@ -160,12 +150,14 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     }
 
     @Override
+    protected void onPostExecute(String errorMessage) {
+        listener.onError(errorMessage);
+        progressDialog.dismiss();
+    }
+
+    @Override
     protected void onCancelled() {
-        super.onCancelled();
-        socketR.disconnect();
-        socketR.close();
-        socketS.close();
-        bKeepRunning=false;
+        listener.onError(null);
         progressDialog.dismiss();
     }
 }
