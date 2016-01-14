@@ -1,7 +1,15 @@
-remotecontrol
-=============
+BeamNG.drive Remote Control
+===========================
 
-Remote Control App for BeamNG.drive
+Remote Control app for the PC game [BeamNG.drive](http://beamng.com/).
+
+<a href="http://play.google.com/store/apps/details?id=com.beamng.udpsteering">
+    <img alt="Get it on Google Play"
+         src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+         height="40px" />
+</a>
+
+![Screenshot](action.png)
 
 ### Communication functionality ###
 
