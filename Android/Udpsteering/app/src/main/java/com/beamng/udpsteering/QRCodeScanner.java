@@ -29,15 +29,12 @@ public class QRCodeScanner extends Activity
         implements ZXingScannerView.ResultHandler, OnUdpConnected {
     private ZXingScannerView mScannerView;
     private WifiManager wifiManager;
-    private ConnectivityManager connManager;
-    private Context mContext;
     private UdpExploreSender exploreSender;
 
     @Override
     public void onCreate(Bundle state) {
         super.onCreate(state);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        mContext = getApplicationContext();
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
     }
@@ -83,27 +80,24 @@ public class QRCodeScanner extends Activity
 
         // Check for WiFi connectivity
         wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
-        connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-        if (mWifi == null || !mWifi.isConnected()) {
+        try {
+            int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
+            String ip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                    (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+
+            ((RemoteControlApplication) getApplication()).setIp(ip);
+
+            InetAddress broadcastAddress = getBroadcastAddress(getIpAddress());
+            Log.i("Broadcast Address", broadcastAddress.getHostAddress());
+
+            assert(exploreSender == null);
+            exploreSender = new UdpExploreSender(broadcastAddress, this, this, ip, this);
+            exploreSender.execute(securityCode);
+        } catch(RuntimeException e) {
             Toast.makeText(this, "You need to be connected to a WiFi network.", Toast.LENGTH_LONG).show();
             mScannerView.startCamera();
-            return;
         }
-
-        int ipAddress = wifiManager.getConnectionInfo().getIpAddress();
-        String ip = String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
-                (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
-
-        ((RemoteControlApplication)getApplication()).setIp(ip);
-
-        InetAddress broadcastAddress = getBroadcastAddress(getIpAddress());
-        Log.i("Broadcastaddress", broadcastAddress.getHostAddress());
-
-        assert(exploreSender == null);
-        exploreSender = new UdpExploreSender(broadcastAddress, this, this, ip, this);
-        exploreSender.execute(securityCode);
     }
 
     private InetAddress getBroadcastAddress(InetAddress inetAddr) {
@@ -125,8 +119,8 @@ public class QRCodeScanner extends Activity
     }
 
     public InetAddress getIpAddress() {
-        InetAddress inetAddress = null;
-        InetAddress myAddr = null;
+        InetAddress inetAddress;
+        InetAddress myAddress = null;
 
         try {
             for (Enumeration<NetworkInterface> networkInterface = NetworkInterface
@@ -143,14 +137,14 @@ public class QRCodeScanner extends Activity
                             singleInterface.getDisplayName().contains("eth0") ||
                             singleInterface.getDisplayName().contains("ap0"))) {
 
-                        myAddr = inetAddress;
+                        myAddress = inetAddress;
                     }
                 }
             }
 
         } catch (SocketException ex) {
         }
-        return myAddr;
+        return myAddress;
     }
 
     @Override
