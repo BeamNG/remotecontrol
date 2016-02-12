@@ -67,7 +67,7 @@ class PTUtil
     
     class func saveToDocuments(filename: String, content: String)->Bool
     {
-        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true) as? [String]
+        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true)
         
         /*for(var i = 0; i < dirs!.count; i++)
         {
@@ -96,7 +96,7 @@ class PTUtil
     }
     class func loadFromDocuments(filename: String)->String?
     {
-        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true) as? [String]
+        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true)
         
         /*for(var i = 0; i < dirs!.count; i++)
         {

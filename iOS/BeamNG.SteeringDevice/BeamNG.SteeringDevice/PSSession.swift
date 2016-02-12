@@ -38,10 +38,7 @@ class PSReceivedData
     func fromData(data: NSData)
     {
 //        var s : NSInputStream = NSInputStream(data: data);
-        
-        var a : UInt32 = 0;
-        var b : UInt32 = 0;
-        var c : UInt32 = 0;
+
         
 //        var buffer : [UInt8] = [UInt8](count: 64, repeatedValue: 0);
         
@@ -147,7 +144,6 @@ class PSSession : AsyncUdpSocketDelegate
         let msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f", currentData.steer, currentData.acceleration, currentData.brake);
         let data = msg.dataUsingEncoding(NSUTF8StringEncoding);
         var mutData = NSMutableData();
-        var nr = Int32(127);
         mutData.setData(data!);
         mutData = NSMutableData();
         mutData.appendBytes(&currentData.steer, length: 4);
@@ -157,7 +153,7 @@ class PSSession : AsyncUdpSocketDelegate
         sendSocket.sendData(mutData, withTimeout: -1, tag: 0);
     }
     
-    func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)
+    @objc func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)
     {
         print("Did not receive!");
         print(error);
@@ -170,7 +166,7 @@ class PSSession : AsyncUdpSocketDelegate
         }
     }
     
-    func onUdpSocket(sock: AsyncUdpSocket!, didNotSendDataWithTag tag: Int, dueToError error: NSError!)
+    @objc func onUdpSocket(sock: AsyncUdpSocket!, didNotSendDataWithTag tag: Int, dueToError error: NSError!)
     {
         print("Data not sent!\n\(error)");
         //Something went wrong! It is better to raise an error than trying to send again!
@@ -181,13 +177,11 @@ class PSSession : AsyncUdpSocketDelegate
             self.onSessionBroken(error);
         }
     }
-    
-    func onUdpSocket(sock: AsyncUdpSocket!, didReceiveData data: NSData!, withTag tag: Int, fromHost host: String!, port: UInt16) -> Bool
+
+    @objc func onUdpSocket(sock: AsyncUdpSocket!, didReceiveData data: NSData!, withTag tag: Int, fromHost host: String!, port: UInt16) -> Bool
     {
         print("PSSession: Received data!\n\t\(data)\nfrom: \(host):\(port)");
-        var paramID : Int8 = 0;
-        var timer : UInt32 = 0;
-        var recData : PSReceivedData = PSReceivedData();
+        let recData : PSReceivedData = PSReceivedData();
         
         recData.fromData(data);
         
@@ -204,11 +198,11 @@ class PSSession : AsyncUdpSocketDelegate
         return true;
     }
     
-    func onUdpSocket(sock: AsyncUdpSocket!, didSendDataWithTag tag: Int)
+    @objc func onUdpSocket(sock: AsyncUdpSocket!, didSendDataWithTag tag: Int)
     {
     }
-    
-    func onUdpSocketDidClose(sock: AsyncUdpSocket!)
+
+    @objc func onUdpSocketDidClose(sock: AsyncUdpSocket!)
     {
     }
 }
