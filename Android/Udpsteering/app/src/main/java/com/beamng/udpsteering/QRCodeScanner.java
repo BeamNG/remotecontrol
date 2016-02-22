@@ -1,14 +1,10 @@
 package com.beamng.udpsteering;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,15 +17,15 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class QRCodeScanner extends Activity
-        implements ZXingScannerView.ResultHandler, OnUdpConnected {
+        implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private WifiManager wifiManager;
-    private UdpExploreSender exploreSender;
+    private UdpExploreSenderFragment exploreSenderFragment;
+    private ProgressDialogFragment progressDialogFragment;
 
     @Override
     public void onCreate(Bundle state) {
@@ -37,6 +33,19 @@ public class QRCodeScanner extends Activity
         getActionBar().setDisplayHomeAsUpEnabled(true);
         mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
         setContentView(mScannerView);                // Set the scanner view as the content view
+
+        // find the retained fragment on activity restarts
+        FragmentManager fm = getFragmentManager();
+        exploreSenderFragment = (UdpExploreSenderFragment) fm.findFragmentByTag("exploreSender");
+        if (exploreSenderFragment == null) {
+            exploreSenderFragment = new UdpExploreSenderFragment();
+            fm.beginTransaction().add(exploreSenderFragment, "exploreSender").commit();
+        }
+        progressDialogFragment = (ProgressDialogFragment) fm.findFragmentByTag("progressDialog");
+        if (progressDialogFragment == null) {
+            progressDialogFragment = new ProgressDialogFragment();
+        }
+        progressDialogFragment.setListener(exploreSenderFragment);
     }
 
     @Override
@@ -55,17 +64,23 @@ public class QRCodeScanner extends Activity
     public void onResume() {
         super.onResume();
         mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
-        mScannerView.startCamera();          // Start camera on resume
+        mScannerView.startCamera(); // The camera needs to be started at least once ...
+        if (exploreSenderFragment.isRunning()) {
+            mScannerView.stopCamera(); // ... even if we stop it immediately
+        } else {
+            if (progressDialogFragment.isShowing()) {
+                progressDialogFragment.dismiss();
+            }
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mScannerView.stopCamera();           // Stop camera on pause
-        if (exploreSender != null) {
-            exploreSender.cancel(true);
-            exploreSender = null;
+        if (!isChangingConfigurations()) {
+            exploreSenderFragment.cancelTask();
         }
+        mScannerView.stopCamera(); // Stop camera on pause
     }
 
     @Override
@@ -91,9 +106,9 @@ public class QRCodeScanner extends Activity
             InetAddress broadcastAddress = getBroadcastAddress(getIpAddress());
             Log.i("Broadcast Address", broadcastAddress.getHostAddress());
 
-            assert(exploreSender == null);
-            exploreSender = new UdpExploreSender(broadcastAddress, this, this, ip, this);
-            exploreSender.execute(securityCode);
+            exploreSenderFragment.execute(broadcastAddress, this, ip, securityCode);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            progressDialogFragment.show(ft, "progressDialog");
         } catch(RuntimeException e) {
             Toast.makeText(this, "You need to be connected to a WiFi network.", Toast.LENGTH_LONG).show();
             mScannerView.startCamera();
@@ -147,18 +162,11 @@ public class QRCodeScanner extends Activity
         return myAddress;
     }
 
-    @Override
-    public void onUdpConnected(InetAddress hostAddress) {
-        Intent intent = new Intent(this, MainActivity.class);
-        ((RemoteControlApplication)getApplication()).setHostAddress(hostAddress);
-        startActivity(intent);
-    }
-
-    @Override
     public void onError(String message) {
         if (message != null) {
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
+        progressDialogFragment.dismiss();
         mScannerView.startCamera();
     }
 }

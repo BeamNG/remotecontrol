@@ -1,23 +1,15 @@
 package com.beamng.udpsteering;
 
-
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.text.Html;
 
 import java.io.IOException;
-import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
-import java.util.Random;
 import java.nio.channels.DatagramChannel;
 
 public class UdpExploreSender extends AsyncTask<String, String, String> {
@@ -25,11 +17,9 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     int hostPORT = 4444;
     int localPORT = hostPORT + 1;
     InetAddress netadress;
-    Activity aContext;
     private OnUdpConnected listener;
     String Iadr;
     InetAddress hostadress;
-    private final ProgressDialog progressDialog;
 
     public String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
@@ -53,21 +43,10 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         }
     }
 
-    public UdpExploreSender(InetAddress iadr, Activity activityContext, OnUdpConnected listener, String iadrr, Context ctx) {
+    public UdpExploreSender(InetAddress iadr, OnUdpConnected listener, String iadrr, Context ctx) {
         this.netadress = iadr;
-        this.aContext = activityContext;
         this.listener = listener;
         this.Iadr = iadrr;
-
-        progressDialog = new ProgressDialog(ctx);
-        progressDialog.setMessage("Connecting to BeamNG.drive");
-        progressDialog.setCancelable(true);
-        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                cancel(true);
-            }
-            });
     }
 
     @Override
@@ -145,20 +124,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPreExecute() {
-        progressDialog.show();
-    }
-
-    @Override
     protected void onPostExecute(String errorMessage) {
         listener.onError(errorMessage);
-        progressDialog.dismiss();
-    }
-
-    @Override
-    protected void onCancelled() {
-        listener.onError(null);
-        progressDialog.dismiss();
     }
 }
-
