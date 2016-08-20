@@ -63,8 +63,6 @@ public class QRCodeScanner extends Activity
     @Override
     public void onResume() {
         super.onResume();
-        mScannerView = new ZXingScannerView(this);
-        setContentView(mScannerView);
 
         mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
         mScannerView.startCamera(); // The camera needs to be started at least once ...
