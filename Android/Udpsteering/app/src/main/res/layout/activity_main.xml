@@ -145,9 +145,10 @@
         android:src="@drawable/icons_headlight_aktiv"
         android:scaleType="centerInside"
         android:id="@+id/light_headlight"
-        android:layout_centerInParent="true"
         android:visibility="invisible"
-        />
+        android:layout_alignTop="@+id/speedometer"
+        android:layout_alignRight="@+id/speedometer"
+        android:layout_alignEnd="@+id/speedometer" />
 
     <ImageView
         android:layout_width="wrap_content"

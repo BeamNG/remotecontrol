@@ -562,12 +562,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                 return;
             }
 
-            int newSpeed = Math.round(3.6f * packet.getSpeed());
+            int newSpeed = Math.round(1.25f * packet.getSpeed());
             //Log.i("Speed ", "set to: " + packet.getSpeed());
             animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, newSpeed);
             oldSpeed = newSpeed;
 
-            int newRPM = Math.round(0.01f * packet.getRPM());
+            int newRPM = Math.round(0.0155f * packet.getRPM());
             //Log.i("RPM ", "set to: " + packet.getRPM());
             animation2 = ObjectAnimator.ofInt(pbRspeed, "progress", oldRPM, newRPM);
             oldRPM = newRPM;
@@ -588,7 +588,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             animSet.setDuration(500);
             animSet.start();
 
-            textSpeed.setText(String.format("%03d", Math.round(3.6f * packet.getSpeed())));
+            textSpeed.setText(String.format("%03d", Math.round(2.24f * packet.getSpeed())));
 
             textGear.setText(packet.getGear());
             textOdo.setText(String.format("%06d", packet.getOdometer()));
@@ -597,6 +597,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
             for (int i = 0; i < 11; i++) {
                 //Check if we have a View for that Flag
+
                 if (lightViews[i] != null) {
                     if (lightsarray[i]) {
                         if (lightViews[i].getVisibility() == View.INVISIBLE) {
