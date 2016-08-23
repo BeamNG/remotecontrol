@@ -80,6 +80,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private TextView textSpeed;
     private TextView textGear;
     private TextView textOdo;
+    private TextView textDelay;
     private ImageView[] lightViews;
 
     //Orientationhandling
@@ -93,6 +94,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Timer fuseTimer = new Timer();
 
     public static String id = "";
+
+    private Long lpTime, timeDiff, oldDiff;
+    private int pID = 1, lastID = 0;
 
     //Multithreading
     private ThreadPoolExecutor executor;
@@ -132,6 +136,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         textSpeed = (TextView) findViewById(R.id.Textspeed);
         textGear = (TextView) findViewById(R.id.Textgear);
         textOdo = (TextView) findViewById(R.id.Textodo);
+        textDelay = (TextView) findViewById(R.id.Textdelay);
 
         //HUD-Lights in the order of given structure in Receivepacket.java
         lightViews = new ImageView[11];
@@ -151,7 +156,8 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         orientation = display.getRotation();
-
+        lpTime = System.currentTimeMillis();
+        timeDiff = 0l;
         //Multi-Thread-executor:
         // A queue of Runnables
         // instantiate the queue of Runnables as a LinkedBlockingQueue
@@ -465,6 +471,13 @@ public class MainActivity extends Activity implements SensorEventListener {
                         ), 0.5f) + 0.5f);
                         sendpacket.setThrottle(thrpushed);
                         sendpacket.setBreaks(brpushed);
+                        sendpacket.setID(pID);
+
+                        //set packet sent time
+                        if (lastID != pID) {
+                            lastID = pID;
+                            lpTime = System.currentTimeMillis();
+                        }
 
                         byte[] buffer = sendpacket.getSendingByteArray();
                         socket.send(
@@ -527,7 +540,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 socket.bind(new InetSocketAddress(Iadress, PORT));
                 socket.setSoTimeout(0); // infinite timeout
                 try {
-                    byte[] buf = new byte[67];
+                    byte[] buf = new byte[100];
                     while (!isCancelled()) {
                         try {
                             socket.receive(new DatagramPacket(buf, buf.length));
@@ -552,14 +565,27 @@ public class MainActivity extends Activity implements SensorEventListener {
             return null;
         }
 
+
         @Override
         protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
 
             if (values != null && values[0].equals("TIMEOUT")) {
                 cancel(true);
                 connectionTimeout();
                 return;
+            }
+            //Log.i("packet ID ", "returned: " + packet.getID());
+
+            if (packet.getID() == pID) {
+                oldDiff = timeDiff;
+                timeDiff = System.currentTimeMillis()-lpTime;
+                float disDiff = (oldDiff+timeDiff)/2;
+                disDiff /= 2;
+                if (timeDiff != 0)
+                    textDelay.setText("Delay: "+disDiff+"ms");
+                pID++;
+                if(pID == 128)
+                    pID = 0;
             }
 
             int newSpeed = Math.round(1.25f * packet.getSpeed());

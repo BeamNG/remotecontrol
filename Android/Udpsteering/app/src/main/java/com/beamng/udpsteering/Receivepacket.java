@@ -17,6 +17,7 @@ public class Receivepacket {
     private float fuel;
     private int odometer;
     private short dashLights;
+    private int id;
     private boolean[] dasharray = new boolean[11];
     private short showLights;
     private final short FLAG_SHIFTLIGHT = 1;
@@ -54,9 +55,9 @@ public class Receivepacket {
     float          brake;           // 0 to 1                                       //52-55
     float          clutch;          // 0 to 1                                       //56-59
     char           display1[16];    // Usually Fuel                                 //60-75
-    char           display2[16];    // Usually Settings                             //76-80
-    int            id;              // optional - only if OutGauge ID is specified  //81-84
-    unsigned	   odometer;	    // distance driven in meters or miles (0-999999)//85-88
+    char           display2[16];    // Usually Settings                             //76-91
+    int            id;              // optional - only if OutGauge ID is specified  //92-95
+    unsigned	   odometer;	    // distance driven in meters or miles (0-999999)//96-99
     } outgauge_t;
     ,]]
 
@@ -106,6 +107,10 @@ public class Receivepacket {
         dashLights = EndianUtils.readSwappedShort(data, 40);
 
         showLights = EndianUtils.readSwappedShort(data, 44);
+
+        id = bb.get(92);
+
+
 
         //Integer.reverseBytes(odometer);
 
@@ -223,4 +228,6 @@ public class Receivepacket {
     }
 
     public int getOdometer() { return 500; }
+
+    public int getID() { return id; }
 }

@@ -229,6 +229,17 @@
         android:layout_centerInParent="true"
         />
 
+    <com.beamng.udpsteering.CustomTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Textdelay"
+        android:text="Delay: 80ms"
+        android:enabled="true"
+        android:gravity="left"
+        android:layout_alignTop="@+id/speedometer"
+        android:layout_toRightOf="@+id/progressBar"
+        android:layout_toEndOf="@+id/progressBar" />
+
 </RelativeLayout>
 
 
