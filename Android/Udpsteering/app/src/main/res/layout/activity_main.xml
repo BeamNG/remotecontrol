@@ -236,9 +236,9 @@
         android:text="Delay: 80ms"
         android:enabled="true"
         android:gravity="left"
-        android:layout_alignTop="@+id/speedometer"
-        android:layout_toRightOf="@+id/progressBar"
-        android:layout_toEndOf="@+id/progressBar" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/Textgear"
+        android:layout_alignStart="@+id/Textgear" />
 
 </RelativeLayout>
 
