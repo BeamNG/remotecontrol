@@ -3,5 +3,7 @@
 
     <string name="app_name">BeamNG.drive Remote Control</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="menu">menu</string>
+    <string name="unit">Unit</string>
 
 </resources>

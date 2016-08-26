@@ -43,10 +43,8 @@
     android:clipChildren="false"
     android:layout_centerVertical="true"
     android:clickable="false"
-    >
-
-
-
+    android:visibility="visible"
+    android:focusable="false">
 
 
     <ProgressBar
@@ -65,8 +63,7 @@
         android:scrollbarThumbHorizontal="@drawable/rectangle"
         />
 
-
-        <ProgressBar
+    <ProgressBar
             android:id="@+id/progressBar2"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="390dp"
@@ -181,7 +178,6 @@
         />
 
 
-
     <com.beamng.udpsteering.CustomTextView
         android:id="@+id/Textspeed"
         android:layout_width="wrap_content"
@@ -241,6 +237,74 @@
         android:layout_alignStart="@+id/Textgear" />
 
 </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1"
+        android:id="@+id/menu"
+        android:visibility="visible">
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:id="@+id/menuButton"
+            android:layout_alignParentRight="false"
+            android:layout_alignParentEnd="false"
+            android:src="@drawable/menu_icon"
+            android:background="@color/black"
+            android:clickable="true"
+            android:layout_alignStart="@+id/unitSwitch" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            android:id="@+id/menuItems">
+
+            <Switch
+                android:layout_width="93dp"
+                android:layout_height="wrap_content"
+                android:text="Unit"
+                android:id="@+id/unitSwitch"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textOn="KMH"
+                android:textOff="MPH"
+                android:clickable="true"
+                android:checked="false"
+                android:paddingStart="5dp"
+                android:background="@color/black"
+                android:thumb="@android:drawable/alert_light_frame"
+                android:track="@color/black"
+                android:visibility="visible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Sensitivity"
+                android:id="@+id/textView2" />
+
+            <SeekBar
+                android:layout_width="115dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/sensitivity"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:progress="50"
+                android:progressDrawable="@color/common_signin_btn_light_text_default"
+                android:thumb="@android:drawable/checkbox_off_background"
+                android:layout_alignParentBottom="true"
+                android:clickable="true" />
+        </LinearLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>

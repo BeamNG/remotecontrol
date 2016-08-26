@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -21,11 +22,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -70,6 +76,14 @@ public class MainActivity extends Activity implements SensorEventListener {
     private Button breaks;
     private float thrpushed;
     private float brpushed;
+
+    //menu items
+    private Switch unitToggle;
+    private int useKMH;
+    private SeekBar sensitivity;
+    private float sensitivitySetting;
+    private ImageButton menu;
+    private LinearLayout menuItems;
 
     //Views depending on communication
     private RelativeLayout mainLayout;
@@ -204,6 +218,48 @@ public class MainActivity extends Activity implements SensorEventListener {
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     brpushed = 0f;
+                }
+                return false;
+            }
+        });
+
+        unitToggle = (Switch) findViewById(R.id.unitSwitch);
+        unitToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    useKMH = 1;
+                } else {
+                   useKMH = 0;
+                }
+            }
+        });
+        sensitivity = (SeekBar) findViewById(R.id.sensitivity);
+        sensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
+                sensitivitySetting = progressValue/100f;
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        menuItems = (LinearLayout)  findViewById(R.id.menuItems);
+        menu = (ImageButton) findViewById(R.id.menuButton);
+        menu.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (menuItems.getVisibility() == View.INVISIBLE)
+                        menuItems.setVisibility(View.VISIBLE);
+                    else
+                        menuItems.setVisibility(View.INVISIBLE);
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+
                 }
                 return false;
             }
@@ -465,10 +521,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-
-                        sendpacket.setSteeringAngle(Math.min(Math.max(
-                                (angle / 1.5f * orientationhandler) / 75, -0.5f
-                        ), 0.5f) + 0.5f);
+                        //Log.i("Sensitivity", ": " + sensitivitySetting);
+                        sendpacket.setSteeringAngle(Math.min(Math.max((angle *sensitivitySetting * orientationhandler) / 75, -0.5f), 0.5f) + 0.5f);
                         sendpacket.setThrottle(thrpushed);
                         sendpacket.setBreaks(brpushed);
                         sendpacket.setID(pID);
@@ -590,9 +644,12 @@ public class MainActivity extends Activity implements SensorEventListener {
             }
             //convert m/s to mp/h
             int newSpeed = Math.round(2.23694f * packet.getSpeed());
+            if (useKMH == 1)
+                newSpeed =  Math.round(1.60934f*newSpeed);
             //Log.i("Speed ", "set to: " + packet.getSpeed());
-            animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, newSpeed);
-            oldSpeed = newSpeed;
+            int barSpeed = Math.round(newSpeed*0.56f);
+            animation1 = ObjectAnimator.ofInt(pbSpeed, "progress", oldSpeed, barSpeed);
+            oldSpeed = barSpeed;
 
             int newRPM = Math.round(0.0155f * packet.getRPM());
             //Log.i("RPM ", "set to: " + packet.getRPM());
@@ -615,7 +672,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             animSet.setDuration(500);
             animSet.start();
 
-            textSpeed.setText(String.format("%03d", Math.round(2.24f * packet.getSpeed())));
+            textSpeed.setText(String.format("%03d", newSpeed));
 
             textGear.setText(packet.getGear());
             textOdo.setText(String.format("%06d", packet.getOdometer()));
