@@ -114,7 +114,7 @@
         android:id="@+id/speedometer"
         android:layout_centerInParent="true"
 
-        />
+        android:visibility="visible" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -236,6 +236,20 @@
         android:layout_alignLeft="@+id/Textgear"
         android:layout_alignStart="@+id/Textgear" />
 
+    <com.beamng.udpsteering.CustomTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Textunit"
+        android:text="MPH"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:layout_centerInParent="true"
+        android:textAlignment="center"
+        android:typeface="normal"
+        android:paddingTop="25dp" />
+
 </RelativeLayout>
 
     <LinearLayout
@@ -261,11 +275,12 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="invisible"
-            android:id="@+id/menuItems">
+            android:visibility="visible"
+            android:id="@+id/menuItems"
+            android:weightSum="1">
 
             <Switch
-                android:layout_width="93dp"
+                android:layout_width="105dp"
                 android:layout_height="wrap_content"
                 android:text="Unit"
                 android:id="@+id/unitSwitch"
@@ -279,9 +294,13 @@
                 android:checked="false"
                 android:paddingStart="5dp"
                 android:background="@color/black"
-                android:thumb="@android:drawable/alert_light_frame"
+                android:thumb="@color/common_action_bar_splitter"
                 android:track="@color/black"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:showText="true"
+                android:switchTextAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+                android:singleLine="false"
+                android:layout_weight="0.05" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -303,6 +322,7 @@
                 android:thumb="@android:drawable/checkbox_off_background"
                 android:layout_alignParentBottom="true"
                 android:clickable="true" />
+
         </LinearLayout>
     </LinearLayout>
 

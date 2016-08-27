@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Layout;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -79,9 +80,9 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     //menu items
     private Switch unitToggle;
-    private int useKMH;
+    private int useKMH = 0;
     private SeekBar sensitivity;
-    private float sensitivitySetting;
+    private float sensitivitySetting = 0.5f;
     private ImageButton menu;
     private LinearLayout menuItems;
 
@@ -95,6 +96,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private TextView textGear;
     private TextView textOdo;
     private TextView textDelay;
+    private TextView textUnit;
     private ImageView[] lightViews;
 
     //Orientationhandling
@@ -125,6 +127,9 @@ public class MainActivity extends Activity implements SensorEventListener {
     private GoogleApiClient client;
     private InetAddress hostAddress;
 
+    public static final String prefsName = "UserSettings";
+
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
@@ -133,8 +138,20 @@ public class MainActivity extends Activity implements SensorEventListener {
         super.onWindowFocusChanged(hasFocus);
     }
 
+    protected void SaveSettings () {
+        // We need an Editor object to make preference changes.
+        // All objects are from android.context.Context
+        SharedPreferences settings = getSharedPreferences(prefsName, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("unit", useKMH);
+        editor.putFloat("sens", sensitivitySetting);
+        // Commit the edits!
+        editor.commit();
+
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Log.v("BeamNG", id);
@@ -151,6 +168,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         textGear = (TextView) findViewById(R.id.Textgear);
         textOdo = (TextView) findViewById(R.id.Textodo);
         textDelay = (TextView) findViewById(R.id.Textdelay);
+        textUnit = (TextView) findViewById(R.id.Textunit);
 
         //HUD-Lights in the order of given structure in Receivepacket.java
         lightViews = new ImageView[11];
@@ -224,20 +242,35 @@ public class MainActivity extends Activity implements SensorEventListener {
         });
 
         unitToggle = (Switch) findViewById(R.id.unitSwitch);
+        sensitivity = (SeekBar) findViewById(R.id.sensitivity);
+        // Restore options preferences
+        SharedPreferences settings = getSharedPreferences(prefsName, 0);
+        useKMH = settings.getInt("unit", 0);
+        sensitivitySetting = settings.getFloat("sens", 0.5f);
+        sensitivity.setProgress(Math.round(sensitivitySetting*100));
+        if (useKMH == 1) {
+            unitToggle.setChecked(true);
+            textUnit.setText("Km/h");
+        }
+
         unitToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     useKMH = 1;
+                    textUnit.setText("Km/h");
                 } else {
                    useKMH = 0;
+                    textUnit.setText("MPH");
                 }
+                SaveSettings();
             }
         });
-        sensitivity = (SeekBar) findViewById(R.id.sensitivity);
+
         sensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
                 sensitivitySetting = progressValue/100f;
+                SaveSettings();
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
