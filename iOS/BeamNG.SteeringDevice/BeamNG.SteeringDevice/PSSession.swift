@@ -13,6 +13,7 @@ class PSSteerData : NSObject
     var acceleration : Float = 0.0;
     var brake : Float = 0.0;
     var steer : Float = 0.0;
+    var id : Int = 1;
     override init()
     {
         super.init();
@@ -103,6 +104,9 @@ class PSSession : AsyncUdpSocketDelegate
     
     var receiveTimeout : CFTimeInterval = 10.0;
     
+    var finalHost : String = "";
+    var finalPort: UInt16 = 4445;
+    
     init(host: String, port: UInt16, sessionBrokenHandler: ((NSError)->(Void))!)
     {
         currentData = PSSteerData();
@@ -112,24 +116,27 @@ class PSSession : AsyncUdpSocketDelegate
         
         sendSocket = AsyncUdpSocket(delegate: self);
         do {
+            print(host+" : \(port)");
             try sendSocket.connectToHost(host, onPort: port)
+            //try sendSocket.bindToPort(port)
         } catch _ {
         };
         
         var error : NSError? = nil;
         
         listenSocket = AsyncUdpSocket(delegate: self);
-        do {
+        /*do {
             try listenSocket.bindToPort(4445)
         } catch let error1 as NSError {
             error = error1
-        };
+        };*/
         
         if(error != nil)
         {
             print(error);
         }
-        
+        finalHost = host;
+        finalPort = port;
         listenSocket.receiveWithTimeout(-1, tag: 0);
     }
     deinit
@@ -141,16 +148,18 @@ class PSSession : AsyncUdpSocketDelegate
     
     func sendCurrentData()
     {
-        let msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f", currentData.steer, currentData.acceleration, currentData.brake);
-        let data = msg.dataUsingEncoding(NSUTF8StringEncoding);
+        //let msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f id: %.1f", currentData.steer, currentData.acceleration, currentData.brake, currentData.id);
+        //let data = msg.dataUsingEncoding(NSUTF8StringEncoding);
         var mutData = NSMutableData();
-        mutData.setData(data!);
+        //mutData.setData(data!);
         mutData = NSMutableData();
         mutData.appendBytes(&currentData.steer, length: 4);
         mutData.appendBytes(&currentData.acceleration, length: 4);
         mutData.appendBytes(&currentData.brake, length: 4);
+        mutData.appendBytes(&currentData.id, length: 4);
+        //print("sending data");
+        sendSocket.sendData(mutData, toHost: finalHost, port: finalPort, withTimeout: -1, tag: 0);
         
-        sendSocket.sendData(mutData, withTimeout: -1, tag: 0);
     }
     
     @objc func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)

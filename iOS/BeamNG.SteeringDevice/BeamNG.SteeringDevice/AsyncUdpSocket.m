@@ -1709,7 +1709,7 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 	
 	[theSendQueue addObject:packet];
 	[self scheduleDequeueSend];
-	
+    
 	return YES;
 }
 

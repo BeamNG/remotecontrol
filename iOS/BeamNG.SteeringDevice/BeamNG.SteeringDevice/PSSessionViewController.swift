@@ -197,8 +197,10 @@ class PSSessionViewController : UIViewController
                 let angleDeg : Double = angle * 180.0 / 3.145;
                 let translatedAngle : Double = angleDeg - 90.0;
             
+                
                 if(self.session != nil)
                 {
+                    //print("are we null?");
                     self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0;
                     self.session.sendCurrentData();
                 }

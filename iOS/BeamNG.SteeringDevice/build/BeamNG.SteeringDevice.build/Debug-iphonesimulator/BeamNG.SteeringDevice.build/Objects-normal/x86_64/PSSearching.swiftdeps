@@ -1,0 +1,399 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "PSSearching"
+provides-nominal:
+- "C21BeamNG_SteeringDevice11PSSearching"
+provides-member:
+- ["C21BeamNG_SteeringDevice11PSSearching", ""]
+provides-dynamic-lookup:
+- "broadcast"
+- "socket"
+- "onUdpSocketDidClose"
+- "onConnectToHost"
+- "onUdpSocket"
+- "onUdpSocket"
+- "onUdpSocket"
+- "onUdpSocket"
+- "listenSocket"
+depends-top-level:
+- "AsyncUdpSocketDelegate"
+- !private "BooleanLiteralType"
+- !private "NSString"
+- "AsyncUdpSocket"
+- "Int"
+- "CFTimeInterval"
+- "NSError"
+- "Void"
+- !private "UnicodeScalarType"
+- "Bool"
+- "NSObject"
+- "PSSearching"
+- !private "UIDevice"
+- !private "PSNetUtil"
+- !private "StringLiteralType"
+- "UInt16"
+- !private "print"
+- !private "NSUTF8StringEncoding"
+- !private "!="
+- "String"
+- "NSData"
+- !private "=="
+depends-member:
+- !private ["PSs9AnyObject", "AsyncUdpSocket"]
+- !private ["PSs9AnyObject", "NSString"]
+- !private ["PSs9AnyObject", "NSUTF8StringEncoding"]
+- !private ["PSs9AnyObject", "PSNetUtil"]
+- !private ["PSs9AnyObject", "UIDevice"]
+- !private ["PSs9AnyObject", "bindToPort"]
+- ["PSs9AnyObject", "broadcast"]
+- !private ["PSs9AnyObject", "broadcastAddress"]
+- !private ["PSs9AnyObject", "containsString"]
+- !private ["PSs9AnyObject", "currentDevice"]
+- !private ["PSs9AnyObject", "dataUsingEncoding"]
+- !private ["PSs9AnyObject", "enableBroadcast"]
+- ["PSs9AnyObject", "init"]
+- ["PSs9AnyObject", "listenSocket"]
+- !private ["PSs9AnyObject", "localIPAddress"]
+- !private ["PSs9AnyObject", "name"]
+- ["PSs9AnyObject", "onConnectToHost"]
+- ["PSs9AnyObject", "onUdpSocket"]
+- ["PSs9AnyObject", "onUdpSocketDidClose"]
+- !private ["PSs9AnyObject", "print"]
+- !private ["PSs9AnyObject", "receiveWithTimeout"]
+- !private ["PSs9AnyObject", "sendData"]
+- ["PSs9AnyObject", "socket"]
+- ["PSs9AnyObject", ""]
+- !private ["CSo14AsyncUdpSocket", "bindToPort"]
+- !private ["CSo14AsyncUdpSocket", "enableBroadcast"]
+- !private ["CSo14AsyncUdpSocket", "init"]
+- !private ["CSo14AsyncUdpSocket", "receiveWithTimeout"]
+- !private ["CSo14AsyncUdpSocket", "sendData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "AsyncUdpSocket"]
+- !private ["PSo22AsyncUdpSocketDelegate", "NSString"]
+- !private ["PSo22AsyncUdpSocketDelegate", "NSUTF8StringEncoding"]
+- !private ["PSo22AsyncUdpSocketDelegate", "PSNetUtil"]
+- !private ["PSo22AsyncUdpSocketDelegate", "UIDevice"]
+- !private ["PSo22AsyncUdpSocketDelegate", "init"]
+- !private ["PSo22AsyncUdpSocketDelegate", "listenSocket"]
+- !private ["PSo22AsyncUdpSocketDelegate", "onConnectToHost"]
+- ["PSo22AsyncUdpSocketDelegate", "onUdpSocket"]
+- ["PSo22AsyncUdpSocketDelegate", "onUdpSocketDidClose"]
+- !private ["PSo22AsyncUdpSocketDelegate", "print"]
+- !private ["PSo22AsyncUdpSocketDelegate", "socket"]
+- ["PSo22AsyncUdpSocketDelegate", ""]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Sb", "deinit"]
+- !private ["PSs25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["PSs11BooleanType", "_getBuiltinLogicValue"]
+- !private ["PSs11CVarArgType", "AsyncUdpSocket"]
+- !private ["PSs11CVarArgType", "NSString"]
+- !private ["PSs11CVarArgType", "NSUTF8StringEncoding"]
+- !private ["PSs11CVarArgType", "PSNetUtil"]
+- !private ["PSs11CVarArgType", "UIDevice"]
+- !private ["PSs11CVarArgType", "bindToPort"]
+- ["PSs11CVarArgType", "broadcast"]
+- !private ["PSs11CVarArgType", "broadcastAddress"]
+- !private ["PSs11CVarArgType", "containsString"]
+- !private ["PSs11CVarArgType", "currentDevice"]
+- !private ["PSs11CVarArgType", "dataUsingEncoding"]
+- !private ["PSs11CVarArgType", "enableBroadcast"]
+- ["PSs11CVarArgType", "init"]
+- ["PSs11CVarArgType", "listenSocket"]
+- !private ["PSs11CVarArgType", "localIPAddress"]
+- !private ["PSs11CVarArgType", "name"]
+- ["PSs11CVarArgType", "onConnectToHost"]
+- ["PSs11CVarArgType", "onUdpSocket"]
+- ["PSs11CVarArgType", "onUdpSocketDidClose"]
+- !private ["PSs11CVarArgType", "print"]
+- !private ["PSs11CVarArgType", "receiveWithTimeout"]
+- !private ["PSs11CVarArgType", "sendData"]
+- ["PSs11CVarArgType", "socket"]
+- ["PSs11CVarArgType", ""]
+- !private ["VSs9Character", "deinit"]
+- !private ["PSs10Comparable", "init"]
+- !private ["PSs28CustomDebugStringConvertible", "init"]
+- !private ["PSs23CustomStringConvertible", "AsyncUdpSocket"]
+- !private ["PSs23CustomStringConvertible", "NSString"]
+- !private ["PSs23CustomStringConvertible", "NSUTF8StringEncoding"]
+- !private ["PSs23CustomStringConvertible", "PSNetUtil"]
+- !private ["PSs23CustomStringConvertible", "UIDevice"]
+- !private ["PSs23CustomStringConvertible", "_getBuiltinLogicValue"]
+- !private ["PSs23CustomStringConvertible", "bindToPort"]
+- ["PSs23CustomStringConvertible", "broadcast"]
+- !private ["PSs23CustomStringConvertible", "broadcastAddress"]
+- !private ["PSs23CustomStringConvertible", "containsString"]
+- !private ["PSs23CustomStringConvertible", "currentDevice"]
+- !private ["PSs23CustomStringConvertible", "dataUsingEncoding"]
+- !private ["PSs23CustomStringConvertible", "enableBroadcast"]
+- ["PSs23CustomStringConvertible", "init"]
+- ["PSs23CustomStringConvertible", "listenSocket"]
+- !private ["PSs23CustomStringConvertible", "localIPAddress"]
+- !private ["PSs23CustomStringConvertible", "name"]
+- ["PSs23CustomStringConvertible", "onConnectToHost"]
+- ["PSs23CustomStringConvertible", "onUdpSocket"]
+- ["PSs23CustomStringConvertible", "onUdpSocketDidClose"]
+- !private ["PSs23CustomStringConvertible", "print"]
+- !private ["PSs23CustomStringConvertible", "receiveWithTimeout"]
+- !private ["PSs23CustomStringConvertible", "sendData"]
+- ["PSs23CustomStringConvertible", "socket"]
+- ["PSs23CustomStringConvertible", ""]
+- !private ["Sd", "deinit"]
+- !private ["PSs9Equatable", "AsyncUdpSocket"]
+- !private ["PSs9Equatable", "NSString"]
+- !private ["PSs9Equatable", "NSUTF8StringEncoding"]
+- !private ["PSs9Equatable", "PSNetUtil"]
+- !private ["PSs9Equatable", "UIDevice"]
+- !private ["PSs9Equatable", "_getBuiltinLogicValue"]
+- !private ["PSs9Equatable", "bindToPort"]
+- ["PSs9Equatable", "broadcast"]
+- !private ["PSs9Equatable", "broadcastAddress"]
+- !private ["PSs9Equatable", "containsString"]
+- !private ["PSs9Equatable", "currentDevice"]
+- !private ["PSs9Equatable", "dataUsingEncoding"]
+- !private ["PSs9Equatable", "enableBroadcast"]
+- ["PSs9Equatable", "init"]
+- ["PSs9Equatable", "listenSocket"]
+- !private ["PSs9Equatable", "localIPAddress"]
+- !private ["PSs9Equatable", "name"]
+- ["PSs9Equatable", "onConnectToHost"]
+- ["PSs9Equatable", "onUdpSocket"]
+- ["PSs9Equatable", "onUdpSocketDidClose"]
+- !private ["PSs9Equatable", "print"]
+- !private ["PSs9Equatable", "receiveWithTimeout"]
+- !private ["PSs9Equatable", "sendData"]
+- ["PSs9Equatable", "socket"]
+- ["PSs9Equatable", ""]
+- !private ["PSs41ExtendedGraphemeClusterLiteralConvertible", "containsString"]
+- !private ["PSs41ExtendedGraphemeClusterLiteralConvertible", "dataUsingEncoding"]
+- !private ["PSs41ExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Sf", "deinit"]
+- !private ["PSs8Hashable", "AsyncUdpSocket"]
+- !private ["PSs8Hashable", "NSString"]
+- !private ["PSs8Hashable", "NSUTF8StringEncoding"]
+- !private ["PSs8Hashable", "PSNetUtil"]
+- !private ["PSs8Hashable", "UIDevice"]
+- !private ["PSs8Hashable", "_getBuiltinLogicValue"]
+- !private ["PSs8Hashable", "bindToPort"]
+- ["PSs8Hashable", "broadcast"]
+- !private ["PSs8Hashable", "broadcastAddress"]
+- !private ["PSs8Hashable", "containsString"]
+- !private ["PSs8Hashable", "currentDevice"]
+- !private ["PSs8Hashable", "dataUsingEncoding"]
+- !private ["PSs8Hashable", "enableBroadcast"]
+- ["PSs8Hashable", "init"]
+- ["PSs8Hashable", "listenSocket"]
+- !private ["PSs8Hashable", "localIPAddress"]
+- !private ["PSs8Hashable", "name"]
+- ["PSs8Hashable", "onConnectToHost"]
+- ["PSs8Hashable", "onUdpSocket"]
+- ["PSs8Hashable", "onUdpSocketDidClose"]
+- !private ["PSs8Hashable", "print"]
+- !private ["PSs8Hashable", "receiveWithTimeout"]
+- !private ["PSs8Hashable", "sendData"]
+- ["PSs8Hashable", "socket"]
+- ["PSs8Hashable", ""]
+- !private ["SQ", "deinit"]
+- !private ["Si", "deinit"]
+- !private ["VSs5Int16", "deinit"]
+- !private ["VSs5Int32", "deinit"]
+- !private ["VSs5Int64", "deinit"]
+- !private ["VSs4Int8", "deinit"]
+- !private ["PSs14MirrorPathType", "init"]
+- !private ["PSo8NSCoding", "containsString"]
+- !private ["PSo8NSCoding", "dataUsingEncoding"]
+- !private ["PSo8NSCoding", "init"]
+- !private ["PSo9NSCopying", "containsString"]
+- !private ["PSo9NSCopying", "dataUsingEncoding"]
+- !private ["PSo9NSCopying", "init"]
+- !private ["PSo16NSMutableCopying", "containsString"]
+- !private ["PSo16NSMutableCopying", "dataUsingEncoding"]
+- !private ["PSo16NSMutableCopying", "init"]
+- ["CSo8NSObject", "AsyncUdpSocket"]
+- ["CSo8NSObject", "Bool"]
+- ["CSo8NSObject", "CFTimeInterval"]
+- ["CSo8NSObject", "Int"]
+- ["CSo8NSObject", "NSData"]
+- ["CSo8NSObject", "NSError"]
+- !private ["CSo8NSObject", "NSString"]
+- !private ["CSo8NSObject", "NSUTF8StringEncoding"]
+- !private ["CSo8NSObject", "PSNetUtil"]
+- ["CSo8NSObject", "String"]
+- !private ["CSo8NSObject", "UIDevice"]
+- ["CSo8NSObject", "UInt16"]
+- ["CSo8NSObject", "Void"]
+- !private ["CSo8NSObject", "bindToPort"]
+- ["CSo8NSObject", "broadcast"]
+- !private ["CSo8NSObject", "broadcastAddress"]
+- !private ["CSo8NSObject", "containsString"]
+- !private ["CSo8NSObject", "currentDevice"]
+- !private ["CSo8NSObject", "dataUsingEncoding"]
+- !private ["CSo8NSObject", "deinit"]
+- !private ["CSo8NSObject", "enableBroadcast"]
+- ["CSo8NSObject", "init"]
+- ["CSo8NSObject", "listenSocket"]
+- !private ["CSo8NSObject", "localIPAddress"]
+- !private ["CSo8NSObject", "name"]
+- ["CSo8NSObject", "onConnectToHost"]
+- ["CSo8NSObject", "onUdpSocket"]
+- ["CSo8NSObject", "onUdpSocketDidClose"]
+- !private ["CSo8NSObject", "print"]
+- !private ["CSo8NSObject", "receiveWithTimeout"]
+- !private ["CSo8NSObject", "sendData"]
+- ["CSo8NSObject", "socket"]
+- ["CSo8NSObject", ""]
+- !private ["PSo16NSObjectProtocol", "AsyncUdpSocket"]
+- !private ["PSo16NSObjectProtocol", "NSString"]
+- !private ["PSo16NSObjectProtocol", "NSUTF8StringEncoding"]
+- !private ["PSo16NSObjectProtocol", "PSNetUtil"]
+- !private ["PSo16NSObjectProtocol", "UIDevice"]
+- !private ["PSo16NSObjectProtocol", "bindToPort"]
+- ["PSo16NSObjectProtocol", "broadcast"]
+- !private ["PSo16NSObjectProtocol", "broadcastAddress"]
+- !private ["PSo16NSObjectProtocol", "containsString"]
+- !private ["PSo16NSObjectProtocol", "currentDevice"]
+- !private ["PSo16NSObjectProtocol", "dataUsingEncoding"]
+- !private ["PSo16NSObjectProtocol", "enableBroadcast"]
+- ["PSo16NSObjectProtocol", "init"]
+- ["PSo16NSObjectProtocol", "listenSocket"]
+- !private ["PSo16NSObjectProtocol", "localIPAddress"]
+- !private ["PSo16NSObjectProtocol", "name"]
+- ["PSo16NSObjectProtocol", "onConnectToHost"]
+- ["PSo16NSObjectProtocol", "onUdpSocket"]
+- ["PSo16NSObjectProtocol", "onUdpSocketDidClose"]
+- !private ["PSo16NSObjectProtocol", "print"]
+- !private ["PSo16NSObjectProtocol", "receiveWithTimeout"]
+- !private ["PSo16NSObjectProtocol", "sendData"]
+- ["PSo16NSObjectProtocol", "socket"]
+- ["PSo16NSObjectProtocol", ""]
+- !private ["PSo14NSSecureCoding", "containsString"]
+- !private ["PSo14NSSecureCoding", "dataUsingEncoding"]
+- !private ["PSo14NSSecureCoding", "init"]
+- !private ["CSo8NSString", "containsString"]
+- !private ["CSo8NSString", "dataUsingEncoding"]
+- !private ["CSo8NSString", "deinit"]
+- !private ["CSo8NSString", "init"]
+- !private ["PSs16OutputStreamType", "init"]
+- !private ["CSo9PSNetUtil", "broadcastAddress"]
+- !private ["CSo9PSNetUtil", "localIPAddress"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "AsyncUdpSocket"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "Bool"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "CFTimeInterval"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "Int"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "NSData"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "NSError"]
+- !private ["C21BeamNG_SteeringDevice11PSSearching", "NSString"]
+- !private ["C21BeamNG_SteeringDevice11PSSearching", "NSUTF8StringEncoding"]
+- !private ["C21BeamNG_SteeringDevice11PSSearching", "PSNetUtil"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "String"]
+- !private ["C21BeamNG_SteeringDevice11PSSearching", "UIDevice"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "UInt16"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "Void"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "broadcast"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "deinit"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "init"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "listenSocket"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "onConnectToHost"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "onUdpSocket"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "onUdpSocketDidClose"]
+- !private ["C21BeamNG_SteeringDevice11PSSearching", "print"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "socket"]
+- !private ["PSs10Streamable", "init"]
+- !private ["SS", "init"]
+- !private ["PSs30StringInterpolationConvertible", "init"]
+- !private ["PSs24StringLiteralConvertible", "containsString"]
+- !private ["PSs24StringLiteralConvertible", "dataUsingEncoding"]
+- !private ["PSs24StringLiteralConvertible", "init"]
+- !private ["CSo8UIDevice", "currentDevice"]
+- !private ["CSo8UIDevice", "name"]
+- !private ["Su", "deinit"]
+- !private ["VSs6UInt16", "deinit"]
+- !private ["VSs6UInt32", "deinit"]
+- !private ["VSs6UInt64", "deinit"]
+- !private ["VSs5UInt8", "deinit"]
+- !private ["Sc", "deinit"]
+- !private ["PSs31UnicodeScalarLiteralConvertible", "containsString"]
+- !private ["PSs31UnicodeScalarLiteralConvertible", "dataUsingEncoding"]
+- !private ["PSs31UnicodeScalarLiteralConvertible", "init"]
+- !private ["PSs33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["PSs49_BuiltinExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["PSs32_BuiltinStringLiteralConvertible", "init"]
+- !private ["PSs37_BuiltinUTF16StringLiteralConvertible", "init"]
+- !private ["PSs39_BuiltinUnicodeScalarLiteralConvertible", "init"]
+- !private ["PSs16_CocoaStringType", "containsString"]
+- !private ["PSs16_CocoaStringType", "dataUsingEncoding"]
+- !private ["PSs16_CocoaStringType", "init"]
+- !private ["PSs21_ObjectiveCBridgeable", "_getBuiltinLogicValue"]
+- !private ["PSs21_ObjectiveCBridgeable", "init"]
+- !private ["PSs12_Reflectable", "_getBuiltinLogicValue"]
+- !private ["PSs12_Reflectable", "containsString"]
+- !private ["PSs12_Reflectable", "dataUsingEncoding"]
+- !private ["PSs12_Reflectable", "init"]
+depends-nominal:
+- "PSs9AnyObject"
+- !private "CSo14AsyncUdpSocket"
+- "PSo22AsyncUdpSocketDelegate"
+- !private "Sb"
+- !private "PSs25BooleanLiteralConvertible"
+- !private "PSs11BooleanType"
+- "PSs11CVarArgType"
+- !private "VSs9Character"
+- !private "PSs10Comparable"
+- !private "PSs28CustomDebugStringConvertible"
+- "PSs23CustomStringConvertible"
+- !private "Sd"
+- "PSs9Equatable"
+- !private "PSs41ExtendedGraphemeClusterLiteralConvertible"
+- !private "Sf"
+- "PSs8Hashable"
+- !private "SQ"
+- !private "Si"
+- !private "VSs5Int16"
+- !private "VSs5Int32"
+- !private "VSs5Int64"
+- !private "VSs4Int8"
+- !private "PSs14MirrorPathType"
+- !private "PSo8NSCoding"
+- !private "PSo9NSCopying"
+- !private "PSo16NSMutableCopying"
+- "CSo8NSObject"
+- "PSo16NSObjectProtocol"
+- !private "PSo14NSSecureCoding"
+- !private "CSo8NSString"
+- !private "PSs16OutputStreamType"
+- !private "CSo9PSNetUtil"
+- "C21BeamNG_SteeringDevice11PSSearching"
+- !private "PSs10Streamable"
+- !private "SS"
+- !private "PSs30StringInterpolationConvertible"
+- !private "PSs24StringLiteralConvertible"
+- !private "CSo8UIDevice"
+- !private "Su"
+- !private "VSs6UInt16"
+- !private "VSs6UInt32"
+- !private "VSs6UInt64"
+- !private "VSs5UInt8"
+- !private "Sc"
+- !private "PSs31UnicodeScalarLiteralConvertible"
+- !private "PSs33_BuiltinBooleanLiteralConvertible"
+- !private "PSs49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "PSs32_BuiltinStringLiteralConvertible"
+- !private "PSs37_BuiltinUTF16StringLiteralConvertible"
+- !private "PSs39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "PSs16_CocoaStringType"
+- !private "PSs21_ObjectiveCBridgeable"
+- !private "PSs12_Reflectable"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Swift.swiftmodule"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/BeamNG.SteeringDevice-Bridging-Header.h"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/AsyncUdpSocket.h"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreGraphics.swiftmodule"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSNetUtil.h"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSQuat.h"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/UIKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreImage.swiftmodule"
+interface-hash: "ba051a92bc56a64a66ab1dbdf90419f9"

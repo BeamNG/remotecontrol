@@ -1,0 +1,10 @@
+version: "Apple Swift version 2.2 (swiftlang-703.0.18.8 clang-703.0.31)"
+options: "a5d4a32376b70ea00be2cbb314894626"
+build_time: [526041498, 794399000]
+inputs:
+  "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PTUtil.swift": [525941021, 0]
+  "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSSession.swift": [526041498, 0]
+  "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSSessionViewController.swift": [526040322, 0]
+  "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSProgressBar.swift": [525941021, 0]
+  "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSSearching.swift": [526039633, 0]
+  "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/AppDelegate.swift": [525941021, 0]

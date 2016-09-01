@@ -16,6 +16,8 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
     
     var onConnectToHost : ((String, UInt16)->(Void))! = nil;
     
+    var code : Int = 232664;
+    
     override init()
     {
         super.init();
@@ -26,7 +28,7 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
         };
         listenSocket = AsyncUdpSocket(delegate: self);
         do {
-            try listenSocket.bindToPort(4444)
+            try listenSocket.bindToPort(4445)
         } catch _ {
         };
         listenSocket.receiveWithTimeout(-1, tag: 0);
@@ -39,7 +41,7 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
     
     func broadcast(timeout : CFTimeInterval)
     {
-        let message : NSString = "beamng\(UIDevice.currentDevice().name)";
+        let message : NSString = "beamng|\(UIDevice.currentDevice().name)|\(code)";
         let data = message.dataUsingEncoding(NSUTF8StringEncoding);
         
         socket.sendData(data, toHost: PSNetUtil.broadcastAddress(), port: 4444, withTimeout: timeout, tag: 0);
@@ -68,10 +70,12 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
             return false;
         }
         
-        if(msg == "beamng")
+        if(msg == "beamng|\(code)")
         {
+            //print("Recieved Message...");
             if(onConnectToHost != nil)
             {
+                //print(host);
                 onConnectToHost(host, 4445);
             }
             print("Connecting people...");

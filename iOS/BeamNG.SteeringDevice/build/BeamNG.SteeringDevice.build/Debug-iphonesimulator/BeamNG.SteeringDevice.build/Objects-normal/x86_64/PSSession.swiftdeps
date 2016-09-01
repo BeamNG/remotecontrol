@@ -1,0 +1,547 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "PSSteerData"
+- "PSCarData"
+- "PSReceivedData"
+- "PSSession"
+provides-nominal:
+- "C21BeamNG_SteeringDevice11PSSteerData"
+- "C21BeamNG_SteeringDevice9PSCarData"
+- "C21BeamNG_SteeringDevice14PSReceivedData"
+- "C21BeamNG_SteeringDevice9PSSession"
+provides-member:
+- ["C21BeamNG_SteeringDevice11PSSteerData", ""]
+- ["C21BeamNG_SteeringDevice9PSCarData", ""]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", ""]
+- ["C21BeamNG_SteeringDevice9PSSession", ""]
+provides-dynamic-lookup:
+- "rpm"
+- "fuel"
+- "onUdpSocketDidClose"
+- "gear"
+- "onUdpSocket"
+- "onUdpSocket"
+- "onUdpSocket"
+- "onUdpSocket"
+- "brake"
+- "steer"
+- "distance"
+- "acceleration"
+- "speed"
+- "temperature"
+depends-top-level:
+- "Float"
+- "Int"
+- "PSSession"
+- !private "BooleanLiteralType"
+- !private "UnicodeScalarType"
+- "Void"
+- "UInt32"
+- "PSCarData"
+- "UInt16"
+- "NSError"
+- "CFTimeInterval"
+- !private "NSMutableData"
+- !private "print"
+- "UInt8"
+- !private "NSUTF8StringEncoding"
+- "AsyncUdpSocket"
+- !private "NSMakeRange"
+- "String"
+- "NSObject"
+- "NSData"
+- !private "!="
+- !private "StringLiteralType"
+- "PSSteerData"
+- "AsyncUdpSocketDelegate"
+- "PSReceivedData"
+- "Bool"
+- !private "NSString"
+depends-member:
+- !private ["PSs9AnyObject", "AsyncUdpSocket"]
+- !private ["PSs9AnyObject", "Int"]
+- !private ["PSs9AnyObject", "NSMakeRange"]
+- !private ["PSs9AnyObject", "NSMutableData"]
+- !private ["PSs9AnyObject", "NSString"]
+- !private ["PSs9AnyObject", "NSUTF8StringEncoding"]
+- !private ["PSs9AnyObject", "PSCarData"]
+- !private ["PSs9AnyObject", "PSReceivedData"]
+- !private ["PSs9AnyObject", "PSSteerData"]
+- ["PSs9AnyObject", "UInt8"]
+- ["PSs9AnyObject", "acceleration"]
+- !private ["PSs9AnyObject", "appendBytes"]
+- !private ["PSs9AnyObject", "bindToPort"]
+- ["PSs9AnyObject", "brake"]
+- !private ["PSs9AnyObject", "carData"]
+- !private ["PSs9AnyObject", "carName"]
+- !private ["PSs9AnyObject", "close"]
+- !private ["PSs9AnyObject", "clutch"]
+- !private ["PSs9AnyObject", "connectToHost"]
+- !private ["PSs9AnyObject", "currentData"]
+- !private ["PSs9AnyObject", "dashLights"]
+- !private ["PSs9AnyObject", "dataUsingEncoding"]
+- !private ["PSs9AnyObject", "display1"]
+- !private ["PSs9AnyObject", "display2"]
+- ["PSs9AnyObject", "distance"]
+- !private ["PSs9AnyObject", "engineTemperature"]
+- !private ["PSs9AnyObject", "flags"]
+- !private ["PSs9AnyObject", "fromData"]
+- ["PSs9AnyObject", "fuel"]
+- ["PSs9AnyObject", "gear"]
+- !private ["PSs9AnyObject", "getBytes"]
+- ["PSs9AnyObject", "init"]
+- !private ["PSs9AnyObject", "listenSocket"]
+- !private ["PSs9AnyObject", "oilPressure"]
+- !private ["PSs9AnyObject", "oilTemperature"]
+- !private ["PSs9AnyObject", "onSessionBroken"]
+- ["PSs9AnyObject", "onUdpSocket"]
+- ["PSs9AnyObject", "onUdpSocketDidClose"]
+- !private ["PSs9AnyObject", "playerId"]
+- !private ["PSs9AnyObject", "print"]
+- !private ["PSs9AnyObject", "receiveWithTimeout"]
+- ["PSs9AnyObject", "rpm"]
+- !private ["PSs9AnyObject", "sendData"]
+- !private ["PSs9AnyObject", "sendSocket"]
+- !private ["PSs9AnyObject", "setData"]
+- !private ["PSs9AnyObject", "setDelegate"]
+- !private ["PSs9AnyObject", "showLights"]
+- ["PSs9AnyObject", "speed"]
+- ["PSs9AnyObject", "steer"]
+- ["PSs9AnyObject", "temperature"]
+- !private ["PSs9AnyObject", "throttle"]
+- !private ["PSs9AnyObject", "timer"]
+- !private ["PSs9AnyObject", "turbo"]
+- ["PSs9AnyObject", ""]
+- ["Sa", "init"]
+- ["PSs23ArrayLiteralConvertible", "init"]
+- !private ["CSo14AsyncUdpSocket", "bindToPort"]
+- !private ["CSo14AsyncUdpSocket", "close"]
+- !private ["CSo14AsyncUdpSocket", "connectToHost"]
+- !private ["CSo14AsyncUdpSocket", "init"]
+- !private ["CSo14AsyncUdpSocket", "receiveWithTimeout"]
+- !private ["CSo14AsyncUdpSocket", "sendData"]
+- !private ["CSo14AsyncUdpSocket", "setDelegate"]
+- !private ["PSo22AsyncUdpSocketDelegate", "AsyncUdpSocket"]
+- !private ["PSo22AsyncUdpSocketDelegate", "Int"]
+- !private ["PSo22AsyncUdpSocketDelegate", "NSMutableData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "NSString"]
+- !private ["PSo22AsyncUdpSocketDelegate", "NSUTF8StringEncoding"]
+- !private ["PSo22AsyncUdpSocketDelegate", "PSCarData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "PSReceivedData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "PSSteerData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "carData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "currentData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "listenSocket"]
+- !private ["PSo22AsyncUdpSocketDelegate", "onSessionBroken"]
+- ["PSo22AsyncUdpSocketDelegate", "onUdpSocket"]
+- ["PSo22AsyncUdpSocketDelegate", "onUdpSocketDidClose"]
+- !private ["PSo22AsyncUdpSocketDelegate", "print"]
+- !private ["PSo22AsyncUdpSocketDelegate", "sendSocket"]
+- ["PSo22AsyncUdpSocketDelegate", ""]
+- !private ["PSs22BidirectionalIndexType", "init"]
+- !private ["PSs21BitwiseOperationsType", "init"]
+- !private ["Sb", "_getBuiltinLogicValue"]
+- !private ["Sb", "deinit"]
+- !private ["PSs25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["PSs11BooleanType", "_getBuiltinLogicValue"]
+- ["PSs11CVarArgType", "acceleration"]
+- !private ["PSs11CVarArgType", "appendBytes"]
+- !private ["PSs11CVarArgType", "bindToPort"]
+- ["PSs11CVarArgType", "brake"]
+- !private ["PSs11CVarArgType", "close"]
+- !private ["PSs11CVarArgType", "connectToHost"]
+- !private ["PSs11CVarArgType", "dataUsingEncoding"]
+- ["PSs11CVarArgType", "distance"]
+- ["PSs11CVarArgType", "fuel"]
+- ["PSs11CVarArgType", "gear"]
+- !private ["PSs11CVarArgType", "getBytes"]
+- ["PSs11CVarArgType", "init"]
+- !private ["PSs11CVarArgType", "receiveWithTimeout"]
+- ["PSs11CVarArgType", "rpm"]
+- !private ["PSs11CVarArgType", "sendData"]
+- !private ["PSs11CVarArgType", "setData"]
+- !private ["PSs11CVarArgType", "setDelegate"]
+- ["PSs11CVarArgType", "speed"]
+- ["PSs11CVarArgType", "steer"]
+- ["PSs11CVarArgType", "temperature"]
+- ["PSs11CVarArgType", ""]
+- !private ["VSs9Character", "deinit"]
+- ["PSs14CollectionType", "init"]
+- !private ["PSs10Comparable", "init"]
+- ["PSs28CustomDebugStringConvertible", "init"]
+- !private ["PSs23CustomStringConvertible", "_getBuiltinLogicValue"]
+- ["PSs23CustomStringConvertible", "acceleration"]
+- !private ["PSs23CustomStringConvertible", "appendBytes"]
+- !private ["PSs23CustomStringConvertible", "bindToPort"]
+- ["PSs23CustomStringConvertible", "brake"]
+- !private ["PSs23CustomStringConvertible", "close"]
+- !private ["PSs23CustomStringConvertible", "connectToHost"]
+- !private ["PSs23CustomStringConvertible", "dataUsingEncoding"]
+- ["PSs23CustomStringConvertible", "distance"]
+- ["PSs23CustomStringConvertible", "fuel"]
+- ["PSs23CustomStringConvertible", "gear"]
+- !private ["PSs23CustomStringConvertible", "getBytes"]
+- ["PSs23CustomStringConvertible", "init"]
+- !private ["PSs23CustomStringConvertible", "receiveWithTimeout"]
+- ["PSs23CustomStringConvertible", "rpm"]
+- !private ["PSs23CustomStringConvertible", "sendData"]
+- !private ["PSs23CustomStringConvertible", "setData"]
+- !private ["PSs23CustomStringConvertible", "setDelegate"]
+- ["PSs23CustomStringConvertible", "speed"]
+- ["PSs23CustomStringConvertible", "steer"]
+- ["PSs23CustomStringConvertible", "temperature"]
+- ["PSs23CustomStringConvertible", ""]
+- !private ["Sd", "deinit"]
+- !private ["PSs9Equatable", "_getBuiltinLogicValue"]
+- ["PSs9Equatable", "acceleration"]
+- !private ["PSs9Equatable", "appendBytes"]
+- !private ["PSs9Equatable", "bindToPort"]
+- ["PSs9Equatable", "brake"]
+- !private ["PSs9Equatable", "close"]
+- !private ["PSs9Equatable", "connectToHost"]
+- !private ["PSs9Equatable", "dataUsingEncoding"]
+- ["PSs9Equatable", "distance"]
+- ["PSs9Equatable", "fuel"]
+- ["PSs9Equatable", "gear"]
+- !private ["PSs9Equatable", "getBytes"]
+- ["PSs9Equatable", "init"]
+- !private ["PSs9Equatable", "receiveWithTimeout"]
+- ["PSs9Equatable", "rpm"]
+- !private ["PSs9Equatable", "sendData"]
+- !private ["PSs9Equatable", "setData"]
+- !private ["PSs9Equatable", "setDelegate"]
+- ["PSs9Equatable", "speed"]
+- ["PSs9Equatable", "steer"]
+- ["PSs9Equatable", "temperature"]
+- ["PSs9Equatable", ""]
+- !private ["PSs41ExtendedGraphemeClusterLiteralConvertible", "dataUsingEncoding"]
+- !private ["PSs41ExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["Sf", "deinit"]
+- !private ["PSs16ForwardIndexType", "init"]
+- !private ["PSs8Hashable", "_getBuiltinLogicValue"]
+- ["PSs8Hashable", "acceleration"]
+- !private ["PSs8Hashable", "appendBytes"]
+- !private ["PSs8Hashable", "bindToPort"]
+- ["PSs8Hashable", "brake"]
+- !private ["PSs8Hashable", "close"]
+- !private ["PSs8Hashable", "connectToHost"]
+- !private ["PSs8Hashable", "dataUsingEncoding"]
+- ["PSs8Hashable", "distance"]
+- ["PSs8Hashable", "fuel"]
+- ["PSs8Hashable", "gear"]
+- !private ["PSs8Hashable", "getBytes"]
+- ["PSs8Hashable", "init"]
+- !private ["PSs8Hashable", "receiveWithTimeout"]
+- ["PSs8Hashable", "rpm"]
+- !private ["PSs8Hashable", "sendData"]
+- !private ["PSs8Hashable", "setData"]
+- !private ["PSs8Hashable", "setDelegate"]
+- ["PSs8Hashable", "speed"]
+- ["PSs8Hashable", "steer"]
+- ["PSs8Hashable", "temperature"]
+- ["PSs8Hashable", ""]
+- !private ["SQ", "deinit"]
+- ["PSs9Indexable", "init"]
+- !private ["Si", "deinit"]
+- !private ["Si", "init"]
+- !private ["VSs5Int16", "deinit"]
+- !private ["VSs5Int32", "deinit"]
+- !private ["VSs5Int64", "deinit"]
+- !private ["VSs4Int8", "deinit"]
+- !private ["PSs21IntegerArithmeticType", "init"]
+- !private ["PSs25IntegerLiteralConvertible", "init"]
+- !private ["PSs11IntegerType", "init"]
+- !private ["PSs14MirrorPathType", "init"]
+- ["PSs21MutableCollectionType", "init"]
+- ["PSs16MutableIndexable", "init"]
+- ["PSs16MutableSliceable", "init"]
+- !private ["PSo8NSCoding", "appendBytes"]
+- !private ["PSo8NSCoding", "dataUsingEncoding"]
+- !private ["PSo8NSCoding", "getBytes"]
+- !private ["PSo8NSCoding", "init"]
+- !private ["PSo8NSCoding", "setData"]
+- !private ["PSo9NSCopying", "appendBytes"]
+- !private ["PSo9NSCopying", "dataUsingEncoding"]
+- !private ["PSo9NSCopying", "getBytes"]
+- !private ["PSo9NSCopying", "init"]
+- !private ["PSo9NSCopying", "setData"]
+- !private ["CSo6NSData", "appendBytes"]
+- !private ["CSo6NSData", "getBytes"]
+- !private ["CSo6NSData", "init"]
+- !private ["CSo6NSData", "setData"]
+- !private ["PSo16NSMutableCopying", "appendBytes"]
+- !private ["PSo16NSMutableCopying", "dataUsingEncoding"]
+- !private ["PSo16NSMutableCopying", "getBytes"]
+- !private ["PSo16NSMutableCopying", "init"]
+- !private ["PSo16NSMutableCopying", "setData"]
+- !private ["CSo13NSMutableData", "appendBytes"]
+- !private ["CSo13NSMutableData", "init"]
+- !private ["CSo13NSMutableData", "setData"]
+- ["CSo8NSObject", "Float"]
+- ["CSo8NSObject", "Int"]
+- ["CSo8NSObject", "acceleration"]
+- !private ["CSo8NSObject", "appendBytes"]
+- !private ["CSo8NSObject", "bindToPort"]
+- ["CSo8NSObject", "brake"]
+- !private ["CSo8NSObject", "close"]
+- !private ["CSo8NSObject", "connectToHost"]
+- !private ["CSo8NSObject", "dataUsingEncoding"]
+- ["CSo8NSObject", "distance"]
+- ["CSo8NSObject", "fuel"]
+- ["CSo8NSObject", "gear"]
+- !private ["CSo8NSObject", "getBytes"]
+- ["CSo8NSObject", "init"]
+- !private ["CSo8NSObject", "receiveWithTimeout"]
+- ["CSo8NSObject", "rpm"]
+- !private ["CSo8NSObject", "sendData"]
+- !private ["CSo8NSObject", "setData"]
+- !private ["CSo8NSObject", "setDelegate"]
+- ["CSo8NSObject", "speed"]
+- ["CSo8NSObject", "steer"]
+- ["CSo8NSObject", "temperature"]
+- ["CSo8NSObject", ""]
+- ["PSo16NSObjectProtocol", "acceleration"]
+- !private ["PSo16NSObjectProtocol", "appendBytes"]
+- !private ["PSo16NSObjectProtocol", "bindToPort"]
+- ["PSo16NSObjectProtocol", "brake"]
+- !private ["PSo16NSObjectProtocol", "close"]
+- !private ["PSo16NSObjectProtocol", "connectToHost"]
+- !private ["PSo16NSObjectProtocol", "dataUsingEncoding"]
+- ["PSo16NSObjectProtocol", "distance"]
+- ["PSo16NSObjectProtocol", "fuel"]
+- ["PSo16NSObjectProtocol", "gear"]
+- !private ["PSo16NSObjectProtocol", "getBytes"]
+- ["PSo16NSObjectProtocol", "init"]
+- !private ["PSo16NSObjectProtocol", "receiveWithTimeout"]
+- ["PSo16NSObjectProtocol", "rpm"]
+- !private ["PSo16NSObjectProtocol", "sendData"]
+- !private ["PSo16NSObjectProtocol", "setData"]
+- !private ["PSo16NSObjectProtocol", "setDelegate"]
+- ["PSo16NSObjectProtocol", "speed"]
+- ["PSo16NSObjectProtocol", "steer"]
+- ["PSo16NSObjectProtocol", "temperature"]
+- ["PSo16NSObjectProtocol", ""]
+- !private ["PSo14NSSecureCoding", "appendBytes"]
+- !private ["PSo14NSSecureCoding", "dataUsingEncoding"]
+- !private ["PSo14NSSecureCoding", "getBytes"]
+- !private ["PSo14NSSecureCoding", "init"]
+- !private ["PSo14NSSecureCoding", "setData"]
+- !private ["CSo8NSString", "dataUsingEncoding"]
+- !private ["CSo8NSString", "deinit"]
+- !private ["CSo8NSString", "init"]
+- !private ["Sq", "deinit"]
+- !private ["PSs16OutputStreamType", "init"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "Float"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "Int"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "deinit"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "distance"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "fuel"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "gear"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "init"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "rpm"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "speed"]
+- ["C21BeamNG_SteeringDevice9PSCarData", "temperature"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "Float"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "NSData"]
+- !private ["C21BeamNG_SteeringDevice14PSReceivedData", "NSMakeRange"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "UInt16"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "UInt32"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "UInt8"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "brake"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "carName"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "clutch"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "dashLights"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "deinit"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "display1"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "display2"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "engineTemperature"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "flags"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "fromData"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "fuel"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "gear"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "init"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "oilPressure"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "oilTemperature"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "playerId"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "rpm"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "showLights"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "speed"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "throttle"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "timer"]
+- ["C21BeamNG_SteeringDevice14PSReceivedData", "turbo"]
+- ["C21BeamNG_SteeringDevice9PSSession", "AsyncUdpSocket"]
+- ["C21BeamNG_SteeringDevice9PSSession", "Bool"]
+- ["C21BeamNG_SteeringDevice9PSSession", "CFTimeInterval"]
+- ["C21BeamNG_SteeringDevice9PSSession", "Int"]
+- ["C21BeamNG_SteeringDevice9PSSession", "NSData"]
+- ["C21BeamNG_SteeringDevice9PSSession", "NSError"]
+- !private ["C21BeamNG_SteeringDevice9PSSession", "NSMutableData"]
+- !private ["C21BeamNG_SteeringDevice9PSSession", "NSString"]
+- !private ["C21BeamNG_SteeringDevice9PSSession", "NSUTF8StringEncoding"]
+- ["C21BeamNG_SteeringDevice9PSSession", "PSCarData"]
+- !private ["C21BeamNG_SteeringDevice9PSSession", "PSReceivedData"]
+- ["C21BeamNG_SteeringDevice9PSSession", "PSSteerData"]
+- ["C21BeamNG_SteeringDevice9PSSession", "String"]
+- ["C21BeamNG_SteeringDevice9PSSession", "UInt16"]
+- ["C21BeamNG_SteeringDevice9PSSession", "Void"]
+- ["C21BeamNG_SteeringDevice9PSSession", "carData"]
+- ["C21BeamNG_SteeringDevice9PSSession", "currentData"]
+- ["C21BeamNG_SteeringDevice9PSSession", "deinit"]
+- ["C21BeamNG_SteeringDevice9PSSession", "init"]
+- ["C21BeamNG_SteeringDevice9PSSession", "listenSocket"]
+- ["C21BeamNG_SteeringDevice9PSSession", "onSessionBroken"]
+- ["C21BeamNG_SteeringDevice9PSSession", "onUdpSocket"]
+- ["C21BeamNG_SteeringDevice9PSSession", "onUdpSocketDidClose"]
+- !private ["C21BeamNG_SteeringDevice9PSSession", "print"]
+- ["C21BeamNG_SteeringDevice9PSSession", "receiveTimeout"]
+- ["C21BeamNG_SteeringDevice9PSSession", "sendCurrentData"]
+- ["C21BeamNG_SteeringDevice9PSSession", "sendSocket"]
+- ["C21BeamNG_SteeringDevice11PSSteerData", "Float"]
+- ["C21BeamNG_SteeringDevice11PSSteerData", "acceleration"]
+- ["C21BeamNG_SteeringDevice11PSSteerData", "brake"]
+- ["C21BeamNG_SteeringDevice11PSSteerData", "deinit"]
+- ["C21BeamNG_SteeringDevice11PSSteerData", "init"]
+- ["C21BeamNG_SteeringDevice11PSSteerData", "steer"]
+- !private ["PSs21RandomAccessIndexType", "init"]
+- ["PSs30RangeReplaceableCollectionType", "init"]
+- ["PSs12SequenceType", "init"]
+- !private ["PSs17SignedIntegerType", "init"]
+- !private ["PSs16SignedNumberType", "init"]
+- !private ["PSs10Streamable", "init"]
+- !private ["PSs10Strideable", "init"]
+- !private ["SS", "init"]
+- !private ["PSs30StringInterpolationConvertible", "init"]
+- !private ["PSs24StringLiteralConvertible", "dataUsingEncoding"]
+- !private ["PSs24StringLiteralConvertible", "init"]
+- !private ["Su", "deinit"]
+- !private ["VSs6UInt16", "deinit"]
+- !private ["VSs6UInt32", "deinit"]
+- !private ["VSs6UInt64", "deinit"]
+- !private ["VSs5UInt8", "deinit"]
+- !private ["Sc", "deinit"]
+- !private ["PSs31UnicodeScalarLiteralConvertible", "dataUsingEncoding"]
+- !private ["PSs31UnicodeScalarLiteralConvertible", "init"]
+- ["PSs10_ArrayType", "init"]
+- !private ["PSs33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
+- !private ["PSs49_BuiltinExtendedGraphemeClusterLiteralConvertible", "init"]
+- !private ["PSs33_BuiltinIntegerLiteralConvertible", "init"]
+- !private ["PSs32_BuiltinStringLiteralConvertible", "init"]
+- !private ["PSs37_BuiltinUTF16StringLiteralConvertible", "init"]
+- !private ["PSs39_BuiltinUnicodeScalarLiteralConvertible", "init"]
+- !private ["PSs16_CocoaStringType", "dataUsingEncoding"]
+- !private ["PSs16_CocoaStringType", "init"]
+- ["PSs24_DestructorSafeContainer", "init"]
+- !private ["PSs14_Incrementable", "init"]
+- !private ["PSs22_IntegerArithmeticType", "init"]
+- !private ["PSs12_IntegerType", "init"]
+- !private ["PSs21_ObjectiveCBridgeable", "_getBuiltinLogicValue"]
+- ["PSs21_ObjectiveCBridgeable", "init"]
+- !private ["VSs26_OptionalNilComparisonType", "deinit"]
+- !private ["PSs22_RandomAccessAmbiguity", "init"]
+- !private ["PSs12_Reflectable", "_getBuiltinLogicValue"]
+- !private ["PSs12_Reflectable", "dataUsingEncoding"]
+- ["PSs12_Reflectable", "init"]
+- !private ["PSs18_SignedIntegerType", "init"]
+- !private ["PSs11_Strideable", "init"]
+depends-nominal:
+- "PSs9AnyObject"
+- "Sa"
+- "PSs23ArrayLiteralConvertible"
+- !private "CSo14AsyncUdpSocket"
+- "PSo22AsyncUdpSocketDelegate"
+- !private "PSs22BidirectionalIndexType"
+- !private "PSs21BitwiseOperationsType"
+- !private "Sb"
+- !private "PSs25BooleanLiteralConvertible"
+- !private "PSs11BooleanType"
+- "PSs11CVarArgType"
+- !private "VSs9Character"
+- "PSs14CollectionType"
+- !private "PSs10Comparable"
+- "PSs28CustomDebugStringConvertible"
+- "PSs23CustomStringConvertible"
+- !private "Sd"
+- "PSs9Equatable"
+- !private "PSs41ExtendedGraphemeClusterLiteralConvertible"
+- !private "Sf"
+- !private "PSs16ForwardIndexType"
+- "PSs8Hashable"
+- !private "SQ"
+- "PSs9Indexable"
+- !private "Si"
+- !private "VSs5Int16"
+- !private "VSs5Int32"
+- !private "VSs5Int64"
+- !private "VSs4Int8"
+- !private "PSs21IntegerArithmeticType"
+- !private "PSs25IntegerLiteralConvertible"
+- !private "PSs11IntegerType"
+- !private "PSs14MirrorPathType"
+- "PSs21MutableCollectionType"
+- "PSs16MutableIndexable"
+- "PSs16MutableSliceable"
+- !private "PSo8NSCoding"
+- !private "PSo9NSCopying"
+- !private "CSo6NSData"
+- !private "PSo16NSMutableCopying"
+- !private "CSo13NSMutableData"
+- "CSo8NSObject"
+- "PSo16NSObjectProtocol"
+- !private "PSo14NSSecureCoding"
+- !private "CSo8NSString"
+- !private "Sq"
+- !private "PSs16OutputStreamType"
+- "C21BeamNG_SteeringDevice9PSCarData"
+- "C21BeamNG_SteeringDevice14PSReceivedData"
+- "C21BeamNG_SteeringDevice9PSSession"
+- "C21BeamNG_SteeringDevice11PSSteerData"
+- !private "PSs21RandomAccessIndexType"
+- "PSs30RangeReplaceableCollectionType"
+- "PSs12SequenceType"
+- !private "PSs17SignedIntegerType"
+- !private "PSs16SignedNumberType"
+- !private "PSs10Streamable"
+- !private "PSs10Strideable"
+- !private "SS"
+- !private "PSs30StringInterpolationConvertible"
+- !private "PSs24StringLiteralConvertible"
+- !private "Su"
+- !private "VSs6UInt16"
+- !private "VSs6UInt32"
+- !private "VSs6UInt64"
+- !private "VSs5UInt8"
+- !private "Sc"
+- !private "PSs31UnicodeScalarLiteralConvertible"
+- "PSs10_ArrayType"
+- !private "PSs33_BuiltinBooleanLiteralConvertible"
+- !private "PSs49_BuiltinExtendedGraphemeClusterLiteralConvertible"
+- !private "PSs33_BuiltinIntegerLiteralConvertible"
+- !private "PSs32_BuiltinStringLiteralConvertible"
+- !private "PSs37_BuiltinUTF16StringLiteralConvertible"
+- !private "PSs39_BuiltinUnicodeScalarLiteralConvertible"
+- !private "PSs16_CocoaStringType"
+- "PSs24_DestructorSafeContainer"
+- !private "PSs14_Incrementable"
+- !private "PSs22_IntegerArithmeticType"
+- !private "PSs12_IntegerType"
+- "PSs21_ObjectiveCBridgeable"
+- !private "VSs26_OptionalNilComparisonType"
+- !private "PSs22_RandomAccessAmbiguity"
+- "PSs12_Reflectable"
+- !private "PSs18_SignedIntegerType"
+- !private "PSs11_Strideable"
+depends-dynamic-lookup:
+depends-external:
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Swift.swiftmodule"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/BeamNG.SteeringDevice-Bridging-Header.h"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/AsyncUdpSocket.h"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Foundation.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Darwin.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/Dispatch.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/ObjectiveC.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreGraphics.swiftmodule"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSNetUtil.h"
+- "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSQuat.h"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/UIKit.swiftmodule"
+- "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/x86_64/CoreImage.swiftmodule"
+interface-hash: "35db77389475e6c35c5c1c8622132b64"

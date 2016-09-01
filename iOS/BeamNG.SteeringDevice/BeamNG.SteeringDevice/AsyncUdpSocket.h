@@ -174,7 +174,7 @@ typedef enum AsyncUdpSocketError AsyncUdpSocketError;
  * On success, returns YES.
  * Otherwise returns NO, and sets errPtr. If you don't care about the error, you can pass nil for errPtr.
 **/
-- (BOOL)connectToHost:(NSString *)host onPort:(UInt16)port error:(NSError **)errPtr;
+- (BOOL)connectToHost:(NSString*)host onPort:(UInt16)port error:(NSError **)errPtr;
 - (BOOL)connectToAddress:(NSData *)remoteAddr error:(NSError **)errPtr;
 
 /**
