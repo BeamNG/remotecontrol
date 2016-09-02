@@ -156,6 +156,7 @@ SWIFT_CLASS("_TtC21BeamNG_SteeringDevice11PSSearching")
 @property (nonatomic, strong) AsyncUdpSocket * _Null_unspecified listenSocket;
 @property (nonatomic, copy) void (^ _Null_unspecified onConnectToHost)(NSString * _Nonnull, uint16_t);
 @property (nonatomic) NSInteger code;
+@property (nonatomic) BOOL initCon;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)initWithConnectionHandler:(void (^ _Nonnull)(NSString * _Nonnull, uint16_t))connectionHandler;
 - (void)broadcast:(CFTimeInterval)timeout;
@@ -212,7 +213,7 @@ SWIFT_CLASS("_TtC21BeamNG_SteeringDevice11PSSteerData")
 @property (nonatomic) float acceleration;
 @property (nonatomic) float brake;
 @property (nonatomic) float steer;
-@property (nonatomic) NSInteger id;
+@property (nonatomic) float id;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 

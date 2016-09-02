@@ -6,39 +6,41 @@ provides-nominal:
 provides-member:
 - ["C21BeamNG_SteeringDevice11PSSearching", ""]
 provides-dynamic-lookup:
-- "listenSocket"
 - "onUdpSocket"
 - "onUdpSocket"
 - "onUdpSocket"
 - "onUdpSocket"
+- "code"
 - "broadcast"
 - "socket"
-- "code"
+- "listenSocket"
 - "onUdpSocketDidClose"
 - "onConnectToHost"
+- "initCon"
 depends-top-level:
-- "AsyncUdpSocketDelegate"
-- !private "=="
-- "Void"
-- "NSData"
-- "NSError"
-- "CFTimeInterval"
-- !private "StringLiteralType"
-- "NSObject"
-- !private "UnicodeScalarType"
-- "AsyncUdpSocket"
-- "Bool"
-- !private "NSUTF8StringEncoding"
-- "PSSearching"
-- !private "PSNetUtil"
-- !private "print"
-- "UInt16"
-- !private "!="
-- !private "BooleanLiteralType"
-- !private "NSString"
-- !private "UIDevice"
-- "String"
 - "Int"
+- "BooleanLiteralType"
+- "UInt16"
+- "AsyncUdpSocketDelegate"
+- "PSSearching"
+- !private "UIDevice"
+- "NSObject"
+- "String"
+- !private "!="
+- !private "NSUTF8StringEncoding"
+- "NSData"
+- !private "print"
+- "AsyncUdpSocket"
+- !private "UnicodeScalarType"
+- "Void"
+- !private "StringLiteralType"
+- !private "!"
+- "NSError"
+- !private "PSNetUtil"
+- !private "=="
+- "Bool"
+- "CFTimeInterval"
+- !private "NSString"
 depends-member:
 - !private ["Ps9AnyObject", "AsyncUdpSocket"]
 - !private ["Ps9AnyObject", "NSString"]
@@ -54,6 +56,7 @@ depends-member:
 - !private ["Ps9AnyObject", "dataUsingEncoding"]
 - !private ["Ps9AnyObject", "enableBroadcast"]
 - ["Ps9AnyObject", "init"]
+- ["Ps9AnyObject", "initCon"]
 - ["Ps9AnyObject", "listenSocket"]
 - !private ["Ps9AnyObject", "localIPAddress"]
 - !private ["Ps9AnyObject", "name"]
@@ -77,6 +80,7 @@ depends-member:
 - !private ["PSo22AsyncUdpSocketDelegate", "UIDevice"]
 - !private ["PSo22AsyncUdpSocketDelegate", "code"]
 - !private ["PSo22AsyncUdpSocketDelegate", "init"]
+- !private ["PSo22AsyncUdpSocketDelegate", "initCon"]
 - !private ["PSo22AsyncUdpSocketDelegate", "listenSocket"]
 - !private ["PSo22AsyncUdpSocketDelegate", "onConnectToHost"]
 - ["PSo22AsyncUdpSocketDelegate", "onUdpSocket"]
@@ -102,6 +106,7 @@ depends-member:
 - !private ["Ps11CVarArgType", "dataUsingEncoding"]
 - !private ["Ps11CVarArgType", "enableBroadcast"]
 - ["Ps11CVarArgType", "init"]
+- ["Ps11CVarArgType", "initCon"]
 - ["Ps11CVarArgType", "listenSocket"]
 - !private ["Ps11CVarArgType", "localIPAddress"]
 - !private ["Ps11CVarArgType", "name"]
@@ -129,6 +134,7 @@ depends-member:
 - !private ["Ps28CustomDebugStringConvertible", "dataUsingEncoding"]
 - !private ["Ps28CustomDebugStringConvertible", "enableBroadcast"]
 - ["Ps28CustomDebugStringConvertible", "init"]
+- ["Ps28CustomDebugStringConvertible", "initCon"]
 - ["Ps28CustomDebugStringConvertible", "listenSocket"]
 - !private ["Ps28CustomDebugStringConvertible", "localIPAddress"]
 - !private ["Ps28CustomDebugStringConvertible", "name"]
@@ -155,6 +161,7 @@ depends-member:
 - !private ["Ps23CustomStringConvertible", "dataUsingEncoding"]
 - !private ["Ps23CustomStringConvertible", "enableBroadcast"]
 - ["Ps23CustomStringConvertible", "init"]
+- ["Ps23CustomStringConvertible", "initCon"]
 - ["Ps23CustomStringConvertible", "listenSocket"]
 - !private ["Ps23CustomStringConvertible", "localIPAddress"]
 - !private ["Ps23CustomStringConvertible", "name"]
@@ -182,6 +189,7 @@ depends-member:
 - !private ["Ps9Equatable", "dataUsingEncoding"]
 - !private ["Ps9Equatable", "enableBroadcast"]
 - ["Ps9Equatable", "init"]
+- ["Ps9Equatable", "initCon"]
 - ["Ps9Equatable", "listenSocket"]
 - !private ["Ps9Equatable", "localIPAddress"]
 - !private ["Ps9Equatable", "name"]
@@ -212,6 +220,7 @@ depends-member:
 - !private ["Ps8Hashable", "dataUsingEncoding"]
 - !private ["Ps8Hashable", "enableBroadcast"]
 - ["Ps8Hashable", "init"]
+- ["Ps8Hashable", "initCon"]
 - ["Ps8Hashable", "listenSocket"]
 - !private ["Ps8Hashable", "localIPAddress"]
 - !private ["Ps8Hashable", "name"]
@@ -262,6 +271,7 @@ depends-member:
 - !private ["CSo8NSObject", "deinit"]
 - !private ["CSo8NSObject", "enableBroadcast"]
 - ["CSo8NSObject", "init"]
+- ["CSo8NSObject", "initCon"]
 - ["CSo8NSObject", "listenSocket"]
 - !private ["CSo8NSObject", "localIPAddress"]
 - !private ["CSo8NSObject", "name"]
@@ -287,6 +297,7 @@ depends-member:
 - !private ["PSo16NSObjectProtocol", "dataUsingEncoding"]
 - !private ["PSo16NSObjectProtocol", "enableBroadcast"]
 - ["PSo16NSObjectProtocol", "init"]
+- ["PSo16NSObjectProtocol", "initCon"]
 - ["PSo16NSObjectProtocol", "listenSocket"]
 - !private ["PSo16NSObjectProtocol", "localIPAddress"]
 - !private ["PSo16NSObjectProtocol", "name"]
@@ -325,6 +336,7 @@ depends-member:
 - ["C21BeamNG_SteeringDevice11PSSearching", "code"]
 - ["C21BeamNG_SteeringDevice11PSSearching", "deinit"]
 - ["C21BeamNG_SteeringDevice11PSSearching", "init"]
+- ["C21BeamNG_SteeringDevice11PSSearching", "initCon"]
 - ["C21BeamNG_SteeringDevice11PSSearching", "listenSocket"]
 - ["C21BeamNG_SteeringDevice11PSSearching", "onConnectToHost"]
 - ["C21BeamNG_SteeringDevice11PSSearching", "onUdpSocket"]
@@ -426,4 +438,4 @@ depends-external:
 - "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSQuat.h"
 - "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/arm64/UIKit.swiftmodule"
 - "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/arm64/CoreImage.swiftmodule"
-interface-hash: "3113c1cc86ccb48ad8b3a821dabc6eeb"
+interface-hash: "b1830f6a680a4520a25265a255092629"

@@ -17,6 +17,7 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
     var onConnectToHost : ((String, UInt16)->(Void))! = nil;
     
     var code : Int = 232664;
+    var initCon : Bool = false;
     
     override init()
     {
@@ -60,6 +61,7 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
     
     func onUdpSocket(sock: AsyncUdpSocket!, didReceiveData data: NSData!, withTag tag: Int, fromHost host: String!, port: UInt16) -> Bool
     {
+        if (!initCon) {
         let msg : NSString = NSString(data: data, encoding: NSUTF8StringEncoding)!;
         print("\nPSSearching: Received data!\n\t\(msg)\nfrom: \(host):\(port)");
         
@@ -76,12 +78,15 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
             if(onConnectToHost != nil)
             {
                 //print(host);
+                initCon = true;
                 onConnectToHost(host, 4445);
             }
             print("Connecting people...");
         }
         listenSocket.receiveWithTimeout(-1, tag: 0);
         return true;
+        }
+        return false;
     }
     
     func onUdpSocket(sock: AsyncUdpSocket!, didSendDataWithTag tag: Int)

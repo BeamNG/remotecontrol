@@ -41,7 +41,6 @@ class PSSessionViewController : UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad();
-        
         self.view.backgroundColor = UIColor.blackColor();
         
         hudImage = UIImage(named: "hud_single_nocolor")!;
@@ -175,10 +174,10 @@ class PSSessionViewController : UIViewController
         
         cm.deviceMotionUpdateInterval = 0.05;
         cm.startDeviceMotionUpdatesUsingReferenceFrame(CMAttitudeReferenceFrame.XArbitraryZVertical, toQueue: NSOperationQueue.mainQueue(), withHandler:
-        
+            
         {
         (deviceMotion: CMDeviceMotion?, error: NSError?) in
-        
+            
             if let deviceMotion = deviceMotion {
                 let gravity : PSVector = PSVector();
                 gravity.x = deviceMotion.gravity.x;
@@ -196,12 +195,12 @@ class PSSessionViewController : UIViewController
                 }
                 let angleDeg : Double = angle * 180.0 / 3.145;
                 let translatedAngle : Double = angleDeg - 90.0;
-            
                 
                 if(self.session != nil)
                 {
-                    //print("are we null?");
-                    self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0;
+                    //print("get steer angle");
+                    self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
+                    //print("session exists, send data");
                     self.session.sendCurrentData();
                 }
                 

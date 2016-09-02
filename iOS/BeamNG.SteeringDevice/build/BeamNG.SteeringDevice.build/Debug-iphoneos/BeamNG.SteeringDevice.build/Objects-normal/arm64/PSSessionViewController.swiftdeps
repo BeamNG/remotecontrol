@@ -6,91 +6,92 @@ provides-nominal:
 provides-member:
 - ["C21BeamNG_SteeringDevice23PSSessionViewController", ""]
 provides-dynamic-lookup:
-- "cm"
-- "steeringWheelView"
-- "onButtonAccelerate0"
-- "fuel"
-- "buttonBrake"
-- "labelGear"
-- "supportedInterfaceOrientations"
-- "onButtonBrake1"
-- "rpm"
-- "onDisconnected"
-- "viewDidLoad"
-- "searching"
-- "hudImageView"
-- "labelDist"
-- "connectionButton"
-- "onButtonConnect"
-- "labelSpeed"
-- "buttonAccelerate"
 - "hudView"
-- "onButtonBrake0"
-- "onButtonAccelerate1"
+- "buttonAccelerate"
+- "onButtonAccelerate0"
 - "shouldAutorotate"
-- "steeringWheelLayer"
-- "hudImage"
+- "onButtonBrake0"
+- "rpm"
+- "onButtonAccelerate1"
+- "onButtonBrake1"
+- "fuel"
+- "hudImageView"
 - "onConnected"
+- "labelDist"
+- "buttonBrake"
+- "supportedInterfaceOrientations"
+- "searching"
+- "connectionButton"
+- "steeringWheelView"
 - "temperature"
 - "speed"
+- "labelGear"
+- "hudImage"
+- "cm"
+- "onDisconnected"
+- "viewDidLoad"
+- "steeringWheelLayer"
+- "onButtonConnect"
+- "labelSpeed"
 depends-top-level:
-- "PSSessionViewController"
-- !private "UIControlState"
-- !private "CGFloat"
-- !private "M_PI_4"
-- !private "acos"
-- "UIView"
-- "UIImage"
-- !private "Double"
-- !private "Void"
-- !private "CGAffineTransformMakeScale"
-- "UIImageView"
-- "UIViewController"
-- !private "CGPoint"
-- !private "CGAffineTransformMakeRotation"
-- !private "CGAffineTransformConcat"
-- "PSSearching"
-- !private "CMAttitudeReferenceFrame"
-- "PSSession"
-- !private "print"
-- !private "StringLiteralType"
-- "PSProgressBar"
-- !private "CGPointMake"
-- !private "/"
-- !private "M_PI"
-- !private "CGRectMake"
-- !private "UIBezierPath"
-- "UILabel"
-- !private "M_PI_2"
-- "UIInterfaceOrientationMask"
-- !private "NSOperationQueue"
-- !private "-"
-- !private "CMDeviceMotion"
-- !private "BooleanLiteralType"
-- "CMMotionManager"
-- !private "UIColor"
-- !private "-="
-- !private "PSVector"
-- !private "NSTextAlignment"
-- "String"
-- "UInt16"
-- "NSError"
-- !private "*"
-- !private "Float"
-- !private "UIInterfaceOrientation"
-- !private "!="
-- "Bool"
-- !private "UIFont"
 - "UIButton"
-- !private "Selector"
-- !private "+="
-- !private "UIControlEvents"
-- !private "UnicodeScalarType"
+- !private "-"
 - !private "Int"
+- !private "UIControlState"
+- !private "CMAttitudeReferenceFrame"
+- !private "NSOperationQueue"
+- !private "M_PI"
+- "CMMotionManager"
+- "String"
+- !private "CGPoint"
+- !private "!="
+- !private "M_PI_4"
+- !private "CMDeviceMotion"
+- !private "Float"
+- !private "print"
+- !private "CGFloat"
+- !private "UIFont"
+- "UIInterfaceOrientationMask"
+- !private "StringLiteralType"
+- !private "UIBezierPath"
+- !private "UIInterfaceOrientation"
+- !private "/"
+- "UILabel"
+- !private "PSVector"
+- !private "-="
+- !private "Double"
+- !private "CGRectMake"
+- "PSProgressBar"
+- !private "M_PI_2"
+- "UInt16"
+- !private "BooleanLiteralType"
+- !private "*="
+- "NSError"
+- "PSSearching"
+- !private "round"
+- "UIImageView"
+- !private "CGPointMake"
+- !private "+="
+- !private "CGAffineTransformMakeScale"
+- "PSSession"
+- "UIView"
+- "UIViewController"
+- !private "CGAffineTransformConcat"
+- "PSSessionViewController"
+- !private "Void"
+- "UIImage"
+- "Bool"
+- !private "UIButtonType"
+- !private "UIColor"
+- !private "CGAffineTransformMakeRotation"
+- !private "Selector"
+- !private "*"
 - "CAShapeLayer"
 - !private "=="
-- !private "UIButtonType"
-- !private "*="
+- !private "NSTextAlignment"
+- !private "acos"
+- !private "UnicodeScalarType"
+- !private "UIControlEvents"
 depends-member:
 - !private ["Ps16AbsoluteValuable", "IntegerLiteralType"]
 - !private ["Ps16AbsoluteValuable", "Stride"]
@@ -189,6 +190,7 @@ depends-member:
 - !private ["Ps9AnyObject", "position"]
 - !private ["Ps9AnyObject", "print"]
 - !private ["Ps9AnyObject", "progress"]
+- !private ["Ps9AnyObject", "round"]
 - ["Ps9AnyObject", "rpm"]
 - ["Ps9AnyObject", "searching"]
 - !private ["Ps9AnyObject", "sendCurrentData"]
@@ -380,6 +382,7 @@ depends-member:
 - !private ["Ps11CVarArgType", "position"]
 - !private ["Ps11CVarArgType", "print"]
 - !private ["Ps11CVarArgType", "progress"]
+- !private ["Ps11CVarArgType", "round"]
 - ["Ps11CVarArgType", "rpm"]
 - ["Ps11CVarArgType", "searching"]
 - ["Ps11CVarArgType", "session"]
@@ -504,6 +507,7 @@ depends-member:
 - !private ["Ps28CustomDebugStringConvertible", "position"]
 - !private ["Ps28CustomDebugStringConvertible", "print"]
 - !private ["Ps28CustomDebugStringConvertible", "progress"]
+- !private ["Ps28CustomDebugStringConvertible", "round"]
 - ["Ps28CustomDebugStringConvertible", "rpm"]
 - ["Ps28CustomDebugStringConvertible", "searching"]
 - ["Ps28CustomDebugStringConvertible", "session"]
@@ -625,6 +629,7 @@ depends-member:
 - !private ["Ps23CustomStringConvertible", "position"]
 - !private ["Ps23CustomStringConvertible", "print"]
 - !private ["Ps23CustomStringConvertible", "progress"]
+- !private ["Ps23CustomStringConvertible", "round"]
 - ["Ps23CustomStringConvertible", "rpm"]
 - ["Ps23CustomStringConvertible", "searching"]
 - ["Ps23CustomStringConvertible", "session"]
@@ -758,6 +763,7 @@ depends-member:
 - !private ["Ps9Equatable", "position"]
 - !private ["Ps9Equatable", "print"]
 - !private ["Ps9Equatable", "progress"]
+- !private ["Ps9Equatable", "round"]
 - ["Ps9Equatable", "rpm"]
 - ["Ps9Equatable", "searching"]
 - ["Ps9Equatable", "session"]
@@ -898,6 +904,7 @@ depends-member:
 - !private ["Ps8Hashable", "position"]
 - !private ["Ps8Hashable", "print"]
 - !private ["Ps8Hashable", "progress"]
+- !private ["Ps8Hashable", "round"]
 - ["Ps8Hashable", "rpm"]
 - ["Ps8Hashable", "searching"]
 - ["Ps8Hashable", "session"]
@@ -1025,6 +1032,7 @@ depends-member:
 - !private ["PSo8NSCoding", "position"]
 - !private ["PSo8NSCoding", "print"]
 - !private ["PSo8NSCoding", "progress"]
+- !private ["PSo8NSCoding", "round"]
 - ["PSo8NSCoding", "rpm"]
 - ["PSo8NSCoding", "searching"]
 - ["PSo8NSCoding", "session"]
@@ -1109,6 +1117,7 @@ depends-member:
 - ["PSo26NSExtensionRequestHandling", "onConnected"]
 - ["PSo26NSExtensionRequestHandling", "onDisconnected"]
 - !private ["PSo26NSExtensionRequestHandling", "print"]
+- !private ["PSo26NSExtensionRequestHandling", "round"]
 - ["PSo26NSExtensionRequestHandling", "rpm"]
 - ["PSo26NSExtensionRequestHandling", "searching"]
 - ["PSo26NSExtensionRequestHandling", "session"]
@@ -1220,6 +1229,7 @@ depends-member:
 - !private ["CSo8NSObject", "position"]
 - !private ["CSo8NSObject", "print"]
 - !private ["CSo8NSObject", "progress"]
+- !private ["CSo8NSObject", "round"]
 - ["CSo8NSObject", "rpm"]
 - ["CSo8NSObject", "searching"]
 - ["CSo8NSObject", "session"]
@@ -1336,6 +1346,7 @@ depends-member:
 - !private ["PSo16NSObjectProtocol", "position"]
 - !private ["PSo16NSObjectProtocol", "print"]
 - !private ["PSo16NSObjectProtocol", "progress"]
+- !private ["PSo16NSObjectProtocol", "round"]
 - ["PSo16NSObjectProtocol", "rpm"]
 - ["PSo16NSObjectProtocol", "searching"]
 - ["PSo16NSObjectProtocol", "session"]
@@ -1463,6 +1474,7 @@ depends-member:
 - ["C21BeamNG_SteeringDevice23PSSessionViewController", "onConnected"]
 - ["C21BeamNG_SteeringDevice23PSSessionViewController", "onDisconnected"]
 - !private ["C21BeamNG_SteeringDevice23PSSessionViewController", "print"]
+- !private ["C21BeamNG_SteeringDevice23PSSessionViewController", "round"]
 - ["C21BeamNG_SteeringDevice23PSSessionViewController", "rpm"]
 - ["C21BeamNG_SteeringDevice23PSSessionViewController", "searching"]
 - ["C21BeamNG_SteeringDevice23PSSessionViewController", "session"]
@@ -1622,6 +1634,7 @@ depends-member:
 - ["PSo21UIAppearanceContainer", "onDisconnected"]
 - !private ["PSo21UIAppearanceContainer", "print"]
 - !private ["PSo21UIAppearanceContainer", "progress"]
+- !private ["PSo21UIAppearanceContainer", "round"]
 - ["PSo21UIAppearanceContainer", "rpm"]
 - ["PSo21UIAppearanceContainer", "searching"]
 - ["PSo21UIAppearanceContainer", "session"]
@@ -1710,6 +1723,7 @@ depends-member:
 - ["PSo18UIContentContainer", "onConnected"]
 - ["PSo18UIContentContainer", "onDisconnected"]
 - !private ["PSo18UIContentContainer", "print"]
+- !private ["PSo18UIContentContainer", "round"]
 - ["PSo18UIContentContainer", "rpm"]
 - ["PSo18UIContentContainer", "searching"]
 - ["PSo18UIContentContainer", "session"]
@@ -1839,6 +1853,7 @@ depends-member:
 - ["PSo18UIFocusEnvironment", "onDisconnected"]
 - !private ["PSo18UIFocusEnvironment", "print"]
 - !private ["PSo18UIFocusEnvironment", "progress"]
+- !private ["PSo18UIFocusEnvironment", "round"]
 - ["PSo18UIFocusEnvironment", "rpm"]
 - ["PSo18UIFocusEnvironment", "searching"]
 - ["PSo18UIFocusEnvironment", "session"]
@@ -1947,6 +1962,7 @@ depends-member:
 - ["CSo11UIResponder", "onDisconnected"]
 - !private ["CSo11UIResponder", "print"]
 - !private ["CSo11UIResponder", "progress"]
+- !private ["CSo11UIResponder", "round"]
 - ["CSo11UIResponder", "rpm"]
 - ["CSo11UIResponder", "searching"]
 - ["CSo11UIResponder", "session"]
@@ -2020,6 +2036,7 @@ depends-member:
 - ["PSo16UIStateRestoring", "onConnected"]
 - ["PSo16UIStateRestoring", "onDisconnected"]
 - !private ["PSo16UIStateRestoring", "print"]
+- !private ["PSo16UIStateRestoring", "round"]
 - ["PSo16UIStateRestoring", "rpm"]
 - ["PSo16UIStateRestoring", "searching"]
 - ["PSo16UIStateRestoring", "session"]
@@ -2102,6 +2119,7 @@ depends-member:
 - ["PSo18UITraitEnvironment", "onDisconnected"]
 - !private ["PSo18UITraitEnvironment", "print"]
 - !private ["PSo18UITraitEnvironment", "progress"]
+- !private ["PSo18UITraitEnvironment", "round"]
 - ["PSo18UITraitEnvironment", "rpm"]
 - ["PSo18UITraitEnvironment", "searching"]
 - ["PSo18UITraitEnvironment", "session"]
@@ -2202,6 +2220,7 @@ depends-member:
 - ["CSo16UIViewController", "onConnected"]
 - ["CSo16UIViewController", "onDisconnected"]
 - !private ["CSo16UIViewController", "print"]
+- !private ["CSo16UIViewController", "round"]
 - ["CSo16UIViewController", "rpm"]
 - ["CSo16UIViewController", "searching"]
 - ["CSo16UIViewController", "session"]

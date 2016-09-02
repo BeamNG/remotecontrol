@@ -13,7 +13,7 @@ class PSSteerData : NSObject
     var acceleration : Float = 0.0;
     var brake : Float = 0.0;
     var steer : Float = 0.0;
-    var id : Int = 1;
+    var id : Float = 1;
     override init()
     {
         super.init();
@@ -117,7 +117,9 @@ class PSSession : AsyncUdpSocketDelegate
         sendSocket = AsyncUdpSocket(delegate: self);
         do {
             print(host+" : \(port)");
-            try sendSocket.connectToHost(host, onPort: port)
+            //try sendSocket.connectToHost(host, onPort: port)
+            try sendSocket.bindToAddress(host, port: port)
+            //try sendSocket.enableBroadcast(true)
             //try sendSocket.bindToPort(port)
         } catch _ {
         };
@@ -148,17 +150,23 @@ class PSSession : AsyncUdpSocketDelegate
     
     func sendCurrentData()
     {
-        //let msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f id: %.1f", currentData.steer, currentData.acceleration, currentData.brake, currentData.id);
-        //let data = msg.dataUsingEncoding(NSUTF8StringEncoding);
+        //print("Creating data");
+        let msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f id: %.1f", currentData.steer, currentData.acceleration, currentData.brake, currentData.id);
+        let data = msg.dataUsingEncoding(NSUTF8StringEncoding);
         var mutData = NSMutableData();
-        //mutData.setData(data!);
+        mutData.setData(data!);
         mutData = NSMutableData();
-        mutData.appendBytes(&currentData.steer, length: 4);
-        mutData.appendBytes(&currentData.acceleration, length: 4);
-        mutData.appendBytes(&currentData.brake, length: 4);
-        mutData.appendBytes(&currentData.id, length: 4);
+        mutData.appendBytes(&currentData.steer, length: sizeof(Float));
+        mutData.appendBytes(&currentData.acceleration, length: sizeof(Float));
+        mutData.appendBytes(&currentData.brake, length: sizeof(Float));
+        mutData.appendBytes(&currentData.id, length: sizeof(Float));
         //print("sending data");
-        sendSocket.sendData(mutData, toHost: finalHost, port: finalPort, withTimeout: -1, tag: 0);
+        sendSocket.sendData(mutData, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
+        //print("sent data");
+        //let message : NSString = "beamng|Test Device|123";
+        //let data2 = message.dataUsingEncoding(NSUTF8StringEncoding);
+        
+        //sendSocket.sendData(data2, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
         
     }
     
