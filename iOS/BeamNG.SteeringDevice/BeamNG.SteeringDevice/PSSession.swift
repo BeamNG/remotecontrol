@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class PSSteerData : NSObject
 {
@@ -150,24 +151,35 @@ class PSSession : AsyncUdpSocketDelegate
     
     func sendCurrentData()
     {
-        //print("Creating data");
-        let msg : NSString = NSString(format: "wheel: %.1f acceleration: %.1f brake: %.1f id: %.1f", currentData.steer, currentData.acceleration, currentData.brake, currentData.id);
-        let data = msg.dataUsingEncoding(NSUTF8StringEncoding);
-        var mutData = NSMutableData();
-        mutData.setData(data!);
-        mutData = NSMutableData();
+        
+        //var data : [Float] = [currentData.steer, currentData.acceleration, currentData.brake, currentData.id];
+        let toBytes : [UInt32] = [currentData.steer._toBitPattern(), currentData.brake._toBitPattern(), currentData.acceleration._toBitPattern(), currentData.id._toBitPattern()];
+        //let data : [UInt8] = [25, 0, 1, 1];
+        let dataBytes = NSData(bytes: toBytes, length: 16);
+        
+        /*let mutData = NSMutableData();
         mutData.appendBytes(&currentData.steer, length: sizeof(Float));
         mutData.appendBytes(&currentData.acceleration, length: sizeof(Float));
         mutData.appendBytes(&currentData.brake, length: sizeof(Float));
-        mutData.appendBytes(&currentData.id, length: sizeof(Float));
-        //print("sending data");
-        sendSocket.sendData(mutData, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
+        mutData.appendBytes(&currentData.id, length: sizeof(Float));*/
+    
+        var test = [UInt32](count: 4, repeatedValue: 0);
+        dataBytes.getBytes(&test, length: 16);
+        test[0] = UInt32(bigEndian: test[0]);
+        test[1] = UInt32(bigEndian: test[1]);
+        test[2] = UInt32(bigEndian: test[2]);
+        test[3] = UInt32(bigEndian: test[3]);
+        
+        let dataBytes2 = NSData(bytes: test, length: 16);
+        //print(test);*/
+        
+        sendSocket.sendData(dataBytes2, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
         //print("sent data");
+        //print(dataBytes);
+        
         //let message : NSString = "beamng|Test Device|123";
         //let data2 = message.dataUsingEncoding(NSUTF8StringEncoding);
-        
         //sendSocket.sendData(data2, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
-        
     }
     
     @objc func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)

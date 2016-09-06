@@ -194,12 +194,13 @@ class PSSessionViewController : UIViewController
                     angle += M_PI_2;
                 }
                 let angleDeg : Double = angle * 180.0 / 3.145;
-                let translatedAngle : Double = angleDeg - 90.0;
+                let translatedAngle : Double = angleDeg - 135.0;
                 
                 if(self.session != nil)
                 {
                     //print("get steer angle");
-                    self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
+                    //self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
+                    self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0;
                     //print("session exists, send data");
                     self.session.sendCurrentData();
                 }

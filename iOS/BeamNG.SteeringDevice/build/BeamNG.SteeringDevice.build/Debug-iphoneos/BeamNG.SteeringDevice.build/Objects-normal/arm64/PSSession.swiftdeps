@@ -15,65 +15,58 @@ provides-member:
 - ["C21BeamNG_SteeringDevice14PSReceivedData", ""]
 - ["C21BeamNG_SteeringDevice9PSSession", ""]
 provides-dynamic-lookup:
-- "distance"
-- "fuel"
+- "temperature"
+- "speed"
+- "brake"
+- "onUdpSocketDidClose"
 - "steer"
-- "rpm"
 - "gear"
+- "rpm"
 - "id"
 - "acceleration"
+- "fuel"
+- "distance"
 - "onUdpSocket"
 - "onUdpSocket"
 - "onUdpSocket"
 - "onUdpSocket"
-- "brake"
-- "temperature"
-- "onUdpSocketDidClose"
-- "speed"
 depends-top-level:
-- "String"
-- "UInt32"
-- "StringLiteralType"
+- "Void"
+- "Bool"
+- !private "BooleanLiteralType"
+- "UInt8"
+- !private "UnicodeScalarType"
+- "NSObject"
+- "PSSteerData"
 - "NSData"
 - "CFTimeInterval"
-- "PSCarData"
-- "NSObject"
-- "PSReceivedData"
-- !private "sizeof"
-- "Float"
-- "AsyncUdpSocket"
-- !private "print"
-- !private "!="
 - "UInt16"
 - "Int"
-- "Void"
-- !private "+"
-- "AsyncUdpSocketDelegate"
-- !private "NSString"
-- !private "UnicodeScalarType"
-- !private "NSMutableData"
-- "NSError"
-- !private "BooleanLiteralType"
-- "PSSession"
-- !private "NSUTF8StringEncoding"
-- "Bool"
+- "AsyncUdpSocket"
 - !private "NSMakeRange"
-- "UInt8"
-- "PSSteerData"
+- "NSError"
+- "String"
+- "PSReceivedData"
+- "StringLiteralType"
+- "AsyncUdpSocketDelegate"
+- "PSCarData"
+- !private "!="
+- "PSSession"
+- !private "print"
+- "Float"
+- !private "+"
+- "UInt32"
 depends-member:
 - !private ["Ps9AnyObject", "AsyncUdpSocket"]
-- !private ["Ps9AnyObject", "Float"]
 - !private ["Ps9AnyObject", "Int"]
+- !private ["Ps9AnyObject", "NSData"]
 - !private ["Ps9AnyObject", "NSMakeRange"]
-- !private ["Ps9AnyObject", "NSMutableData"]
-- !private ["Ps9AnyObject", "NSString"]
-- !private ["Ps9AnyObject", "NSUTF8StringEncoding"]
 - !private ["Ps9AnyObject", "PSCarData"]
 - !private ["Ps9AnyObject", "PSReceivedData"]
 - !private ["Ps9AnyObject", "PSSteerData"]
+- !private ["Ps9AnyObject", "UInt16"]
 - ["Ps9AnyObject", "UInt8"]
 - ["Ps9AnyObject", "acceleration"]
-- !private ["Ps9AnyObject", "appendBytes"]
 - !private ["Ps9AnyObject", "bindToAddress"]
 - ["Ps9AnyObject", "brake"]
 - !private ["Ps9AnyObject", "carData"]
@@ -82,7 +75,6 @@ depends-member:
 - !private ["Ps9AnyObject", "clutch"]
 - !private ["Ps9AnyObject", "currentData"]
 - !private ["Ps9AnyObject", "dashLights"]
-- !private ["Ps9AnyObject", "dataUsingEncoding"]
 - !private ["Ps9AnyObject", "display1"]
 - !private ["Ps9AnyObject", "display2"]
 - ["Ps9AnyObject", "distance"]
@@ -108,10 +100,8 @@ depends-member:
 - ["Ps9AnyObject", "rpm"]
 - !private ["Ps9AnyObject", "sendData"]
 - !private ["Ps9AnyObject", "sendSocket"]
-- !private ["Ps9AnyObject", "setData"]
 - !private ["Ps9AnyObject", "setDelegate"]
 - !private ["Ps9AnyObject", "showLights"]
-- !private ["Ps9AnyObject", "sizeof"]
 - ["Ps9AnyObject", "speed"]
 - ["Ps9AnyObject", "steer"]
 - ["Ps9AnyObject", "temperature"]
@@ -120,7 +110,9 @@ depends-member:
 - !private ["Ps9AnyObject", "turbo"]
 - ["Ps9AnyObject", ""]
 - ["Sa", "init"]
+- !private ["Sa", "subscript"]
 - ["Ps23ArrayLiteralConvertible", "init"]
+- !private ["Ps23ArrayLiteralConvertible", "subscript"]
 - !private ["CSo14AsyncUdpSocket", "bindToAddress"]
 - !private ["CSo14AsyncUdpSocket", "close"]
 - !private ["CSo14AsyncUdpSocket", "init"]
@@ -128,14 +120,12 @@ depends-member:
 - !private ["CSo14AsyncUdpSocket", "sendData"]
 - !private ["CSo14AsyncUdpSocket", "setDelegate"]
 - !private ["PSo22AsyncUdpSocketDelegate", "AsyncUdpSocket"]
-- !private ["PSo22AsyncUdpSocketDelegate", "Float"]
 - !private ["PSo22AsyncUdpSocketDelegate", "Int"]
-- !private ["PSo22AsyncUdpSocketDelegate", "NSMutableData"]
-- !private ["PSo22AsyncUdpSocketDelegate", "NSString"]
-- !private ["PSo22AsyncUdpSocketDelegate", "NSUTF8StringEncoding"]
+- !private ["PSo22AsyncUdpSocketDelegate", "NSData"]
 - !private ["PSo22AsyncUdpSocketDelegate", "PSCarData"]
 - !private ["PSo22AsyncUdpSocketDelegate", "PSReceivedData"]
 - !private ["PSo22AsyncUdpSocketDelegate", "PSSteerData"]
+- !private ["PSo22AsyncUdpSocketDelegate", "UInt16"]
 - !private ["PSo22AsyncUdpSocketDelegate", "carData"]
 - !private ["PSo22AsyncUdpSocketDelegate", "currentData"]
 - !private ["PSo22AsyncUdpSocketDelegate", "finalHost"]
@@ -146,7 +136,6 @@ depends-member:
 - ["PSo22AsyncUdpSocketDelegate", "onUdpSocketDidClose"]
 - !private ["PSo22AsyncUdpSocketDelegate", "print"]
 - !private ["PSo22AsyncUdpSocketDelegate", "sendSocket"]
-- !private ["PSo22AsyncUdpSocketDelegate", "sizeof"]
 - ["PSo22AsyncUdpSocketDelegate", ""]
 - !private ["Ps22BidirectionalIndexType", "init"]
 - !private ["Ps21BitwiseOperationsType", "init"]
@@ -155,11 +144,9 @@ depends-member:
 - !private ["Ps25BooleanLiteralConvertible", "_getBuiltinLogicValue"]
 - !private ["Ps11BooleanType", "_getBuiltinLogicValue"]
 - ["Ps11CVarArgType", "acceleration"]
-- !private ["Ps11CVarArgType", "appendBytes"]
 - !private ["Ps11CVarArgType", "bindToAddress"]
 - ["Ps11CVarArgType", "brake"]
 - !private ["Ps11CVarArgType", "close"]
-- !private ["Ps11CVarArgType", "dataUsingEncoding"]
 - ["Ps11CVarArgType", "distance"]
 - ["Ps11CVarArgType", "fuel"]
 - ["Ps11CVarArgType", "gear"]
@@ -169,21 +156,23 @@ depends-member:
 - !private ["Ps11CVarArgType", "receiveWithTimeout"]
 - ["Ps11CVarArgType", "rpm"]
 - !private ["Ps11CVarArgType", "sendData"]
-- !private ["Ps11CVarArgType", "setData"]
 - !private ["Ps11CVarArgType", "setDelegate"]
 - ["Ps11CVarArgType", "speed"]
 - ["Ps11CVarArgType", "steer"]
 - ["Ps11CVarArgType", "temperature"]
 - ["Ps11CVarArgType", ""]
 - !private ["Vs9Character", "deinit"]
+- !private ["Ps14CollectionType", "Generator"]
+- !private ["Ps14CollectionType", "Index"]
+- !private ["Ps14CollectionType", "SubSequence"]
+- !private ["Ps14CollectionType", "_Element"]
 - ["Ps14CollectionType", "init"]
+- !private ["Ps14CollectionType", "subscript"]
 - !private ["Ps10Comparable", "init"]
 - ["Ps28CustomDebugStringConvertible", "acceleration"]
-- !private ["Ps28CustomDebugStringConvertible", "appendBytes"]
 - !private ["Ps28CustomDebugStringConvertible", "bindToAddress"]
 - ["Ps28CustomDebugStringConvertible", "brake"]
 - !private ["Ps28CustomDebugStringConvertible", "close"]
-- !private ["Ps28CustomDebugStringConvertible", "dataUsingEncoding"]
 - ["Ps28CustomDebugStringConvertible", "distance"]
 - ["Ps28CustomDebugStringConvertible", "fuel"]
 - ["Ps28CustomDebugStringConvertible", "gear"]
@@ -193,19 +182,17 @@ depends-member:
 - !private ["Ps28CustomDebugStringConvertible", "receiveWithTimeout"]
 - ["Ps28CustomDebugStringConvertible", "rpm"]
 - !private ["Ps28CustomDebugStringConvertible", "sendData"]
-- !private ["Ps28CustomDebugStringConvertible", "setData"]
 - !private ["Ps28CustomDebugStringConvertible", "setDelegate"]
 - ["Ps28CustomDebugStringConvertible", "speed"]
 - ["Ps28CustomDebugStringConvertible", "steer"]
+- !private ["Ps28CustomDebugStringConvertible", "subscript"]
 - ["Ps28CustomDebugStringConvertible", "temperature"]
 - ["Ps28CustomDebugStringConvertible", ""]
 - !private ["Ps23CustomStringConvertible", "_getBuiltinLogicValue"]
 - ["Ps23CustomStringConvertible", "acceleration"]
-- !private ["Ps23CustomStringConvertible", "appendBytes"]
 - !private ["Ps23CustomStringConvertible", "bindToAddress"]
 - ["Ps23CustomStringConvertible", "brake"]
 - !private ["Ps23CustomStringConvertible", "close"]
-- !private ["Ps23CustomStringConvertible", "dataUsingEncoding"]
 - ["Ps23CustomStringConvertible", "distance"]
 - ["Ps23CustomStringConvertible", "fuel"]
 - ["Ps23CustomStringConvertible", "gear"]
@@ -215,20 +202,18 @@ depends-member:
 - !private ["Ps23CustomStringConvertible", "receiveWithTimeout"]
 - ["Ps23CustomStringConvertible", "rpm"]
 - !private ["Ps23CustomStringConvertible", "sendData"]
-- !private ["Ps23CustomStringConvertible", "setData"]
 - !private ["Ps23CustomStringConvertible", "setDelegate"]
 - ["Ps23CustomStringConvertible", "speed"]
 - ["Ps23CustomStringConvertible", "steer"]
+- !private ["Ps23CustomStringConvertible", "subscript"]
 - ["Ps23CustomStringConvertible", "temperature"]
 - ["Ps23CustomStringConvertible", ""]
 - !private ["Sd", "deinit"]
 - !private ["Ps9Equatable", "_getBuiltinLogicValue"]
 - ["Ps9Equatable", "acceleration"]
-- !private ["Ps9Equatable", "appendBytes"]
 - !private ["Ps9Equatable", "bindToAddress"]
 - ["Ps9Equatable", "brake"]
 - !private ["Ps9Equatable", "close"]
-- !private ["Ps9Equatable", "dataUsingEncoding"]
 - ["Ps9Equatable", "distance"]
 - ["Ps9Equatable", "fuel"]
 - ["Ps9Equatable", "gear"]
@@ -238,23 +223,20 @@ depends-member:
 - !private ["Ps9Equatable", "receiveWithTimeout"]
 - ["Ps9Equatable", "rpm"]
 - !private ["Ps9Equatable", "sendData"]
-- !private ["Ps9Equatable", "setData"]
 - !private ["Ps9Equatable", "setDelegate"]
 - ["Ps9Equatable", "speed"]
 - ["Ps9Equatable", "steer"]
 - ["Ps9Equatable", "temperature"]
 - ["Ps9Equatable", ""]
-- !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "dataUsingEncoding"]
 - !private ["Ps41ExtendedGraphemeClusterLiteralConvertible", "init"]
 - !private ["Sf", "deinit"]
 - !private ["Ps16ForwardIndexType", "init"]
+- !private ["Ps13GeneratorType", "Element"]
 - !private ["Ps8Hashable", "_getBuiltinLogicValue"]
 - ["Ps8Hashable", "acceleration"]
-- !private ["Ps8Hashable", "appendBytes"]
 - !private ["Ps8Hashable", "bindToAddress"]
 - ["Ps8Hashable", "brake"]
 - !private ["Ps8Hashable", "close"]
-- !private ["Ps8Hashable", "dataUsingEncoding"]
 - ["Ps8Hashable", "distance"]
 - ["Ps8Hashable", "fuel"]
 - ["Ps8Hashable", "gear"]
@@ -264,14 +246,19 @@ depends-member:
 - !private ["Ps8Hashable", "receiveWithTimeout"]
 - ["Ps8Hashable", "rpm"]
 - !private ["Ps8Hashable", "sendData"]
-- !private ["Ps8Hashable", "setData"]
 - !private ["Ps8Hashable", "setDelegate"]
 - ["Ps8Hashable", "speed"]
 - ["Ps8Hashable", "steer"]
 - ["Ps8Hashable", "temperature"]
 - ["Ps8Hashable", ""]
 - !private ["SQ", "deinit"]
+- !private ["Ps9Indexable", "Generator"]
+- !private ["Ps9Indexable", "Index"]
+- !private ["Ps9Indexable", "SubSequence"]
+- !private ["Ps9Indexable", "_Element"]
 - ["Ps9Indexable", "init"]
+- !private ["Ps9Indexable", "subscript"]
+- !private ["Vs17IndexingGenerator", "Element"]
 - !private ["Si", "deinit"]
 - !private ["Si", "init"]
 - !private ["Vs5Int16", "deinit"]
@@ -283,38 +270,25 @@ depends-member:
 - !private ["Ps11IntegerType", "init"]
 - !private ["Ps14MirrorPathType", "init"]
 - ["Ps21MutableCollectionType", "init"]
+- !private ["Ps21MutableCollectionType", "subscript"]
 - ["Ps16MutableIndexable", "init"]
+- !private ["Ps16MutableIndexable", "subscript"]
 - ["Ps16MutableSliceable", "init"]
-- !private ["PSo8NSCoding", "appendBytes"]
-- !private ["PSo8NSCoding", "dataUsingEncoding"]
+- !private ["Ps16MutableSliceable", "subscript"]
 - !private ["PSo8NSCoding", "getBytes"]
 - !private ["PSo8NSCoding", "init"]
-- !private ["PSo8NSCoding", "setData"]
-- !private ["PSo9NSCopying", "appendBytes"]
-- !private ["PSo9NSCopying", "dataUsingEncoding"]
 - !private ["PSo9NSCopying", "getBytes"]
 - !private ["PSo9NSCopying", "init"]
-- !private ["PSo9NSCopying", "setData"]
-- !private ["CSo6NSData", "appendBytes"]
 - !private ["CSo6NSData", "getBytes"]
 - !private ["CSo6NSData", "init"]
-- !private ["CSo6NSData", "setData"]
-- !private ["PSo16NSMutableCopying", "appendBytes"]
-- !private ["PSo16NSMutableCopying", "dataUsingEncoding"]
 - !private ["PSo16NSMutableCopying", "getBytes"]
 - !private ["PSo16NSMutableCopying", "init"]
-- !private ["PSo16NSMutableCopying", "setData"]
-- !private ["CSo13NSMutableData", "appendBytes"]
-- !private ["CSo13NSMutableData", "init"]
-- !private ["CSo13NSMutableData", "setData"]
 - ["CSo8NSObject", "Float"]
 - ["CSo8NSObject", "Int"]
 - ["CSo8NSObject", "acceleration"]
-- !private ["CSo8NSObject", "appendBytes"]
 - !private ["CSo8NSObject", "bindToAddress"]
 - ["CSo8NSObject", "brake"]
 - !private ["CSo8NSObject", "close"]
-- !private ["CSo8NSObject", "dataUsingEncoding"]
 - ["CSo8NSObject", "distance"]
 - ["CSo8NSObject", "fuel"]
 - ["CSo8NSObject", "gear"]
@@ -324,18 +298,15 @@ depends-member:
 - !private ["CSo8NSObject", "receiveWithTimeout"]
 - ["CSo8NSObject", "rpm"]
 - !private ["CSo8NSObject", "sendData"]
-- !private ["CSo8NSObject", "setData"]
 - !private ["CSo8NSObject", "setDelegate"]
 - ["CSo8NSObject", "speed"]
 - ["CSo8NSObject", "steer"]
 - ["CSo8NSObject", "temperature"]
 - ["CSo8NSObject", ""]
 - ["PSo16NSObjectProtocol", "acceleration"]
-- !private ["PSo16NSObjectProtocol", "appendBytes"]
 - !private ["PSo16NSObjectProtocol", "bindToAddress"]
 - ["PSo16NSObjectProtocol", "brake"]
 - !private ["PSo16NSObjectProtocol", "close"]
-- !private ["PSo16NSObjectProtocol", "dataUsingEncoding"]
 - ["PSo16NSObjectProtocol", "distance"]
 - ["PSo16NSObjectProtocol", "fuel"]
 - ["PSo16NSObjectProtocol", "gear"]
@@ -345,18 +316,13 @@ depends-member:
 - !private ["PSo16NSObjectProtocol", "receiveWithTimeout"]
 - ["PSo16NSObjectProtocol", "rpm"]
 - !private ["PSo16NSObjectProtocol", "sendData"]
-- !private ["PSo16NSObjectProtocol", "setData"]
 - !private ["PSo16NSObjectProtocol", "setDelegate"]
 - ["PSo16NSObjectProtocol", "speed"]
 - ["PSo16NSObjectProtocol", "steer"]
 - ["PSo16NSObjectProtocol", "temperature"]
 - ["PSo16NSObjectProtocol", ""]
-- !private ["PSo14NSSecureCoding", "appendBytes"]
-- !private ["PSo14NSSecureCoding", "dataUsingEncoding"]
 - !private ["PSo14NSSecureCoding", "getBytes"]
 - !private ["PSo14NSSecureCoding", "init"]
-- !private ["PSo14NSSecureCoding", "setData"]
-- !private ["CSo8NSString", "dataUsingEncoding"]
 - !private ["CSo8NSString", "deinit"]
 - !private ["CSo8NSString", "init"]
 - !private ["Sq", "deinit"]
@@ -402,18 +368,15 @@ depends-member:
 - ["C21BeamNG_SteeringDevice9PSSession", "AsyncUdpSocket"]
 - ["C21BeamNG_SteeringDevice9PSSession", "Bool"]
 - ["C21BeamNG_SteeringDevice9PSSession", "CFTimeInterval"]
-- !private ["C21BeamNG_SteeringDevice9PSSession", "Float"]
 - ["C21BeamNG_SteeringDevice9PSSession", "Int"]
 - ["C21BeamNG_SteeringDevice9PSSession", "NSData"]
 - ["C21BeamNG_SteeringDevice9PSSession", "NSError"]
-- !private ["C21BeamNG_SteeringDevice9PSSession", "NSMutableData"]
-- !private ["C21BeamNG_SteeringDevice9PSSession", "NSString"]
-- !private ["C21BeamNG_SteeringDevice9PSSession", "NSUTF8StringEncoding"]
 - ["C21BeamNG_SteeringDevice9PSSession", "PSCarData"]
 - !private ["C21BeamNG_SteeringDevice9PSSession", "PSReceivedData"]
 - ["C21BeamNG_SteeringDevice9PSSession", "PSSteerData"]
 - ["C21BeamNG_SteeringDevice9PSSession", "String"]
 - ["C21BeamNG_SteeringDevice9PSSession", "UInt16"]
+- !private ["C21BeamNG_SteeringDevice9PSSession", "UInt8"]
 - ["C21BeamNG_SteeringDevice9PSSession", "Void"]
 - ["C21BeamNG_SteeringDevice9PSSession", "carData"]
 - ["C21BeamNG_SteeringDevice9PSSession", "currentData"]
@@ -429,7 +392,6 @@ depends-member:
 - ["C21BeamNG_SteeringDevice9PSSession", "receiveTimeout"]
 - ["C21BeamNG_SteeringDevice9PSSession", "sendCurrentData"]
 - ["C21BeamNG_SteeringDevice9PSSession", "sendSocket"]
-- !private ["C21BeamNG_SteeringDevice9PSSession", "sizeof"]
 - ["C21BeamNG_SteeringDevice11PSSteerData", "Float"]
 - ["C21BeamNG_SteeringDevice11PSSteerData", "acceleration"]
 - ["C21BeamNG_SteeringDevice11PSSteerData", "brake"]
@@ -439,25 +401,37 @@ depends-member:
 - ["C21BeamNG_SteeringDevice11PSSteerData", "steer"]
 - !private ["Ps21RandomAccessIndexType", "init"]
 - ["Ps30RangeReplaceableCollectionType", "init"]
+- !private ["Ps30RangeReplaceableCollectionType", "subscript"]
+- !private ["Ps12SequenceType", "Element"]
+- !private ["Ps12SequenceType", "Generator"]
+- !private ["Ps12SequenceType", "Index"]
+- !private ["Ps12SequenceType", "SubSequence"]
+- !private ["Ps12SequenceType", "_Element"]
 - ["Ps12SequenceType", "init"]
+- !private ["Ps12SequenceType", "subscript"]
 - !private ["Ps17SignedIntegerType", "init"]
 - !private ["Ps16SignedNumberType", "init"]
+- !private ["Vs5Slice", "Generator"]
+- !private ["Vs5Slice", "Index"]
+- !private ["Vs5Slice", "SubSequence"]
+- !private ["Vs5Slice", "_Element"]
 - !private ["Ps10Streamable", "init"]
 - !private ["Ps10Strideable", "init"]
 - !private ["SS", "deinit"]
 - !private ["SS", "init"]
 - !private ["Ps30StringInterpolationConvertible", "init"]
-- !private ["Ps24StringLiteralConvertible", "dataUsingEncoding"]
 - !private ["Ps24StringLiteralConvertible", "init"]
 - !private ["Su", "deinit"]
 - !private ["Vs6UInt16", "deinit"]
+- !private ["Vs6UInt16", "init"]
 - !private ["Vs6UInt32", "deinit"]
 - !private ["Vs6UInt64", "deinit"]
 - !private ["Vs5UInt8", "deinit"]
 - !private ["Sc", "deinit"]
-- !private ["Ps31UnicodeScalarLiteralConvertible", "dataUsingEncoding"]
 - !private ["Ps31UnicodeScalarLiteralConvertible", "init"]
+- !private ["Ps19UnsignedIntegerType", "init"]
 - ["Ps10_ArrayType", "init"]
+- !private ["Ps10_ArrayType", "subscript"]
 - !private ["Ps33_BuiltinBooleanLiteralConvertible", "_getBuiltinLogicValue"]
 - !private ["Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible", "init"]
 - !private ["Ps33_BuiltinIntegerLiteralConvertible", "init"]
@@ -465,17 +439,21 @@ depends-member:
 - !private ["Ps37_BuiltinUTF16StringLiteralConvertible", "init"]
 - !private ["Ps39_BuiltinUnicodeScalarLiteralConvertible", "init"]
 - ["Ps24_DestructorSafeContainer", "init"]
+- !private ["Ps24_DestructorSafeContainer", "subscript"]
+- !private ["Ps28_DisallowMixedSignArithmetic", "init"]
 - !private ["Ps14_Incrementable", "init"]
 - !private ["Ps22_IntegerArithmeticType", "init"]
 - !private ["Ps12_IntegerType", "init"]
 - !private ["Ps21_ObjectiveCBridgeable", "_getBuiltinLogicValue"]
 - ["Ps21_ObjectiveCBridgeable", "init"]
+- !private ["Ps21_ObjectiveCBridgeable", "subscript"]
 - !private ["Vs26_OptionalNilComparisonType", "deinit"]
 - !private ["Ps22_RandomAccessAmbiguity", "init"]
 - !private ["Ps12_Reflectable", "_getBuiltinLogicValue"]
-- !private ["Ps12_Reflectable", "dataUsingEncoding"]
 - ["Ps12_Reflectable", "init"]
+- !private ["Ps12_Reflectable", "subscript"]
 - !private ["Ps18_SignedIntegerType", "init"]
+- !private ["Ps18_StringElementType", "init"]
 depends-nominal:
 - "Ps9AnyObject"
 - "Sa"
@@ -498,9 +476,11 @@ depends-nominal:
 - !private "Ps41ExtendedGraphemeClusterLiteralConvertible"
 - !private "Sf"
 - !private "Ps16ForwardIndexType"
+- !private "Ps13GeneratorType"
 - "Ps8Hashable"
 - !private "SQ"
 - "Ps9Indexable"
+- !private "Vs17IndexingGenerator"
 - !private "Si"
 - !private "Vs5Int16"
 - !private "Vs5Int32"
@@ -517,7 +497,6 @@ depends-nominal:
 - !private "PSo9NSCopying"
 - !private "CSo6NSData"
 - !private "PSo16NSMutableCopying"
-- !private "CSo13NSMutableData"
 - "CSo8NSObject"
 - "PSo16NSObjectProtocol"
 - !private "PSo14NSSecureCoding"
@@ -533,6 +512,7 @@ depends-nominal:
 - "Ps12SequenceType"
 - !private "Ps17SignedIntegerType"
 - !private "Ps16SignedNumberType"
+- !private "Vs5Slice"
 - !private "Ps10Streamable"
 - !private "Ps10Strideable"
 - !private "SS"
@@ -545,6 +525,7 @@ depends-nominal:
 - !private "Vs5UInt8"
 - !private "Sc"
 - !private "Ps31UnicodeScalarLiteralConvertible"
+- !private "Ps19UnsignedIntegerType"
 - "Ps10_ArrayType"
 - !private "Ps33_BuiltinBooleanLiteralConvertible"
 - !private "Ps49_BuiltinExtendedGraphemeClusterLiteralConvertible"
@@ -553,6 +534,7 @@ depends-nominal:
 - !private "Ps37_BuiltinUTF16StringLiteralConvertible"
 - !private "Ps39_BuiltinUnicodeScalarLiteralConvertible"
 - "Ps24_DestructorSafeContainer"
+- !private "Ps28_DisallowMixedSignArithmetic"
 - !private "Ps14_Incrementable"
 - !private "Ps22_IntegerArithmeticType"
 - !private "Ps12_IntegerType"
@@ -561,6 +543,7 @@ depends-nominal:
 - !private "Ps22_RandomAccessAmbiguity"
 - "Ps12_Reflectable"
 - !private "Ps18_SignedIntegerType"
+- !private "Ps18_StringElementType"
 depends-dynamic-lookup:
 depends-external:
 - "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/arm64/Swift.swiftmodule"
@@ -575,4 +558,4 @@ depends-external:
 - "/Users/Hondune/Desktop/Work And Stuff/BeamNG Work/remotecontrol/iOS/BeamNG.SteeringDevice/BeamNG.SteeringDevice/PSQuat.h"
 - "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/arm64/UIKit.swiftmodule"
 - "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos/arm64/CoreImage.swiftmodule"
-interface-hash: "c40b0de92c9109a280ffb712078d65fe"
+interface-hash: "f77b0ee6aa710bbe48eadb56481f5c63"
