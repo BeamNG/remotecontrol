@@ -70,6 +70,7 @@ class PSReceivedData
         
         data.getBytes(&display1, range: NSMakeRange(60, 16));
         data.getBytes(&display2, range: NSMakeRange(76, 16));
+        data.getBytes(&rid, range: NSMakeRange(92, 4));
     }
     var timer : UInt32 = 0;
     var carName = [UInt8](count: 4, repeatedValue: 0);
@@ -90,7 +91,7 @@ class PSReceivedData
     var clutch : Float = 0.0;
     var display1 = [UInt8](count: 16, repeatedValue: 0);
     var display2 = [UInt8](count: 16, repeatedValue: 0);
-    //var id : Int = 0;
+    var rid : Int = 1;
 }
 
 class PSSession : AsyncUdpSocketDelegate
@@ -117,22 +118,20 @@ class PSSession : AsyncUdpSocketDelegate
         
         sendSocket = AsyncUdpSocket(delegate: self);
         do {
-            print(host+" : \(port)");
-            //try sendSocket.connectToHost(host, onPort: port)
-            try sendSocket.bindToAddress(host, port: port)
-            //try sendSocket.enableBroadcast(true)
-            //try sendSocket.bindToPort(port)
+            print("Connecting Send Socket: "+host+" : \(port)");
+            //try sendSocket.bindToAddress(host, port: 4445)
+            try sendSocket.bindToPort(4445)
         } catch _ {
         };
         
         var error : NSError? = nil;
         
         listenSocket = AsyncUdpSocket(delegate: self);
-        /*do {
-            try listenSocket.bindToPort(4445)
-        } catch let error1 as NSError {
-            error = error1
-        };*/
+        do {
+            print("Connecting Listen Socket: "+host+" : 4445");
+            try listenSocket.bindToAddress("10.0.1.31", port: 4445)
+        } catch _ {
+        };
         
         if(error != nil)
         {
@@ -140,7 +139,7 @@ class PSSession : AsyncUdpSocketDelegate
         }
         finalHost = host;
         finalPort = port;
-        listenSocket.receiveWithTimeout(-1, tag: 0);
+        listenSocket.receiveWithTimeout(5, tag: 0);
     }
     deinit
     {
@@ -152,34 +151,20 @@ class PSSession : AsyncUdpSocketDelegate
     func sendCurrentData()
     {
         
-        //var data : [Float] = [currentData.steer, currentData.acceleration, currentData.brake, currentData.id];
-        let toBytes : [UInt32] = [currentData.steer._toBitPattern(), currentData.brake._toBitPattern(), currentData.acceleration._toBitPattern(), currentData.id._toBitPattern()];
-        //let data : [UInt8] = [25, 0, 1, 1];
+        let toBytes : [UInt32] = [UInt32(bigEndian: currentData.steer._toBitPattern()), UInt32(bigEndian: currentData.brake._toBitPattern()), UInt32(bigEndian: currentData.acceleration._toBitPattern()), UInt32(bigEndian: currentData.id._toBitPattern())];
         let dataBytes = NSData(bytes: toBytes, length: 16);
-        
-        /*let mutData = NSMutableData();
-        mutData.appendBytes(&currentData.steer, length: sizeof(Float));
-        mutData.appendBytes(&currentData.acceleration, length: sizeof(Float));
-        mutData.appendBytes(&currentData.brake, length: sizeof(Float));
-        mutData.appendBytes(&currentData.id, length: sizeof(Float));*/
-    
-        var test = [UInt32](count: 4, repeatedValue: 0);
+
+        /*var test = [UInt32](count: 4, repeatedValue: 0);
         dataBytes.getBytes(&test, length: 16);
         test[0] = UInt32(bigEndian: test[0]);
         test[1] = UInt32(bigEndian: test[1]);
         test[2] = UInt32(bigEndian: test[2]);
         test[3] = UInt32(bigEndian: test[3]);
         
-        let dataBytes2 = NSData(bytes: test, length: 16);
-        //print(test);*/
+        let dataBytes2 = NSData(bytes: test, length: 16);*/
         
-        sendSocket.sendData(dataBytes2, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
-        //print("sent data");
-        //print(dataBytes);
+        sendSocket.sendData(dataBytes, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
         
-        //let message : NSString = "beamng|Test Device|123";
-        //let data2 = message.dataUsingEncoding(NSUTF8StringEncoding);
-        //sendSocket.sendData(data2, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
     }
     
     @objc func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)
@@ -209,12 +194,13 @@ class PSSession : AsyncUdpSocketDelegate
 
     @objc func onUdpSocket(sock: AsyncUdpSocket!, didReceiveData data: NSData!, withTag tag: Int, fromHost host: String!, port: UInt16) -> Bool
     {
-        print("PSSession: Received data!\n\t\(data)\nfrom: \(host):\(port)");
+        //print("PSSession: Received data!\n\t\(data)\nfrom: \(host):\(port)");
         let recData : PSReceivedData = PSReceivedData();
         
         recData.fromData(data);
         
         carData.speed = recData.speed;
+        
         carData.rpm = recData.rpm;
         
         carData.gear = Int(recData.gear);

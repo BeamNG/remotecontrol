@@ -211,20 +211,21 @@ class PSSessionViewController : UIViewController
                     
                     if(self.session != nil)
                     {
-                        self.speed.progress = CGFloat(self.session.carData.speed);
-                        self.rpm.progress = CGFloat(self.session.carData.rpm);
-                        self.labelSpeed.text = String(format: "%03d", Int(220.0 * self.session.carData.speed));
+                        self.speed.progress = CGFloat((self.session.carData.speed*2.23694)/220);
+                        self.rpm.progress = CGFloat(self.session.carData.rpm/8000);
+                        //m/s to mph
+                        self.labelSpeed.text = String(format: "%03d", Int(self.session.carData.speed*2.23694));
                         if(self.session.carData.gear == 0)
-                        {
-                            self.labelGear.text = String(format: "N");
-                        }
-                        else if(self.session.carData.gear == 7)
                         {
                             self.labelGear.text = String(format: "R");
                         }
+                        else if(self.session.carData.gear == 1)
+                        {
+                            self.labelGear.text = String(format: "N");
+                        }
                         else
                         {
-                            self.labelGear.text = String(format: "%01d", Int(self.session.carData.gear));
+                            self.labelGear.text = String(format: "%01d", Int(self.session.carData.gear-1));
                         }
                         self.labelDist.text = String(format: "%06d", Int(self.session.carData.distance));
                         self.fuel.progress = CGFloat(self.session.carData.fuel);

@@ -45,6 +45,7 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
         let message : NSString = "beamng|\(UIDevice.currentDevice().name)|\(code)";
         let data = message.dataUsingEncoding(NSUTF8StringEncoding);
         
+        print("Broadcasting from: \(PSNetUtil.localIPAddress())")
         socket.sendData(data, toHost: PSNetUtil.broadcastAddress(), port: 4444, withTimeout: timeout, tag: 0);
     }
     
