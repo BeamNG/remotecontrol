@@ -34,6 +34,7 @@ class PSSessionViewController : UIViewController
     var labelSpeed : UILabel! = nil;
     var labelGear : UILabel! = nil;
     var labelDist : UILabel! = nil;
+    var labelLag : UILabel! = nil;
     
     var buttonAccelerate : UIButton! = nil;
     var buttonBrake : UIButton! = nil;
@@ -187,6 +188,15 @@ class PSSessionViewController : UIViewController
         labelDist.textAlignment = NSTextAlignment.Center;
         hudView.addSubview(labelDist);
         
+        labelLag = UILabel(frame: CGRectMake(0.5029 * imgWidth - labelWidth * 0.5, 0.641 * imgHeight - labelWidth * -0.5, labelWidth, labelWidth));
+        //labelSpeed.backgroundColor = UIColor.redColor();
+        labelLag.text = "Delay: 0.0ms";
+        labelLag.textColor = UIColor.whiteColor();
+        labelLag.font = UIFont(name: "OpenSans-Bold", size: 0.03 * imgWidth);
+        labelLag.textAlignment = NSTextAlignment.Center;
+        hudView.addSubview(labelLag);
+
+        
         buttonAccelerate = UIButton(type: UIButtonType.System) as UIButton;
         buttonAccelerate.frame = CGRectMake(0, 0, self.view.frame.height * 0.5, self.view.frame.width);
         buttonAccelerate.setTitle("", forState: UIControlState.Normal);
@@ -271,7 +281,7 @@ class PSSessionViewController : UIViewController
                         self.labelDist.text = String(format: "%06d", Int(self.session.carData.distance));
                         self.fuel.progress = CGFloat(self.session.carData.fuel);
                         self.temperature.progress = CGFloat(self.session.carData.temperature);
-                        
+                        self.labelLag.text = "Delay: "+String(self.session.currentData.lagDelay)+"ms";
                         var lights : Int = Int(self.session.carData.lights);
                         if (lights - 96 >= 0) {
                             //print("show hazards");

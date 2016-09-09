@@ -15,6 +15,7 @@ class PSSteerData : NSObject
     var brake : Float = 0.0;
     var steer : Float = 0.0;
     var id : Float = 1;
+    var lagDelay : Double = 0;
     override init()
     {
         super.init();
@@ -92,7 +93,7 @@ class PSReceivedData
     var clutch : Float = 0.0;
     var display1 = [UInt8](count: 16, repeatedValue: 0);
     var display2 = [UInt8](count: 16, repeatedValue: 0);
-    var rid : Int = 1;
+    var rid : Int = 0;
 }
 
 class PSSession : AsyncUdpSocketDelegate
@@ -109,6 +110,10 @@ class PSSession : AsyncUdpSocketDelegate
     
     var finalHost : String = "";
     var finalPort: UInt16 = 4445;
+    
+    var lastID : Int = 0;
+    var lpTime : Double = 0;
+    var oldDiff : Double = 0;
     
     init(host: String, port: UInt16, sessionBrokenHandler: ((NSError)->(Void))!)
     {
@@ -166,6 +171,11 @@ class PSSession : AsyncUdpSocketDelegate
         
         sendSocket.sendData(dataBytes, toHost: finalHost, port: 4444, withTimeout: -1, tag: 0);
         
+        if (lastID != Int(currentData.id)) {
+            lastID = Int(currentData.id);
+            lpTime = CACurrentMediaTime();
+        }
+        
     }
     
     @objc func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)
@@ -208,6 +218,23 @@ class PSSession : AsyncUdpSocketDelegate
         carData.fuel = recData.fuel;
         carData.temperature = recData.engineTemperature;
         carData.lights = recData.showLights;
+        
+        if (recData.rid == Int(currentData.id)) {
+            let diff : Double = (CACurrentMediaTime() - lpTime)*1000/2;
+            
+            currentData.lagDelay = (oldDiff + diff)/2;
+            
+            currentData.lagDelay = round(currentData.lagDelay*100)/100;
+            
+            //print(currentData.lagDelay);
+            
+            currentData.id += 1;
+            if (currentData.id == 128) {
+                currentData.id = 0;
+            }
+            
+            oldDiff = diff;
+        }
         //print(recData.showLights);
         
         listenSocket.receiveWithTimeout(-1, tag: 0);
