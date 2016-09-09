@@ -34,9 +34,25 @@ class PSSessionViewController : UIViewController
     var labelSpeed : UILabel! = nil;
     var labelGear : UILabel! = nil;
     var labelDist : UILabel! = nil;
+    var labelLag : UILabel! = nil;
     
     var buttonAccelerate : UIButton! = nil;
     var buttonBrake : UIButton! = nil;
+    
+    var lightsBG : UIImage! = nil;
+    var lightsBGView : UIImageView! = nil;
+    
+    var lowBeams : UIImage! = nil;
+    var lowBeamView : UIImageView! = nil;
+    
+    var highBeams : UIImage! = nil;
+    var highBeamView : UIImageView! = nil;
+    
+    var lBlinker : UIImage! = nil;
+    var lBlinkerView : UIImageView! = nil;
+    
+    var rBlinker : UIImage! = nil;
+    var rBlinkerView : UIImageView! = nil;
     
     override func viewDidLoad()
     {
@@ -53,9 +69,35 @@ class PSSessionViewController : UIViewController
         hudView = UIImageView(frame: CGRectMake(self.view.frame.height * 0.5 - imgWidth * 0.5, self.view.frame.width * 0.5 - imgHeight * 0.5, imgWidth, imgHeight));
         self.view.addSubview(hudView);
         
+        
         hudImageView = UIImageView(frame: CGRectMake(0, 0, imgWidth, imgHeight));
         hudImageView.image = hudImage;
         hudView.addSubview(hudImageView);
+        
+        lightsBG = UIImage(named: "lightsbg")!;
+        lightsBGView = UIImageView(frame: CGRectMake(0, 0, imgWidth, imgHeight));
+        lightsBGView.image = lightsBG;
+        hudView.addSubview(lightsBGView);
+        
+        lowBeams = UIImage(named: "lowbeams")!;
+        lowBeamView = UIImageView(frame: CGRectMake(0, 0, imgWidth, imgHeight));
+        lowBeamView.image = lowBeams;
+        hudView.addSubview(lowBeamView);
+        
+        highBeams = UIImage(named: "highbeams")!;
+        highBeamView = UIImageView(frame: CGRectMake(0, 0, imgWidth, imgHeight));
+        highBeamView.image = highBeams;
+        hudView.addSubview(highBeamView);
+        
+        lBlinker = UIImage(named: "leftblinker")!;
+        lBlinkerView = UIImageView(frame: CGRectMake(0, 0, imgWidth, imgHeight));
+        lBlinkerView.image = lBlinker;
+        hudView.addSubview(lBlinkerView);
+        
+        rBlinker = UIImage(named: "rightblinker")!;
+        rBlinkerView = UIImageView(frame: CGRectMake(0, 0, imgWidth, imgHeight));
+        rBlinkerView.image = rBlinker;
+        hudView.addSubview(rBlinkerView);
 
         let wheelRadius : CGFloat = 100;
         steeringWheelLayer = CAShapeLayer();
@@ -146,6 +188,15 @@ class PSSessionViewController : UIViewController
         labelDist.textAlignment = NSTextAlignment.Center;
         hudView.addSubview(labelDist);
         
+        labelLag = UILabel(frame: CGRectMake(0.5029 * imgWidth - labelWidth * 0.5, 0.641 * imgHeight - labelWidth * -0.5, labelWidth, labelWidth));
+        //labelSpeed.backgroundColor = UIColor.redColor();
+        labelLag.text = "Delay: 0.0ms";
+        labelLag.textColor = UIColor.whiteColor();
+        labelLag.font = UIFont(name: "OpenSans-Bold", size: 0.03 * imgWidth);
+        labelLag.textAlignment = NSTextAlignment.Center;
+        hudView.addSubview(labelLag);
+
+        
         buttonAccelerate = UIButton(type: UIButtonType.System) as UIButton;
         buttonAccelerate.frame = CGRectMake(0, 0, self.view.frame.height * 0.5, self.view.frame.width);
         buttonAccelerate.setTitle("", forState: UIControlState.Normal);
@@ -230,6 +281,46 @@ class PSSessionViewController : UIViewController
                         self.labelDist.text = String(format: "%06d", Int(self.session.carData.distance));
                         self.fuel.progress = CGFloat(self.session.carData.fuel);
                         self.temperature.progress = CGFloat(self.session.carData.temperature);
+                        self.labelLag.text = "Delay: "+String(self.session.currentData.lagDelay)+"ms";
+                        var lights : Int = Int(self.session.carData.lights);
+                        if (lights - 96 >= 0) {
+                            //print("show hazards");
+                            self.lBlinkerView.hidden = false;
+                            self.rBlinkerView.hidden = false;
+                            lights -= 96;
+                        }
+                        else if (lights - 64 >= 0) {
+                            //print("show right blinker");
+                            self.lBlinkerView.hidden = true;
+                            self.rBlinkerView.hidden = false;
+                            lights -= 64;
+                        }
+                        else if (lights - 32 >= 0) {
+                            //print("show Left blinker");
+                            self.rBlinkerView.hidden = true;
+                            self.lBlinkerView.hidden = false;
+                            lights -= 32;
+                        }
+                        else {
+                            self.lBlinkerView.hidden = true;
+                            self.rBlinkerView.hidden = true;
+                        }
+                        if (lights - 2 >= 0) {
+                            //print("show high beams");
+                            self.highBeamView.hidden = false;
+                            lights -= 2;
+                        }
+                        else {
+                            self.highBeamView.hidden = true;
+                        }
+                        if (lights - 1 >= 0) {
+                            //print("show low beams");
+                            self.lowBeamView.hidden = false;
+                            lights -= 1;
+                        }
+                        else {
+                            self.lowBeamView.hidden = true;
+                        }
                     }
                 });
             }
