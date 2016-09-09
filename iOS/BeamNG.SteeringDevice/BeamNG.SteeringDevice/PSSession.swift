@@ -29,6 +29,7 @@ class PSCarData : NSObject
     var temperature : Float = 0.0;
     var gear : Int = 0;
     var distance : Int = 0;
+    var lights : UInt32 = 0;
     override init()
     {
         super.init();
@@ -206,6 +207,8 @@ class PSSession : AsyncUdpSocketDelegate
         carData.gear = Int(recData.gear);
         carData.fuel = recData.fuel;
         carData.temperature = recData.engineTemperature;
+        carData.lights = recData.showLights;
+        //print(recData.showLights);
         
         listenSocket.receiveWithTimeout(-1, tag: 0);
         
