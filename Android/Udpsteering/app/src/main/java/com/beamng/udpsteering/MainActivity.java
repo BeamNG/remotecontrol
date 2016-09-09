@@ -664,7 +664,6 @@ public class MainActivity extends Activity implements SensorEventListener {
             //Log.i("packet ID ", "returned: " + packet.getID());
 
             if (packet.getID() == pID) {
-                oldDiff = timeDiff;
                 timeDiff = System.currentTimeMillis()-lpTime;
                 //smooth the display a bit so the numbers dont jump so erratically
                 float disDiff = (oldDiff+timeDiff)/2;
@@ -674,6 +673,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                 pID++;
                 if(pID == 128)
                     pID = 0;
+
+                oldDiff = timeDiff;
             }
             //convert m/s to mp/h
             int newSpeed = Math.round(2.23694f * packet.getSpeed());
