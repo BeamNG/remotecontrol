@@ -35,6 +35,7 @@ class PSSessionViewController : UIViewController
     var labelGear : UILabel! = nil;
     var labelDist : UILabel! = nil;
     var labelLag : UILabel! = nil;
+    var labelUnit : UILabel! = nil;
     
     var buttonAccelerate : UIButton! = nil;
     var buttonBrake : UIButton! = nil;
@@ -53,6 +54,11 @@ class PSSessionViewController : UIViewController
     
     var rBlinker : UIImage! = nil;
     var rBlinkerView : UIImageView! = nil;
+    
+    var senSlider : UISlider! = nil;
+    var unitSel : UISwitch! = nil;
+    var senText : UILabel! = nil;
+    var unitText : UILabel! = nil;
     
     override func viewDidLoad()
     {
@@ -178,6 +184,15 @@ class PSSessionViewController : UIViewController
         labelGear.textAlignment = NSTextAlignment.Center;
         hudView.addSubview(labelGear);
         
+        labelUnit = UILabel(frame: CGRectMake(0.5 * imgWidth - labelWidth * 0.5, 0.535 * imgHeight - labelWidth * 0.5, labelWidth, labelWidth));
+        //labelGear.backgroundColor = UIColor.redColor();
+        labelUnit.text = "MPH";
+        labelUnit.textColor = UIColor.grayColor();
+        //labelGear.font = UIFont(name: "OpenSans-Bold", size: 0.162234 * imgWidth);
+        labelUnit.font = UIFont(name: "OpenSans-Bold", size: 0.065 * imgWidth);
+        labelUnit.textAlignment = NSTextAlignment.Center;
+        hudView.addSubview(labelUnit);
+        
         
         labelDist = UILabel(frame: CGRectMake(0.535 * imgWidth - labelWidth * 0.5, 0.9593 * imgHeight - labelWidth * 0.5, labelWidth, labelWidth));
         //labelGear.backgroundColor = UIColor.redColor();
@@ -218,8 +233,31 @@ class PSSessionViewController : UIViewController
         self.connectionButton = UIButton(type: UIButtonType.System) as UIButton;
         self.connectionButton.setTitle("Connect", forState: UIControlState.Normal);
         self.connectionButton.addTarget(self, action: Selector("onButtonConnect"), forControlEvents: UIControlEvents.TouchUpInside);
-        self.connectionButton.frame = CGRectMake(10.0, 10.0, 100, 100);
+        self.connectionButton.frame = CGRectMake(10.0, -20.0, 100, 100);
         self.view.addSubview(self.connectionButton);
+        
+        self.senSlider = UISlider();
+        self.senSlider.frame = CGRectMake(20.0, 120.0, 150, 20);
+        self.view.addSubview(senSlider);
+        
+        self.senText = UILabel();
+        self.senText.frame = CGRectMake(20.0, 95.0, 150, 20);
+        self.senText.text = "Sensitivity";
+        self.senText.textColor = UIColor.whiteColor();
+        self.view.addSubview(senText);
+        
+        self.unitSel = UISwitch();
+        self.unitSel.frame = CGRectMake(20.0, 60.0, 150, 20);
+        self.unitSel.onTintColor = UIColor.whiteColor();
+        self.unitSel.addTarget(self, action: "UnitSwitch", forControlEvents: UIControlEvents.ValueChanged);
+        self.view.addSubview(unitSel);
+        
+        self.unitText = UILabel();
+        self.unitText.frame = CGRectMake(80.0, 65.0, 80, 20);
+        self.unitText.text = "MPH";
+        self.unitText.textColor = UIColor.whiteColor();
+        self.view.addSubview(unitText);
+
         
         cm = CMMotionManager();
         
@@ -251,7 +289,8 @@ class PSSessionViewController : UIViewController
                 {
                     //print("get steer angle");
                     //self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
-                    self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0;
+                    print(self.senSlider.value);
+                    self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0*self.senSlider.value;
                     //print("session exists, send data");
                     self.session.sendCurrentData();
                 }
@@ -262,10 +301,19 @@ class PSSessionViewController : UIViewController
                     
                     if(self.session != nil)
                     {
-                        self.speed.progress = CGFloat((self.session.carData.speed*2.23694)/220);
-                        self.rpm.progress = CGFloat(self.session.carData.rpm/8000);
+                        
+                        
                         //m/s to mph
-                        self.labelSpeed.text = String(format: "%03d", Int(self.session.carData.speed*2.23694));
+                        var Speed : Float = self.session.carData.speed*2.23694;
+                        //mph to km/h
+                        if(self.unitSel.on) {
+                            Speed *= 1.60934;
+                        }
+                        
+                        self.speed.progress = CGFloat(Speed/220);
+                        self.rpm.progress = CGFloat(self.session.carData.rpm/8000);
+                        
+                        self.labelSpeed.text = String(format: "%03d", Int(Speed));
                         if(self.session.carData.gear == 0)
                         {
                             self.labelGear.text = String(format: "R");
@@ -378,6 +426,16 @@ class PSSessionViewController : UIViewController
         if(self.session != nil)
         {
             self.session.currentData.brake = 0.0;
+        }
+    }
+    func UnitSwitch () {
+        if(self.unitSel.on) {
+            unitText.text = "KM/H";
+            labelUnit.text = "KM/H"
+        }
+        else {
+            unitText.text = "MPH";
+            labelUnit.text = "MPH";
         }
     }
     
