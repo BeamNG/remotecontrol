@@ -37,6 +37,8 @@ class PSSessionViewController : UIViewController
     var labelLag : UILabel! = nil;
     var labelUnit : UILabel! = nil;
     
+    var buttonMenu : UIButton! = nil;
+    
     var buttonAccelerate : UIButton! = nil;
     var buttonBrake : UIButton! = nil;
     
@@ -210,7 +212,6 @@ class PSSessionViewController : UIViewController
         labelLag.font = UIFont(name: "OpenSans-Bold", size: 0.03 * imgWidth);
         labelLag.textAlignment = NSTextAlignment.Center;
         hudView.addSubview(labelLag);
-
         
         buttonAccelerate = UIButton(type: UIButtonType.System) as UIButton;
         buttonAccelerate.frame = CGRectMake(0, 0, self.view.frame.height * 0.5, self.view.frame.width);
@@ -230,18 +231,35 @@ class PSSessionViewController : UIViewController
         
         self.searching = PSSearching(connectionHandler: self.onConnected);
         
+        buttonMenu = UIButton(type: UIButtonType.System) as UIButton;
+        buttonMenu.frame = CGRectMake(10, 10, 30, 30);
+        buttonMenu.setTitle("", forState: UIControlState.Normal);
+        buttonMenu.addTarget(self, action: "onButtonMenu", forControlEvents: UIControlEvents.TouchUpInside);
+        buttonMenu.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.0);
+        buttonMenu.setBackgroundImage(UIImage(named: "menubutton")!, forState: UIControlState.Normal);
+        self.view.addSubview(buttonMenu);
+        
         self.connectionButton = UIButton(type: UIButtonType.System) as UIButton;
         self.connectionButton.setTitle("Connect", forState: UIControlState.Normal);
         self.connectionButton.addTarget(self, action: Selector("onButtonConnect"), forControlEvents: UIControlEvents.TouchUpInside);
-        self.connectionButton.frame = CGRectMake(10.0, -20.0, 100, 100);
+        self.connectionButton.frame = CGRectMake(10.0, 130.0, 100, 100);
         self.view.addSubview(self.connectionButton);
         
+        let defaults = NSUserDefaults.standardUserDefaults();
+
         self.senSlider = UISlider();
-        self.senSlider.frame = CGRectMake(20.0, 120.0, 150, 20);
+        self.senSlider.frame = CGRectMake(20.0, 130.0, 150, 20);
+        self.senSlider.addTarget(self, action: Selector("onSliderChange"), forControlEvents: UIControlEvents.ValueChanged);
         self.view.addSubview(senSlider);
         
+        senSlider.value = defaults.floatForKey("Sensitivity");
+        
+        if (senSlider.value == 0) {
+            senSlider.value = 1;
+        }
+        
         self.senText = UILabel();
-        self.senText.frame = CGRectMake(20.0, 95.0, 150, 20);
+        self.senText.frame = CGRectMake(20.0, 103.0, 150, 20);
         self.senText.text = "Sensitivity";
         self.senText.textColor = UIColor.whiteColor();
         self.view.addSubview(senText);
@@ -252,12 +270,22 @@ class PSSessionViewController : UIViewController
         self.unitSel.addTarget(self, action: "UnitSwitch", forControlEvents: UIControlEvents.ValueChanged);
         self.view.addSubview(unitSel);
         
+        unitSel.on = defaults.boolForKey("UnitSetting");
+        
         self.unitText = UILabel();
         self.unitText.frame = CGRectMake(80.0, 65.0, 80, 20);
         self.unitText.text = "MPH";
         self.unitText.textColor = UIColor.whiteColor();
         self.view.addSubview(unitText);
-
+        
+        if(self.unitSel.on) {
+            unitText.text = "KM/H";
+            labelUnit.text = "KM/H"
+        }
+        else {
+            unitText.text = "MPH";
+            labelUnit.text = "MPH";
+        }
         
         cm = CMMotionManager();
         
@@ -380,6 +408,7 @@ class PSSessionViewController : UIViewController
         {
             self.connectionButton.hidden = true;
             self.session = PSSession(host: toHost, port: onPort, sessionBrokenHandler: self.onDisconnected);
+            onButtonMenu();
         }
         else
         {
@@ -428,6 +457,10 @@ class PSSessionViewController : UIViewController
             self.session.currentData.brake = 0.0;
         }
     }
+    func onSliderChange () {
+        let defaults = NSUserDefaults.standardUserDefaults();
+        defaults.setFloat(senSlider.value, forKey: "Sensitivity");
+    }
     func UnitSwitch () {
         if(self.unitSel.on) {
             unitText.text = "KM/H";
@@ -436,6 +469,27 @@ class PSSessionViewController : UIViewController
         else {
             unitText.text = "MPH";
             labelUnit.text = "MPH";
+        }
+        let defaults = NSUserDefaults.standardUserDefaults();
+        defaults.setBool(unitSel.on, forKey: "UnitSetting");
+
+    }
+    func onButtonMenu () {
+        if (!unitText.hidden) {
+            connectionButton.hidden = true;
+            unitText.hidden = true;
+            unitSel.hidden = true;
+            senSlider.hidden = true;
+            senText.hidden = true;
+        }
+        else {
+            if(self.session == nil) {
+                connectionButton.hidden = false;
+            }
+            unitText.hidden = false;
+            unitSel.hidden = false;
+            senSlider.hidden = false;
+            senText.hidden = false;
         }
     }
     
