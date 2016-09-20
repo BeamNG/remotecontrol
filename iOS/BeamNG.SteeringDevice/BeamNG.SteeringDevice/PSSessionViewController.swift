@@ -9,8 +9,9 @@
 import UIKit
 import CoreMotion
 import QuartzCore
+import AVFoundation
 
-class PSSessionViewController : UIViewController
+class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjectsDelegate
 {
     var searching : PSSearching!;
     var session : PSSession! = nil;
@@ -62,6 +63,11 @@ class PSSessionViewController : UIViewController
     var senText : UILabel! = nil;
     var unitText : UILabel! = nil;
     
+    //qr scanner stuff
+    var captureSession:AVCaptureSession?
+    var videoPreviewLayer:AVCaptureVideoPreviewLayer?
+    var qrCodeFrameView:UIView?
+    
     override func viewDidLoad()
     {
         super.viewDidLoad();
@@ -74,7 +80,7 @@ class PSSessionViewController : UIViewController
         var imgHeight : CGFloat = imgWidth * sizeRatio;
         imgWidth = hudImage.size.width;
         imgHeight = hudImage.size.height;
-        hudView = UIImageView(frame: CGRectMake(self.view.frame.height * 0.5 - imgWidth * 0.5, self.view.frame.width * 0.5 - imgHeight * 0.5, imgWidth, imgHeight));
+        hudView = UIImageView(frame: CGRectMake(self.view.frame.width * 0.5 - imgWidth * 0.5, self.view.frame.height * 0.5 - imgHeight * 0.5, imgWidth, imgHeight));
         self.view.addSubview(hudView);
         
         
@@ -214,7 +220,7 @@ class PSSessionViewController : UIViewController
         hudView.addSubview(labelLag);
         
         buttonAccelerate = UIButton(type: UIButtonType.System) as UIButton;
-        buttonAccelerate.frame = CGRectMake(0, 0, self.view.frame.height * 0.5, self.view.frame.width);
+        buttonAccelerate.frame = CGRectMake(0, 0, self.view.frame.width * 0.5, self.view.frame.height);
         buttonAccelerate.setTitle("", forState: UIControlState.Normal);
         buttonAccelerate.addTarget(self, action: "onButtonAccelerate0", forControlEvents: UIControlEvents.TouchDown);
         buttonAccelerate.addTarget(self, action: "onButtonAccelerate1", forControlEvents: UIControlEvents.TouchUpInside);
@@ -222,7 +228,7 @@ class PSSessionViewController : UIViewController
         self.view.addSubview(buttonAccelerate);
         
         buttonBrake = UIButton(type: UIButtonType.System) as UIButton;
-        buttonBrake.frame = CGRectMake(self.view.frame.height * 0.5, 0, self.view.frame.height * 0.5, self.view.frame.width);
+        buttonBrake.frame = CGRectMake(self.view.frame.width * 0.5, 0, self.view.frame.width * 0.5, self.view.frame.height);
         buttonBrake.setTitle("", forState: UIControlState.Normal);
         buttonBrake.addTarget(self, action: "onButtonBrake0", forControlEvents: UIControlEvents.TouchDown);
         buttonBrake.addTarget(self, action: "onButtonBrake1", forControlEvents: UIControlEvents.TouchUpInside);
@@ -232,7 +238,7 @@ class PSSessionViewController : UIViewController
         self.searching = PSSearching(connectionHandler: self.onConnected);
         
         buttonMenu = UIButton(type: UIButtonType.System) as UIButton;
-        buttonMenu.frame = CGRectMake(10, 10, 30, 30);
+        buttonMenu.frame = CGRectMake(10, 20, 30, 30);
         buttonMenu.setTitle("", forState: UIControlState.Normal);
         buttonMenu.addTarget(self, action: "onButtonMenu", forControlEvents: UIControlEvents.TouchUpInside);
         buttonMenu.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.0);
@@ -287,10 +293,69 @@ class PSSessionViewController : UIViewController
             labelUnit.text = "MPH";
         }
         
+        //qr scanner stuff
+        // Get an instance of the AVCaptureDevice class to initialize a device object and provide the video
+        // as the media type parameter.
+        let captureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        
+        // Get an instance of the AVCaptureDeviceInput class using the previous device object.
+        var error:NSError?
+        var input : AnyObject! = nil;
+        do {
+            input = try AVCaptureDeviceInput(device: captureDevice)
+        } catch {
+            print(error);
+        }
+            
+        if (error != nil) {
+            // If any error occurs, simply log the description of it and don't continue any more.
+            print("\(error?.localizedDescription)")
+            return
+        }
+        
+        // Initialize the captureSession object.
+        captureSession = AVCaptureSession();
+        // Set the input device on the capture session.
+        self.captureSession?.addInput(input as! AVCaptureInput);
+        
+        // Initialize a AVCaptureMetadataOutput object and set it as the output device to the capture session.
+        let captureMetadataOutput = AVCaptureMetadataOutput();
+        self.captureSession?.addOutput(captureMetadataOutput);
+        
+        // Set delegate and use the default dispatch queue to execute the call back
+        captureMetadataOutput.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue());
+        captureMetadataOutput.metadataObjectTypes = [AVMetadataObjectTypeQRCode];
+        
+        // Initialize the video preview layer and add it as a sublayer to the viewPreview view's layer.
+        videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession);
+        self.videoPreviewLayer?.videoGravity = AVLayerVideoGravityResizeAspectFill;
+        self.videoPreviewLayer?.frame = self.view.bounds;
+        if(self.interfaceOrientation == UIInterfaceOrientation.LandscapeLeft)
+        {
+            self.videoPreviewLayer?.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeLeft;
+        }
+        else {
+            self.videoPreviewLayer?.connection.videoOrientation = AVCaptureVideoOrientation.LandscapeRight;
+        }
+        self.view.layer.addSublayer(videoPreviewLayer!);
+        
+        
+        // Start video capture.
+        captureSession?.startRunning();
+        
+        // Initialize QR Code Frame to highlight the QR code
+        qrCodeFrameView = UIView();
+        self.qrCodeFrameView?.layer.borderColor = UIColor.greenColor().CGColor;
+        self.qrCodeFrameView?.layer.borderWidth = 2;
+        self.view.addSubview(qrCodeFrameView!);
+        self.view.bringSubviewToFront(qrCodeFrameView!);
+        
         cm = CMMotionManager();
         
         cm.deviceMotionUpdateInterval = 0.05;
         cm.startDeviceMotionUpdatesUsingReferenceFrame(CMAttitudeReferenceFrame.XArbitraryZVertical, toQueue: NSOperationQueue.mainQueue(), withHandler:
+            
+        
             
         {
         (deviceMotion: CMDeviceMotion?, error: NSError?) in
@@ -317,7 +382,7 @@ class PSSessionViewController : UIViewController
                 {
                     //print("get steer angle");
                     //self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
-                    print(self.senSlider.value);
+                    //print(self.senSlider.value);
                     self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0*self.senSlider.value;
                     //print("session exists, send data");
                     self.session.sendCurrentData();
@@ -358,7 +423,9 @@ class PSSessionViewController : UIViewController
                         self.fuel.progress = CGFloat(self.session.carData.fuel);
                         self.temperature.progress = CGFloat(self.session.carData.temperature);
                         self.labelLag.text = "Delay: "+String(self.session.currentData.lagDelay)+"ms";
+                        
                         var lights : Int = Int(self.session.carData.lights);
+                        //print(self.session.carData.lights);
                         if (lights - 96 >= 0) {
                             //print("show hazards");
                             self.lBlinkerView.hidden = false;
@@ -402,6 +469,7 @@ class PSSessionViewController : UIViewController
             }
         });
     }
+    
     func onConnected(toHost: String, onPort: UInt16)
     {
         if(self.session == nil)
@@ -409,6 +477,10 @@ class PSSessionViewController : UIViewController
             self.connectionButton.hidden = true;
             self.session = PSSession(host: toHost, port: onPort, sessionBrokenHandler: self.onDisconnected);
             onButtonMenu();
+            self.captureSession?.stopRunning();
+            self.captureSession = nil;
+            self.videoPreviewLayer?.removeFromSuperlayer();
+            self.qrCodeFrameView?.removeFromSuperview();
         }
         else
         {
@@ -490,6 +562,37 @@ class PSSessionViewController : UIViewController
             unitSel.hidden = false;
             senSlider.hidden = false;
             senText.hidden = false;
+        }
+    }
+    
+    func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
+        
+        // Check if the metadataObjects array is not nil and it contains at least one object.
+        if metadataObjects == nil || metadataObjects.count == 0 {
+            qrCodeFrameView?.frame = CGRectZero
+            //messageLabel.text = "No QR code is detected"
+            return
+        }
+        
+        // Get the metadata object.
+        let metadataObj = metadataObjects[0] as! AVMetadataMachineReadableCodeObject
+        
+        if metadataObj.type == AVMetadataObjectTypeQRCode {
+            // If the found metadata is equal to the QR code metadata then update the status label's text and set the bounds
+            let barCodeObject = videoPreviewLayer?.transformedMetadataObjectForMetadataObject(metadataObj as AVMetadataMachineReadableCodeObject) as! AVMetadataMachineReadableCodeObject
+            qrCodeFrameView?.frame = barCodeObject.bounds;
+            
+            if metadataObj.stringValue != nil {
+                //messageLabel.text = metadataObj.stringValue
+                //print(metadataObj.stringValue);
+                var qrString = metadataObj.stringValue;
+                var splitString = qrString.componentsSeparatedByString("#");
+                if (splitString[1] != "") {
+                    //print(splitString[1]);
+                    self.searching.code = splitString[1];
+                    self.searching.broadcast(1);
+                }
+            }
         }
     }
     

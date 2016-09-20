@@ -46,6 +46,8 @@ class PSReceivedData
         
 //        var buffer : [UInt8] = [UInt8](count: 64, repeatedValue: 0);
         
+        //dont ask me why, but if i remove this print line the app starts throwing inccorect data length errors and crashes on connection. ¯\_(ツ)_/¯
+        print(data);
         
         data.getBytes(&timer, range: NSMakeRange(0, 4));
         data.getBytes(&carName, range: NSMakeRange(4, 4));
@@ -209,6 +211,7 @@ class PSSession : AsyncUdpSocketDelegate
         let recData : PSReceivedData = PSReceivedData();
         
         recData.fromData(data);
+        print(recData.speed);
         
         carData.speed = recData.speed;
         
@@ -217,7 +220,9 @@ class PSSession : AsyncUdpSocketDelegate
         carData.gear = Int(recData.gear);
         carData.fuel = recData.fuel;
         carData.temperature = recData.engineTemperature;
+        //print(recData.showLights);
         carData.lights = recData.showLights;
+        //print(carData.lights);
         
         if (recData.rid == Int(currentData.id)) {
             let diff : Double = (CACurrentMediaTime() - lpTime)*1000/2;

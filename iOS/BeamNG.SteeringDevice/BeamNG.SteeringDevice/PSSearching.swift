@@ -16,7 +16,7 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
     
     var onConnectToHost : ((String, UInt16)->(Void))! = nil;
     
-    var code : Int = 232664;
+    var code : String = "232664";
     var initCon : Bool = false;
     
     override init()
