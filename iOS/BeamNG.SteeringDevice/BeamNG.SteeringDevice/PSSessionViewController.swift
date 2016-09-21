@@ -63,6 +63,12 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
     var senText : UILabel! = nil;
     var unitText : UILabel! = nil;
     
+    var startScreen : UIImage! = nil;
+    var startScreenView : UIImageView! = nil;
+    var startMessage : UILabel! = nil;
+    var startButton : UIButton! = nil;
+    var camBlocker : UIImageView! = nil;
+    
     //qr scanner stuff
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
@@ -238,7 +244,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         self.searching = PSSearching(connectionHandler: self.onConnected);
         
         buttonMenu = UIButton(type: UIButtonType.System) as UIButton;
-        buttonMenu.frame = CGRectMake(10, 20, 30, 30);
+        buttonMenu.frame = CGRectMake(10, 20, 40, 40);
         buttonMenu.setTitle("", forState: UIControlState.Normal);
         buttonMenu.addTarget(self, action: "onButtonMenu", forControlEvents: UIControlEvents.TouchUpInside);
         buttonMenu.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.0);
@@ -254,7 +260,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         let defaults = NSUserDefaults.standardUserDefaults();
 
         self.senSlider = UISlider();
-        self.senSlider.frame = CGRectMake(20.0, 130.0, 150, 20);
+        self.senSlider.frame = CGRectMake(20.0, 150.0, 150, 20);
         self.senSlider.addTarget(self, action: Selector("onSliderChange"), forControlEvents: UIControlEvents.ValueChanged);
         self.view.addSubview(senSlider);
         
@@ -265,13 +271,13 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         }
         
         self.senText = UILabel();
-        self.senText.frame = CGRectMake(20.0, 103.0, 150, 20);
+        self.senText.frame = CGRectMake(20.0, 123.0, 150, 20);
         self.senText.text = "Sensitivity";
         self.senText.textColor = UIColor.whiteColor();
         self.view.addSubview(senText);
         
         self.unitSel = UISwitch();
-        self.unitSel.frame = CGRectMake(20.0, 60.0, 150, 20);
+        self.unitSel.frame = CGRectMake(20.0, 80.0, 150, 20);
         self.unitSel.onTintColor = UIColor.whiteColor();
         self.unitSel.addTarget(self, action: "UnitSwitch", forControlEvents: UIControlEvents.ValueChanged);
         self.view.addSubview(unitSel);
@@ -279,7 +285,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         unitSel.on = defaults.boolForKey("UnitSetting");
         
         self.unitText = UILabel();
-        self.unitText.frame = CGRectMake(80.0, 65.0, 80, 20);
+        self.unitText.frame = CGRectMake(80.0, 85.0, 80, 20);
         self.unitText.text = "MPH";
         self.unitText.textColor = UIColor.whiteColor();
         self.view.addSubview(unitText);
@@ -349,6 +355,37 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         self.qrCodeFrameView?.layer.borderWidth = 2;
         self.view.addSubview(qrCodeFrameView!);
         self.view.bringSubviewToFront(qrCodeFrameView!);
+        
+        //start up screen and instructions
+        camBlocker = UIImageView(frame: CGRectMake(0, 0, self.view.frame.width, self.view.frame.height));
+        camBlocker.backgroundColor = UIColor.blackColor();
+        self.view.addSubview(camBlocker);
+        self.view.bringSubviewToFront(camBlocker!);
+
+        
+        startScreen = UIImage(named: "startscreen")!;
+        startScreenView = UIImageView(frame: CGRectMake(self.view.frame.width/2-(self.view.frame.width * 0.6/2), 20, self.view.frame.width * 0.6, self.view.frame.height * 0.35));
+        startScreenView.image = startScreen;
+        self.view.addSubview(startScreenView);
+        self.view.bringSubviewToFront(startScreenView!);
+        
+        startMessage = UILabel();
+        startMessage.frame = CGRectMake(self.view.frame.width/2-(self.view.frame.width * 0.6/2), self.view.frame.height * 0.25, self.view.frame.width * 0.6, self.view.frame.height * 0.35);
+        startMessage.lineBreakMode = .ByWordWrapping;
+        startMessage.numberOfLines = 3;
+        startMessage.text = "Open BeamNG.drive and select \"Controls\" from the main menu and then click on \"HARDWARE\". Scan the QR Code to use this device as a remote controller.";
+        startMessage.textColor = UIColor.whiteColor();
+        self.view.addSubview(startMessage);
+        self.view.bringSubviewToFront(startMessage!);
+        
+        startButton = UIButton(type: UIButtonType.System) as UIButton;
+        startButton.setTitle("Scan QR Code", forState: UIControlState.Normal);
+        startButton.addTarget(self, action: Selector("onButtonScan"), forControlEvents: UIControlEvents.TouchUpInside);
+        startButton.frame = CGRectMake(self.view.frame.height * 0.8, self.view.frame.height * 0.5, 150, 80);
+        startButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal);
+        startButton.backgroundColor = UIColor.grayColor();
+        self.view.addSubview(self.startButton);
+        self.view.bringSubviewToFront(self.startButton!);
         
         cm = CMMotionManager();
         
@@ -481,6 +518,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
             self.captureSession = nil;
             self.videoPreviewLayer?.removeFromSuperlayer();
             self.qrCodeFrameView?.removeFromSuperview();
+            CloseStartScreen();
         }
         else
         {
@@ -563,6 +601,15 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
             senSlider.hidden = false;
             senText.hidden = false;
         }
+    }
+    func onButtonScan () {
+        CloseStartScreen();
+    }
+    func CloseStartScreen () {
+        startButton.hidden = true;
+        startMessage.hidden = true;
+        startScreenView.hidden = true;
+        camBlocker.hidden = true;
     }
     
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
