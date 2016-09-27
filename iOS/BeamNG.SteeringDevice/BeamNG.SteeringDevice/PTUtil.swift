@@ -10,11 +10,11 @@ import Foundation
 
 class PTUtil
 {
-    class func lerp(t: Double, a: Double, b: Double) -> Double
+    class func lerp(_ t: Double, a: Double, b: Double) -> Double
     {
         return (b-a)*t + a;
     }
-    class func clamp01(val: Double) -> Double
+    class func clamp01(_ val: Double) -> Double
     {
         var retVal = val;
         if(val < 0.0)
@@ -27,7 +27,7 @@ class PTUtil
         }
         return retVal;
     }
-    class func clamp(val: Double, min: Double, max: Double) -> Double
+    class func clamp(_ val: Double, min: Double, max: Double) -> Double
     {
         var retVal = val;
         if(val < min)
@@ -40,34 +40,26 @@ class PTUtil
         }
         return retVal;
     }
-    class func delay(delay:Double, closure:()->())
+    class func delay(_ delay:Double, closure:@escaping ()->())
     {
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            dispatch_get_main_queue(), closure)
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
     }
     
-    class func dispatch(delay:Double, closure:()->(), thread: dispatch_queue_t!)
+    class func dispatch(_ delay:Double, closure:@escaping ()->(), thread: DispatchQueue!)
     {
         var threadToRun = thread;
         if(threadToRun == nil)
         {
-            threadToRun = dispatch_get_main_queue();
+            threadToRun = DispatchQueue.main;
         }
-        dispatch_after(
-            dispatch_time(
-                DISPATCH_TIME_NOW,
-                Int64(delay * Double(NSEC_PER_SEC))
-            ),
-            threadToRun, closure);
+        threadToRun?.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure);
     }
     
-    class func saveToDocuments(filename: String, content: String)->Bool
+    class func saveToDocuments(_ filename: String, content: String)->Bool
     {
-        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true)
+        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
         
         /*for(var i = 0; i < dirs!.count; i++)
         {
@@ -78,12 +70,12 @@ class PTUtil
         {
             let directories:[String] = dirs!;
             let dir = directories[0]; //documents directory
-            let path = (dir as NSString).stringByAppendingPathComponent(filename);
+            let path = (dir as NSString).appendingPathComponent(filename);
             do {
                 //let text = "some text";
             
                 //writing
-                try content.writeToFile(path, atomically: false, encoding: NSUTF8StringEncoding)
+                try content.write(toFile: path, atomically: false, encoding: String.Encoding.utf8)
             } catch _ {
             };
             
@@ -94,9 +86,9 @@ class PTUtil
         }
         return false;
     }
-    class func loadFromDocuments(filename: String)->String?
+    class func loadFromDocuments(_ filename: String)->String?
     {
-        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true)
+        let dirs : [String]? = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.allDomainsMask, true)
         
         /*for(var i = 0; i < dirs!.count; i++)
         {
@@ -107,7 +99,7 @@ class PTUtil
         {
             let directories:[String] = dirs!;
             let dir = directories[0]; //documents directory
-            let path = (dir as NSString).stringByAppendingPathComponent(filename);
+            let path = (dir as NSString).appendingPathComponent(filename);
             //let text = "some text";
             
             //writing
@@ -115,7 +107,7 @@ class PTUtil
             
             //reading
             //let text2 = String.stringWithContentsOfFile(path, encoding: NSUTF8StringEncoding, error: nil)
-            let text2 = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding);
+            let text2 = try? NSString(contentsOfFile: path, encoding: String.Encoding.utf8.rawValue);
             //let text2 = String.stringWithContentsOfFile(path, encoding: NSUTF8StringEncoding, error: nil)
             return text2 as? String;
             //println(text2);

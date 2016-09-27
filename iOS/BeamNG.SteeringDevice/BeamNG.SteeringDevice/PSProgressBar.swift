@@ -45,12 +45,12 @@ class PSProgressBar : UIView
     {
         super.init(frame: frame);
     }
-    func draw(startAngle : CGFloat, endAngle : CGFloat, lineWidth : CGFloat, strokeColor: CGColor, clockwise : Bool)
+    func draw(_ startAngle : CGFloat, endAngle : CGFloat, lineWidth : CGFloat, strokeColor: CGColor, clockwise : Bool)
     {
         if let testVar = self.layer.sublayers
         {
             if var unwrapped = self.layer.sublayers {
-                unwrapped.removeAll(keepCapacity: true);
+                unwrapped.removeAll(keepingCapacity: true);
             }
         }
         
@@ -59,27 +59,27 @@ class PSProgressBar : UIView
         angleEnd = endAngle;
         
         
-        var progressLayerRadius : CGFloat = self.frame.width * 0.5;
+        let progressLayerRadius : CGFloat = self.frame.width * 0.5;
         progressLayer2 = CAShapeLayer();
-        progressLayer2.path = UIBezierPath(arcCenter: CGPointMake(0, 0), radius: progressLayerRadius, startAngle: startAngle, endAngle: endAngle, clockwise: clockwise).CGPath;
-        progressLayer2.strokeColor = UIColor.whiteColor().CGColor;
-        progressLayer2.fillColor = UIColor.clearColor().CGColor;
+        progressLayer2.path = UIBezierPath(arcCenter: CGPoint(x: 0, y: 0), radius: progressLayerRadius, startAngle: startAngle, endAngle: endAngle, clockwise: clockwise).cgPath;
+        progressLayer2.strokeColor = UIColor.white.cgColor;
+        progressLayer2.fillColor = UIColor.clear.cgColor;
         progressLayer2.lineWidth = lineWidth * 1.05;
-        progressLayer2.bounds = CGRectMake(-progressLayerRadius, -progressLayerRadius, progressLayerRadius * 2, progressLayerRadius * 2);
-        progressLayer2.anchorPoint = CGPointMake(0, 0);
-        progressLayer2.position = CGPointMake(0, 0);
+        progressLayer2.bounds = CGRect(x: -progressLayerRadius, y: -progressLayerRadius, width: progressLayerRadius * 2, height: progressLayerRadius * 2);
+        progressLayer2.anchorPoint = CGPoint(x: 0, y: 0);
+        progressLayer2.position = CGPoint(x: 0, y: 0);
         //progressLayer2.borderWidth = 1.0;
         
         self.layer.addSublayer(progressLayer2);
         
         progressLayer = CAShapeLayer();
-        progressLayer.path = UIBezierPath(arcCenter: CGPointMake(0, 0), radius: progressLayerRadius, startAngle: startAngle, endAngle: endAngle, clockwise: clockwise).CGPath;
+        progressLayer.path = UIBezierPath(arcCenter: CGPoint(x: 0, y: 0), radius: progressLayerRadius, startAngle: startAngle, endAngle: endAngle, clockwise: clockwise).cgPath;
         progressLayer.strokeColor = strokeColor;
-        progressLayer.fillColor = UIColor.clearColor().CGColor;
+        progressLayer.fillColor = UIColor.clear.cgColor;
         progressLayer.lineWidth = lineWidth;
-        progressLayer.bounds = CGRectMake(-progressLayerRadius, -progressLayerRadius, progressLayerRadius * 2, progressLayerRadius * 2);
-        progressLayer.anchorPoint = CGPointMake(0, 0);
-        progressLayer.position = CGPointMake(0, 0);
+        progressLayer.bounds = CGRect(x: -progressLayerRadius, y: -progressLayerRadius, width: progressLayerRadius * 2, height: progressLayerRadius * 2);
+        progressLayer.anchorPoint = CGPoint(x: 0, y: 0);
+        progressLayer.position = CGPoint(x: 0, y: 0);
         //progressLayer.borderWidth = 1.0;
         
         self.layer.addSublayer(progressLayer);

@@ -272,9 +272,11 @@
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = YXU9EHS8BZ;
 						DevelopmentTeamName = "Brandon Proulx";
+						LastSwiftMigration = 0800;
 					};
 					E5EF147819E688B90080988C = {
 						CreatedOnToolsVersion = 6.0;
+						LastSwiftMigration = 0800;
 						TestTargetID = E5EF146619E688B90080988C;
 					};
 				};
@@ -467,6 +469,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BeamNG.SteeringDevice/BeamNG.SteeringDevice-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -485,6 +488,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "BeamNG.SteeringDevice/BeamNG.SteeringDevice-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -504,6 +508,7 @@
 				INFOPLIST_FILE = BeamNG.SteeringDeviceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BeamNG.SteeringDevice.app/BeamNG.SteeringDevice";
 			};
 			name = Debug;
@@ -519,6 +524,7 @@
 				INFOPLIST_FILE = BeamNG.SteeringDeviceTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BeamNG.SteeringDevice.app/BeamNG.SteeringDevice";
 			};
 			name = Release;

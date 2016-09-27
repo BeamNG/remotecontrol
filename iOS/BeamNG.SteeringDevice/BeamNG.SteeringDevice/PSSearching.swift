@@ -29,51 +29,51 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
         };
         listenSocket = AsyncUdpSocket(delegate: self);
         do {
-            try listenSocket.bindToPort(4445)
+            try listenSocket.bind(toPort: 4445)
         } catch _ {
         };
-        listenSocket.receiveWithTimeout(-1, tag: 0);
+        listenSocket.receive(withTimeout: -1, tag: 0);
     }
-    convenience init(connectionHandler: ((String, UInt16)->(Void)))
+    convenience init(connectionHandler: @escaping ((String, UInt16)->(Void)))
     {
         self.init();
         self.onConnectToHost = connectionHandler;
     }
     
-    func broadcast(timeout : CFTimeInterval)
+    func broadcast(_ timeout : CFTimeInterval)
     {
-        let message : NSString = "beamng|\(UIDevice.currentDevice().name)|\(code)";
-        let data = message.dataUsingEncoding(NSUTF8StringEncoding);
+        let message : NSString = "beamng|\(UIDevice.current.name)|\(code)" as NSString;
+        let data = message.data(using: String.Encoding.utf8.rawValue);
         
         print("Broadcasting from: \(PSNetUtil.localIPAddress())")
-        socket.sendData(data, toHost: PSNetUtil.broadcastAddress(), port: 4444, withTimeout: timeout, tag: 0);
+        socket.send(data, toHost: PSNetUtil.broadcastAddress(), port: 4444, withTimeout: timeout, tag: 0);
     }
     
-    func onUdpSocket(sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)
+    func onUdpSocket(_ sock: AsyncUdpSocket!, didNotReceiveDataWithTag tag: Int, dueToError error: NSError!)
     {
         print("PSSearching: didNotReceiveData");
         print(error);
     }
     
-    func onUdpSocket(sock: AsyncUdpSocket!, didNotSendDataWithTag tag: Int, dueToError error: NSError!)
+    func onUdpSocket(_ sock: AsyncUdpSocket!, didNotSendDataWithTag tag: Int, dueToError error: NSError!)
     {
         print("PSSearching: didNotSendData");
     }
     
-    func onUdpSocket(sock: AsyncUdpSocket!, didReceiveData data: NSData!, withTag tag: Int, fromHost host: String!, port: UInt16) -> Bool
+    func onUdpSocket(_ sock: AsyncUdpSocket!, didReceive data: Data!, withTag tag: Int, fromHost host: String!, port: UInt16) -> Bool
     {
         if (!initCon) {
-        let msg : NSString = NSString(data: data, encoding: NSUTF8StringEncoding)!;
+        let msg : NSString = NSString(data: data, encoding: String.Encoding.utf8.rawValue)!;
         print("\nPSSearching: Received data!\n\t\(msg)\nfrom: \(host):\(port)");
         
         let temp : NSString = NSString(string: host);
-        if(temp.containsString(PSNetUtil.localIPAddress()))
+        if(temp.contains(PSNetUtil.localIPAddress()))
         {
             print("Received own data!");
             return false;
         }
         
-        if(msg == "beamng|\(code)")
+        if(msg as String == "beamng|\(code)")
         {
             //print("Recieved Message...");
             if(onConnectToHost != nil)
@@ -84,17 +84,17 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
             }
             print("Connecting people...");
         }
-        listenSocket.receiveWithTimeout(-1, tag: 0);
+        listenSocket.receive(withTimeout: -1, tag: 0);
         return true;
         }
         return false;
     }
     
-    func onUdpSocket(sock: AsyncUdpSocket!, didSendDataWithTag tag: Int)
+    func onUdpSocket(_ sock: AsyncUdpSocket!, didSendDataWithTag tag: Int)
     {
     }
     
-    func onUdpSocketDidClose(sock: AsyncUdpSocket!)
+    func onUdpSocketDidClose(_ sock: AsyncUdpSocket!)
     {
     }
 }
