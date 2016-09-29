@@ -111,7 +111,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     public static String id = "";
 
-    private Long lpTime, timeDiff, oldDiff;
+    private Long lpTime, timeDiff, oldDiff = 1l;
     private int pID = 1, lastID = 0;
 
     //Multithreading

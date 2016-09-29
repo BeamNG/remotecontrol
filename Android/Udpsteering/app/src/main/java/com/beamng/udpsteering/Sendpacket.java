@@ -46,7 +46,7 @@ public class Sendpacket {
         System.arraycopy(t, 0, res, 4, 4);
         System.arraycopy(b, 0, res, 8, 4);
         System.arraycopy(i, 0, res, 12, 4);
-        Log.i("byte array", ""+res);
+        //Log.i("byte array", ""+res);
         return res;
     }
 }
