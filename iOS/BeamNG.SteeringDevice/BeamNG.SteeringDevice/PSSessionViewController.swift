@@ -277,7 +277,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         
         senSlider.value = defaults.float(forKey: "Sensitivity");
         
-        if (senSlider.value == 0) {
+        if (senSlider.value >= 0.1) {
             print("slider value" + String(senSlider.value));
             senSlider.value = 1;
             defaults.set(senSlider.value, forKey: "Sensitivity");
