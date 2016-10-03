@@ -269,7 +269,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         let defaults = UserDefaults.standard;
 
         self.senSlider = UISlider();
-        self.senSlider.minimumValue = 0.5;
+        self.senSlider.minimumValue = 0;
         self.senSlider.maximumValue = 1;
         self.senSlider.frame = CGRect(x: 20.0, y: 155.0, width: 150, height: 20);
         self.senSlider.addTarget(self, action: #selector(PSSessionViewController.onSliderChange), for: UIControlEvents.valueChanged);
@@ -278,7 +278,9 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         senSlider.value = defaults.float(forKey: "Sensitivity");
         
         if (senSlider.value == 0) {
+            print("slider value" + String(senSlider.value));
             senSlider.value = 1;
+            defaults.set(senSlider.value, forKey: "Sensitivity");
         }
         
         self.senText = UILabel();
@@ -382,7 +384,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         self.view.bringSubview(toFront: startScreenView!);
         
         startMessage = UILabel();
-        startMessage.frame = CGRect(x: self.view.frame.width/2-(self.view.frame.width * 0.6/2), y: self.view.frame.height * 0.35, width: self.view.frame.width * 0.6, height: self.view.frame.height * 0.35);
+        startMessage.frame = CGRect(x: self.view.frame.width/2-(self.view.frame.width * 0.8/2), y: self.view.frame.height * 0.35, width: self.view.frame.width * 0.8, height: self.view.frame.height * 0.35);
         startMessage.lineBreakMode = .byWordWrapping;
         startMessage.numberOfLines = 3;
         startMessage.text = "Open BeamNG.drive and select \"Controls\" from the main menu and then click on \"HARDWARE\". Scan the QR Code to use this device as a remote controller.";
@@ -430,7 +432,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                 //print("get steer angle");
                 //self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
                 //print(self.senSlider.value);
-                self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0*self.senSlider.value;
+                self.session.currentData.steer = ((Float(translatedAngle / 90.0) * -1.0)-0.5)*self.senSlider.value+0.5;
                 //print("session exists, send data");
                 self.session.sendCurrentData();
             }
@@ -545,7 +547,8 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                     //print("get steer angle");
                     //self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
                     //print(self.senSlider.value);
-                    self.session.currentData.steer = Float(translatedAngle / 90.0) * -1.0*self.senSlider.value;
+                    self.session.currentData.steer = (Float(translatedAngle) / 90.0 * -1)*self.senSlider.value;
+                    print(translatedAngle);
                     //print("session exists, send data");
                     self.session.sendCurrentData();
                 }
