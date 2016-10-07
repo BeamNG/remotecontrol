@@ -271,16 +271,13 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         self.senSlider = UISlider();
         self.senSlider.minimumValue = 0;
         self.senSlider.maximumValue = 1;
+        self.senSlider.value = 1;
         self.senSlider.frame = CGRect(x: 20.0, y: 155.0, width: 150, height: 20);
         self.senSlider.addTarget(self, action: #selector(PSSessionViewController.onSliderChange), for: UIControlEvents.valueChanged);
         self.view.addSubview(senSlider);
         
-        senSlider.value = defaults.float(forKey: "Sensitivity");
-        
-        if (senSlider.value >= 0.1) {
-            print("slider value" + String(senSlider.value));
-            senSlider.value = 1;
-            defaults.set(senSlider.value, forKey: "Sensitivity");
+        if (defaults.float(forKey: "Sensitivity") != 0) {
+            senSlider.value = defaults.float(forKey: "Sensitivity");
         }
         
         self.senText = UILabel();
