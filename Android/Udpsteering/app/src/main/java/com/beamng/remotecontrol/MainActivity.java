@@ -1,4 +1,4 @@
-package com.beamng.udpsteering;
+package com.beamng.remotecontrol;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -34,6 +34,7 @@ import android.widget.Toast;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
+import com.beamng.remotecontrol.R;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -364,7 +365,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.beamng.udpsteering/http/host/path")
+                Uri.parse("android-app://com.beamng.remotecontrol/http/host/path")
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         // unregister sensor listeners to prevent the activity from draining the device's battery.
@@ -439,7 +440,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.beamng.udpsteering/http/host/path")
+                Uri.parse("android-app://com.beamng.remotecontrol/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
     }

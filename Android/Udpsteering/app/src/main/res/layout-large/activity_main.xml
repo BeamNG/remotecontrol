@@ -92,7 +92,7 @@
         android:layout_centerHorizontal="true"
         />
 
-    <com.beamng.udpsteering.InverseProgressBar
+    <com.beamng.remotecontrol.InverseProgressBar
         android:id="@+id/progressBar4"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="660dp"
@@ -176,7 +176,7 @@
         android:visibility="invisible"
         />
 
-    <com.beamng.udpsteering.CustomTextView
+    <com.beamng.remotecontrol.CustomTextView
         android:id="@+id/Textspeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
 
-    <com.beamng.udpsteering.CustomTextView
+    <com.beamng.remotecontrol.CustomTextView
         android:id="@+id/Textgear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -201,7 +201,7 @@
         android:layout_marginTop="81dp"
         android:layout_marginRight="-8dp"/>
 
-    <com.beamng.udpsteering.CustomTextView
+    <com.beamng.remotecontrol.CustomTextView
         android:id="@+id/Textodo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

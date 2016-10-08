@@ -1,4 +1,4 @@
-package com.beamng.udpsteering;
+package com.beamng.remotecontrol;
 
 import android.app.Dialog;
 import android.app.DialogFragment;

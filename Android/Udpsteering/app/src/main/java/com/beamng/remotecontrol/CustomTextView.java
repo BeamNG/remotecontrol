@@ -1,4 +1,4 @@
-package com.beamng.udpsteering;
+package com.beamng.remotecontrol;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import android.util.Log;
+
+import com.beamng.remotecontrol.R;
 
 public class CustomTextView extends TextView {
 

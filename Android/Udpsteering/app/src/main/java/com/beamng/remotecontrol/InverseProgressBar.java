@@ -1,4 +1,4 @@
-package com.beamng.udpsteering;
+package com.beamng.remotecontrol;
 
 import android.content.Context;
 import android.graphics.Canvas;
