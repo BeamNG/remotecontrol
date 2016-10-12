@@ -34,6 +34,10 @@ class PSSearching : NSObject, AsyncUdpSocketDelegate
         };
         listenSocket.receive(withTimeout: -1, tag: 0);
     }
+    deinit {
+        listenSocket.close();
+        socket.close();
+    }
     convenience init(connectionHandler: @escaping ((String, UInt16)->(Void)))
     {
         self.init();

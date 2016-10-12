@@ -99,7 +99,7 @@ class PSReceivedData
     var rid : Int = 0;
 }
 
-class PSSession : AsyncUdpSocketDelegate
+class PSSession : NSObject, AsyncUdpSocketDelegate
 {
     var sendSocket : AsyncUdpSocket!;
     var listenSocket : AsyncUdpSocket!;
@@ -120,12 +120,13 @@ class PSSession : AsyncUdpSocketDelegate
     
     init(host: String, port: UInt16, sessionBrokenHandler: ((NSError)->(Void))!)
     {
+        super.init();
         currentData = PSSteerData();
         carData = PSCarData();
         
         self.onSessionBroken = sessionBrokenHandler;
         
-        sendSocket = AsyncUdpSocket(delegate: self);
+        self.sendSocket = AsyncUdpSocket(delegate: self);
         do {
             print("Connecting Send Socket: "+host+" : \(port)");
             try self.sendSocket.bind(toAddress: host, port: 4445)
@@ -136,7 +137,7 @@ class PSSession : AsyncUdpSocketDelegate
         
         let error : NSError? = nil;
         
-        listenSocket = AsyncUdpSocket(delegate: self);
+        self.listenSocket = AsyncUdpSocket(delegate: self);
         do {
             print("Connecting Listen Socket: "+PSNetUtil.localIPAddress()+" : 4445");
             try self.listenSocket.bind(toAddress: PSNetUtil.localIPAddress(), port: 4445)
@@ -150,7 +151,7 @@ class PSSession : AsyncUdpSocketDelegate
         }
         finalHost = host;
         finalPort = port;
-        listenSocket.receive(withTimeout: 5, tag: 0);
+        listenSocket.receive(withTimeout: -1, tag: 0);
     }
     deinit
     {
@@ -230,8 +231,7 @@ class PSSession : AsyncUdpSocketDelegate
         if (recData.rid == Int(currentData.id)) {
             let diff : Double = (CACurrentMediaTime() - lpTime)*1000/2;
             
-            currentData.lagDelay = (oldDiff + diff)/2;
-            
+            currentData.lagDelay = (oldDiff + diff+currentData.lagDelay)/3;
             currentData.lagDelay = round(currentData.lagDelay*100)/100;
             
             //print(currentData.lagDelay);

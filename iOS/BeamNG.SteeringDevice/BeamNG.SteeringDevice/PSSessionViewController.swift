@@ -38,6 +38,8 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
     var labelLag : UILabel! = nil;
     var labelUnit : UILabel! = nil;
     
+    var buttonDisconnect : UIButton! = nil;
+    
     var buttonMenu : UIButton! = nil;
     
     var buttonAccelerate : UIButton! = nil;
@@ -223,7 +225,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         
         labelLag = UILabel(frame: CGRect(x: 0.5029 * imgWidth - labelWidth * 0.5, y: 0.641 * imgHeight - labelWidth * -0.5, width: labelWidth, height: labelWidth));
         //labelSpeed.backgroundColor = UIColor.redColor();
-        labelLag.text = "Delay: 0.0ms";
+        labelLag.text = "Delay: 0ms";
         labelLag.textColor = UIColor.white;
         labelLag.font = UIFont(name: "OpenSans-Bold", size: 0.03 * imgWidth);
         labelLag.textAlignment = NSTextAlignment.center;
@@ -247,6 +249,13 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         
         self.searching = PSSearching(connectionHandler: self.onConnected);
         
+        buttonDisconnect = UIButton(type: UIButtonType.system) as UIButton;
+        buttonDisconnect.frame = CGRect(x: self.view.frame.width-(self.view.frame.width * 0.1)-10, y: 20, width: self.view.frame.width * 0.1, height: self.view.frame.height * 0.08);
+        buttonDisconnect.setTitle("Disconnect", for: UIControlState());
+        buttonDisconnect.addTarget(self, action: #selector(PSSessionViewController.onButtonDisconnect), for: UIControlEvents.touchUpInside);
+        buttonDisconnect.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0);
+        self.view.addSubview(buttonDisconnect);
+        
         //menu stuff
         menuBG = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200));
         menuBG.backgroundColor = UIColor.black;
@@ -269,7 +278,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         let defaults = UserDefaults.standard;
 
         self.senSlider = UISlider();
-        self.senSlider.minimumValue = 0;
+        self.senSlider.minimumValue = 0.2;
         self.senSlider.maximumValue = 1;
         self.senSlider.value = 1;
         self.senSlider.frame = CGRect(x: 20.0, y: 155.0, width: 150, height: 20);
@@ -422,7 +431,15 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                 angle += M_PI_2;
             }
             let angleDeg : Double = angle * 180.0 / 3.145;
-            let translatedAngle : Double = angleDeg - 135.0;
+            var translatedAngle : Double = angleDeg - 135.0;
+            print(angle);
+            /*if (translatedAngle > 90) {
+                translatedAngle = 90;
+            }
+            if (translatedAngle < -90) {
+                translatedAngle = -90;
+            }*/
+
             
             if(self.session != nil)
             {
@@ -466,7 +483,10 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                     self.labelDist.text = String(format: "%06d", Int(self.session.carData.distance));
                     self.fuel.progress = CGFloat(self.session.carData.fuel);
                     self.temperature.progress = CGFloat(self.session.carData.temperature);
-                    self.labelLag.text = "Delay: "+String(self.session.currentData.lagDelay)+"ms";
+                    
+                    var lagNum : Int = Int(self.session.currentData.lagDelay.rounded());
+                    //let lagDisplay : String = String(format: "%1f",lagNum);
+                    self.labelLag.text = "Delay: "+String(lagNum)+"ms";
                     
                     var lights : Int = Int(self.session.carData.lights);
                     //print(self.session.carData.lights);
@@ -515,7 +535,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
     
     
 
-    func StartCM () {
+    func StartCM_OLD () {
         print("Starting device motion updates");
         cm = CMMotionManager().self;
         cm.deviceMotionUpdateInterval = 0.05;
@@ -537,7 +557,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                     angle += M_PI_2;
                 }
                 let angleDeg : Double = angle * 180.0 / 3.145;
-                let translatedAngle : Double = angleDeg - 135.0;
+                var translatedAngle : Double = angleDeg - 135.0;
                 
                 if(self.session != nil)
                 {
@@ -545,7 +565,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                     //self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
                     //print(self.senSlider.value);
                     self.session.currentData.steer = (Float(translatedAngle) / 90.0 * -1)*self.senSlider.value;
-                    print(translatedAngle);
+                    //print(translatedAngle);
                     //print("session exists, send data");
                     self.session.sendCurrentData();
                 }
@@ -582,7 +602,9 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                         self.labelDist.text = String(format: "%06d", Int(self.session.carData.distance));
                         self.fuel.progress = CGFloat(self.session.carData.fuel);
                         self.temperature.progress = CGFloat(self.session.carData.temperature);
-                        self.labelLag.text = "Delay: "+String(self.session.currentData.lagDelay)+"ms";
+                        var lagNum : Int = Int(self.session.currentData.lagDelay.rounded());
+                        let lagDisplay : String = String(format: "%1f",lagNum);
+                        self.labelLag.text = "Delay: "+lagDisplay+"ms";
                         
                         var lights : Int = Int(self.session.carData.lights);
                         //print(self.session.carData.lights);
@@ -739,7 +761,20 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         self.startScreenView?.removeFromSuperview();
         self.camBlocker?.removeFromSuperview();
     }
-    
+    func onButtonDisconnect () {
+        self.view.subviews.forEach({ $0.removeFromSuperview()});
+        //self.view.subviews.map({ $0.removeFromSuperview()});
+        
+        self.searching.listenSocket.close();
+        self.searching.socket.close();
+        self.session.listenSocket.close();
+        self.session.sendSocket.close();
+        
+        self.searching = nil;
+        self.session = nil;
+        self.viewDidLoad();
+        //self.searching = PSSearching(connectionHandler: self.onConnected);
+    }
     func captureOutput(_ captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [Any]!, from connection: AVCaptureConnection!) {
         
         // Check if the metadataObjects array is not nil and it contains at least one object.
