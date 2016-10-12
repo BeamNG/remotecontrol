@@ -72,6 +72,10 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
     var startButton : UIButton! = nil;
     var camBlocker : UIImageView! = nil;
     
+    //tilt input stuff, global so that its value is kept while its not being updated
+    var angle : Double = 0;
+    var translatedAngle : Double = 0;
+    
     //qr scanner stuff
     var captureSession:AVCaptureSession?
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
@@ -280,7 +284,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         self.senSlider = UISlider();
         self.senSlider.minimumValue = 0.2;
         self.senSlider.maximumValue = 1;
-        self.senSlider.value = 1;
+        self.senSlider.value = 0.5;
         self.senSlider.frame = CGRect(x: 20.0, y: 155.0, width: 150, height: 20);
         self.senSlider.addTarget(self, action: #selector(PSSessionViewController.onSliderChange), for: UIControlEvents.valueChanged);
         self.view.addSubview(senSlider);
@@ -423,22 +427,35 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
             
             let upVec : PSVector = PSVector(x: 0, y: 1, z: 0);
             
-            var angle : Double = acos(gravity.dot(upVec));
+            //keep value locked when going past 90 degrees (previous implementation had it going up to 90 and then back down as you past it)
             if(self.interfaceOrientation == UIInterfaceOrientation.landscapeLeft)
             {
-                angle -= M_PI_2;
-                angle *= -1;
-                angle += M_PI_2;
+                if (gravity.x > 0) {
+                    angle = acos(gravity.dot(upVec));
+                
+                    angle -= M_PI_2;
+                    angle *= -1;
+                    angle += M_PI_2;
+                
+                    let angleDeg : Double = angle * 180.0 / 3.145;
+                
+                    translatedAngle = angleDeg - 135.0;
+                }
+                
             }
-            let angleDeg : Double = angle * 180.0 / 3.145;
-            var translatedAngle : Double = angleDeg - 135.0;
-            print(angle);
-            /*if (translatedAngle > 90) {
-                translatedAngle = 90;
+            else {
+                if (gravity.x < 0) {
+                    angle = acos(gravity.dot(upVec));
+                    let angleDeg : Double = angle * 180.0 / 3.145;
+                
+                    translatedAngle = angleDeg - 135.0;
+                }
             }
-            if (translatedAngle < -90) {
-                translatedAngle = -90;
-            }*/
+            
+            
+            
+            //print(angle);
+            //print(String(gravity.x)+" : "+String(gravity.y)+" : "+String(gravity.z));
 
             
             if(self.session != nil)
@@ -453,7 +470,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
             
             let animDuration : Double = 0.07;
             UIView.animate(withDuration: animDuration, animations: { () -> Void in
-                self.hudView.transform = CGAffineTransform(rotationAngle: CGFloat(-(angle - (90.0 / (180.0 / 3.145))))).concatenating(CGAffineTransform(scaleX: 1.0, y: 1.0));
+                self.hudView.transform = CGAffineTransform(rotationAngle: CGFloat(-(self.angle - (90.0 / (180.0 / 3.145))))).concatenating(CGAffineTransform(scaleX: 1.0, y: 1.0));
                 
                 if(self.session != nil) {
                     
