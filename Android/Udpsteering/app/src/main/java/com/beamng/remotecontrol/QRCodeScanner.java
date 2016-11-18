@@ -107,13 +107,14 @@ public class QRCodeScanner extends Activity
             ((RemoteControlApplication) getApplication()).setIp(ip);
 
             InetAddress broadcastAddress = getBroadcastAddress(getIpAddress());
+            //Log.i("broadcastAddress", getIpAddress().getHostAddress());
             Log.i("Broadcast Address", broadcastAddress.getHostAddress());
 
             exploreSenderFragment.execute(broadcastAddress, this, ip, securityCode);
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             progressDialogFragment.show(ft, "progressDialog");
         } catch(RuntimeException e) {
-            Toast.makeText(this, "You need to be connected to a WiFi network.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "You must be connected to the same WiFi as your PC", Toast.LENGTH_LONG).show();
             mScannerView.startCamera();
         }
     }
@@ -124,10 +125,10 @@ public class QRCodeScanner extends Activity
         try {
             temp = NetworkInterface.getByInetAddress(inetAddr);
             List<InterfaceAddress> addresses = temp.getInterfaceAddresses();
-
-            for (InterfaceAddress inetAddress : addresses)
-
+            for (InterfaceAddress inetAddress : addresses) {
+                if (inetAddress.getBroadcast() != null)
                 iAddr = inetAddress.getBroadcast();
+            }
             return iAddr;
 
         } catch (SocketException e) {
@@ -137,7 +138,7 @@ public class QRCodeScanner extends Activity
     }
 
     public InetAddress getIpAddress() {
-        InetAddress inetAddress;
+        InetAddress inetAddress = null;
         InetAddress myAddress = null;
 
         try {
@@ -149,13 +150,11 @@ public class QRCodeScanner extends Activity
                 for (Enumeration<InetAddress> IpAddresses = singleInterface.getInetAddresses(); IpAddresses
                         .hasMoreElements(); ) {
                     inetAddress = IpAddresses.nextElement();
-
                     if (!inetAddress.isLoopbackAddress() && (singleInterface.getDisplayName()
                             .contains("wlan0") ||
                             singleInterface.getDisplayName().contains("eth0") ||
                             singleInterface.getDisplayName().contains("ap0"))) {
-
-                        myAddress = inetAddress;
+                            myAddress = inetAddress;
                     }
                 }
             }

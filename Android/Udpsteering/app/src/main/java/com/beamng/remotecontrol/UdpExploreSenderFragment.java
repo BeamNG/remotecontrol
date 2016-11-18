@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.net.InetAddress;
 
@@ -23,6 +24,7 @@ public class UdpExploreSenderFragment extends Fragment implements OnUdpConnected
     }
 
     public void execute(InetAddress broadcastAddress, QRCodeScanner parent, String ip, String securityCode) {
+        //Log.i("IP", broadcastAddress.getHostAddress());
         assert(exploreSender == null);
         exploreSender = new UdpExploreSender(broadcastAddress, this, ip, parent);
         exploreSender.execute(securityCode);

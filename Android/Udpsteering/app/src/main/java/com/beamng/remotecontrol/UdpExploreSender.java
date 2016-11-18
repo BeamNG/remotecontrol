@@ -47,6 +47,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         this.netadress = iadr;
         this.listener = listener;
         this.Iadr = iadrr;
+        //Log.i("Address", iadr.toString());
     }
 
     @Override
@@ -54,7 +55,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
         String securityCode = args[0];
 
         sendString = "beamng|" + getDeviceName() + "|" + securityCode;
-        Log.i("SendString: ", sendString);
+        Log.i("SendString", sendString);
         byte[] buffer = (sendString).getBytes();
 
         DatagramSocket socketS = null;
@@ -65,6 +66,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             DatagramSocket socketR = channel.socket();
             socketR.setReuseAddress(true);
             socketR.bind(new InetSocketAddress(Iadr, localPORT));
+            //Log.i("Address", netadress.toString());
             socketR.setSoTimeout(250);
             final String waitingFor = "beamng|" + securityCode;
             byte[] receive_buf = new byte[32];
@@ -75,12 +77,13 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
             while (!isCancelled()) {
                 try {
                     socketS.send(packetS);
+                    Log.i("packet", packetS.toString());
                     socketR.receive(packetR);
                 } catch (IOException e) {
                     if (++tries > 10) {
                         return "Connection timeout.";
                     }
-                    //e.printStackTrace();
+                    e.printStackTrace();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e1) {
@@ -90,7 +93,6 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
                 }
                 String message = new String(receive_buf, 0, packetR.getLength());
                 hostadress = packetR.getAddress();
-
                 Log.i("UDP SERVER", "Received: " + message + " IP " +
                       packetR.getAddress().getHostAddress() + ":" + packetR.getPort() +
                       " / waiting for: " + waitingFor);
@@ -100,7 +102,7 @@ public class UdpExploreSender extends AsyncTask<String, String, String> {
                 }
             }
         } catch (Exception e) {
-            return e.getLocalizedMessage();
+            return e.toString();
         } finally {
             if (channel != null) {
                 try {

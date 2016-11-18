@@ -186,9 +186,9 @@
         udpsteering:fontName="OpenSans-Bold.ttf"
         android:text="046"
         android:textColor="@color/white"
-        android:layout_below="@+id/anchor"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/anchor" />
 
     <com.beamng.remotecontrol.CustomTextView
         android:id="@+id/Textgear"

@@ -270,7 +270,7 @@ public class MainActivity extends Activity implements SensorEventListener {
         sensitivity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progressValue, boolean fromUser) {
-                sensitivitySetting = progressValue/100f;
+                sensitivitySetting = 0.2f+(progressValue/100f*0.8f);
                 SaveSettings();
             }
             @Override
@@ -667,7 +667,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             if (packet.getID() == pID) {
                 timeDiff = System.currentTimeMillis()-lpTime;
                 //smooth the display a bit so the numbers dont jump so erratically
-                float disDiff = (oldDiff+timeDiff)/2;
+                int disDiff = Math.round((oldDiff+timeDiff)/2);
                 disDiff /= 2;
                 if (timeDiff != 0)
                     textDelay.setText("Delay: "+disDiff+"ms");
