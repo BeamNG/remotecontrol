@@ -255,7 +255,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
         
         buttonDisconnect = UIButton(type: UIButtonType.system) as UIButton;
         buttonDisconnect.frame = CGRect(x: self.view.frame.width-(self.view.frame.width * 0.1)-10, y: 20, width: self.view.frame.width * 0.1, height: self.view.frame.height * 0.08);
-        buttonDisconnect.setTitle("Disconnect", for: UIControlState());
+        buttonDisconnect.setTitle("Back", for: UIControlState());
         buttonDisconnect.addTarget(self, action: #selector(PSSessionViewController.onButtonDisconnect), for: UIControlEvents.touchUpInside);
         buttonDisconnect.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 1.0);
         self.view.addSubview(buttonDisconnect);
@@ -388,7 +388,7 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
 
         
         startScreen = UIImage(named: "startscreen")!;
-        startScreenView = UIImageView(frame: CGRect(x: self.view.frame.width/2-(self.view.frame.width * 0.6/2), y: 20, width: self.view.frame.width * 0.6, height: self.view.frame.height * 0.35));
+        startScreenView = UIImageView(frame: CGRect(x: self.view.frame.width/2-(self.view.frame.width * 0.55/2), y: 20, width: self.view.frame.width * 0.55, height: self.view.frame.height * 0.35));
         startScreenView.image = startScreen;
         self.view.addSubview(startScreenView);
         self.view.bringSubview(toFront: startScreenView!);
@@ -463,7 +463,14 @@ class PSSessionViewController : UIViewController, AVCaptureMetadataOutputObjects
                 //print("get steer angle");
                 //self.session.currentData.steer = round(Float(translatedAngle / 90.0) * -1.0);
                 //print(self.senSlider.value);
-                self.session.currentData.steer = ((Float(translatedAngle / 90.0) * -1.0)-0.5)*self.senSlider.value+0.5;
+                var steerVal : Float = ((Float(translatedAngle / 90.0) * -1.0)-0.5)*self.senSlider.value+0.5;
+                if (steerVal > 1) {
+                    steerVal = 1;
+                }
+                else if (steerVal < 0) {
+                    steerVal = 0;
+                }
+                self.session.currentData.steer = steerVal;
                 //print("session exists, send data");
                 self.session.sendCurrentData();
             }
