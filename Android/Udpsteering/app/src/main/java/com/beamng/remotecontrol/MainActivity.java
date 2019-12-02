@@ -70,7 +70,7 @@ public class MainActivity extends Activity implements SensorEventListener {
 
     //Sensordata damping elements
     private List<Float> rollingAverage = new ArrayList<Float>();
-    private static final int MAX_SAMPLE_SIZE = 5;
+    private static final int MAX_SAMPLE_SIZE = 1;
     private float gravity;
 
     //UI Elements
@@ -318,7 +318,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         switch (event.sensor.getType()) {
-            case Sensor.TYPE_ACCELEROMETER:
+            case Sensor.TYPE_GRAVITY:
 
                 angle = (float) (Math.asin(
                     -event.values[1] / Math.sqrt(
@@ -397,7 +397,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     // This function registers sensor listeners for the accelerometer
     public void initListeners() {
         mSensorManager.registerListener(this,
-                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                mSensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY),
                 SensorManager.SENSOR_DELAY_GAME);
 
         mSensorManager.registerListener(this,
